@@ -4,21 +4,21 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
-class ResultItems extends Model
+class QuestionComponent extends Model
 {
     protected $fillable = [
-        'result_id',
         'question_id',
-        'is_correct',
-        'duration',
-        'user_answer_content'
+        'component_id',
+        'component_type',
+        'order',
+        'role',
     ];
-
-    public function result(){
-        return $this->belongsTo(Result::class, 'result_id');
-    }
 
     public function question(){
         return $this->belongsTo(Question::class, 'question_id');
     }
-}
+
+    public function component(){
+        return $this->morphTo();
+    }
+}   

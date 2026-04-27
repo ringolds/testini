@@ -6,5 +6,17 @@ use Illuminate\Database\Eloquent\Model;
 
 class Rating extends Model
 {
-    //
+    protected $fillable = [
+        'user_id',
+        'test_id',
+        'stars',
+    ];
+
+    public function user(){
+        return $this->belongsTo(User::class, 'user_id');
+    }
+
+    public function test(){
+        return $this->belongsTo(Test::class, 'test_id');
+    }
 }
