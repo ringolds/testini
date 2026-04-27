@@ -11,12 +11,9 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('reports', function (Blueprint $table) {
-            $table->id();
-            $table->foreignId('user_id')->constrained()->onDelete('cascade'); 
-            $table->morphs('reportable'); 
-            $table->text('reason');
-            $table->string('status')->default('pending');
+        Schema::create('bank_question', function (Blueprint $table) {
+            $table->foreignId('bank_id')->constrained()->onDelete('cascade');
+            $table->foreignId('question_id')->constrained()->onDelete('cascade');
             $table->timestamps();
         });
     }
@@ -26,6 +23,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('reports');
+        Schema::dropIfExists('bank_question');
     }
 };

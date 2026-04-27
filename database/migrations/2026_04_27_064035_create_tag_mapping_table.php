@@ -11,12 +11,10 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('reports', function (Blueprint $table) {
+        Schema::create('tag_mapping', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('user_id')->constrained()->onDelete('cascade'); 
-            $table->morphs('reportable'); 
-            $table->text('reason');
-            $table->string('status')->default('pending');
+            $table->foreignId('tag_id')->constrained()->onDelete('cascade');
+            $table->morphs('taggable');
             $table->timestamps();
         });
     }
@@ -26,6 +24,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('reports');
+        Schema::dropIfExists('tag_mapping');
     }
 };
