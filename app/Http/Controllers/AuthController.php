@@ -25,8 +25,6 @@ class AuthController extends Controller
             'password' => 'required|min:8|confirmed',
         ]);
 
-        $validated['password'] = Hash::make($validated['password']);
-
         $user = User::create([
             'name' => $validated['name'],
             'email'=> $validated['email'],
@@ -48,7 +46,7 @@ class AuthController extends Controller
         ]);
         if (Auth::attempt($credentials)) {
             $request->session()->regenerate();
-            return redirect()->intended('welcome');
+            return redirect()->intended(route('welcome'));
         }
         return back()-> 
             with('error', 'Invalid credentials');
