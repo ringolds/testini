@@ -32,6 +32,12 @@
         <input type="password" name="password_confirmation" class="form-control" required>
     </div>
     <button type="submit" class="btn btn-success">Register</button>
+    <div class="mt-3">
+        <a href="{{ route('google.login') }}" class="btn btn-outline-dark w-100">
+            <img src="https://www.gstatic.com/images/branding/product/1x/gsa_512dp.png" width="20" class="me-2">
+            Continue with Google
+        </a>
+    </div>
     <a href="{{ route('login') }}" class="btn btn-link">
         Already have an account?
     </a>

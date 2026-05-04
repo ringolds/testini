@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\User;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Hash;
+use Laravel\Socialite\Facades\Socialite;
 
 class AuthController extends Controller
 {
@@ -59,5 +59,40 @@ class AuthController extends Controller
         $request->session()->invalidate();
         $request->session()->regenerateToken();
         return redirect('/login');
+    }
+
+    public function redirectToGoogle()
+    {
+        return Socialite::driver('google')->redirect();
+    }
+
+    public function handleGoogleCallback()
+    {
+        try {
+            $googleUser = Socialite::driver('google')->user();
+            $user = User::where('email', $googleUser->email)->first();
+
+            if($user){
+                $user->update([
+                    'google_id' => $googleUser->id,
+                ]);
+            }
+            else{
+                $user = User::create([
+                    'name' => $googleUser->name,
+                    'password'=>NULL,
+                    'email' => $googleUser->email,
+                    'google_id' => $googleUser->id,
+                    'is_admin'=> FALSE,
+                    'is_banned'=> FALSE,
+                ]);
+            }
+
+            Auth::login($user);
+            return redirect()->route('welcome');
+
+        } catch (\Exception $e) {
+            return redirect('/login')->withErrors(['login_error' => 'Google authentication failed.']);
+        }
     }
 }
