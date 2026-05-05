@@ -20,10 +20,6 @@
         <div id="content">
             <nav class="navbar navbar-expand-lg navbar-light bg-light navbar-top p-3">
                 <div class="container-fluid">
-                    <span class="navbar-text">
-                        {{ $title ?? 'Welcome' }}
-                    </span>
-                    
                     <div class="ms-auto">
                         @auth
                             <div class="dropdown">

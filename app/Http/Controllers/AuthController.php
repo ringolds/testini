@@ -45,7 +45,7 @@ class AuthController extends Controller
         ]);
 
         Auth::login($user);
-        return redirect()->route('welcome');
+        return redirect()->route('home');
     }
 
 
@@ -57,7 +57,7 @@ class AuthController extends Controller
         ]);
         if (Auth::attempt($credentials)) {
             $request->session()->regenerate();
-            return redirect()->intended(route('welcome'));
+            return redirect()->intended(route('home'));
         }
         return back()-> 
             with('error', 'Invalid credentials');
@@ -109,7 +109,7 @@ class AuthController extends Controller
             }
 
             Auth::login($user);
-            return redirect()->route('welcome');
+            return redirect()->route('home');
 
         } catch (\Exception $e) {
             return redirect('/login')->withErrors(['login_error' => 'Google authentication failed.']);

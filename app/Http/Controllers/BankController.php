@@ -40,7 +40,20 @@ class BankController extends Controller
      */
     public function show(string $id)
     {
-        //
+        $bank = auth()->user()->banks()
+        ->with('questions')
+        ->where('id', $id)
+        ->first();
+
+        if(!$bank){
+            return redirect()->route('home');
+        }
+
+        if (request()->ajax()) {
+            return view('banks.details', compact('bank'))->render();
+        }
+
+        return view('banks.show', compact('bank'));
     }
 
     /**
