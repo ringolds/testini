@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Bank;
 use Illuminate\Http\Request;
 use App\Models\User;
 use Illuminate\Support\Facades\Auth;
@@ -33,6 +34,16 @@ class AuthController extends Controller
             'is_admin'=> FALSE,
             'is_banned'=> FALSE,
         ]);
+
+        $bank = Bank::create([
+            'name' => "Default",
+            'user_id'=> $user->id,
+            'description' => "Default bank created at registration",
+            'public'=> FALSE,
+            'collaborative'=> FALSE,
+            'hidden'=> TRUE,
+        ]);
+
         Auth::login($user);
         return redirect()->route('welcome');
     }
@@ -85,6 +96,15 @@ class AuthController extends Controller
                     'google_id' => $googleUser->id,
                     'is_admin'=> FALSE,
                     'is_banned'=> FALSE,
+                ]);
+
+                $bank = Bank::create([
+                    'name' => "Default",
+                    'user_id'=> $user->id,
+                    'description' => "Default bank created at registration",
+                    'public'=> FALSE,
+                    'collaborative'=> FALSE,
+                    'hidden'=> TRUE,
                 ]);
             }
 

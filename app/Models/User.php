@@ -9,6 +9,12 @@ use Illuminate\Database\Eloquent\Attributes\Hidden;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use App\Models\Bank;
+use App\Models\Question;
+use App\Models\Test;
+use App\Models\Rating;
+use App\Models\Report;
+use App\Models\Result;
 
 #[Fillable(['name', 'email', 'password', 'google_id', 'is_admin', 'is_banned'])]
 #[Hidden(['password', 'remember_token'])]

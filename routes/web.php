@@ -2,12 +2,14 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\BankController;
 
 Route::get('/', function () {
     return view('welcome');
 })->name('welcome');
 
 Route::middleware('auth')->group(function() {
+    Route::resource('bank', BankController::class); 
     Route::post('/logout', [AuthController::class, 'logout']) ->name('logout');    
 });
 

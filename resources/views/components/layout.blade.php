@@ -12,6 +12,7 @@
         #content { width: 100%; }
         .navbar-top { border-bottom: 1px solid #dee2e6; }
     </style>
+    @livewireStyles
 </head> 
 <body> 
         <div id="wrapper">
@@ -45,6 +46,7 @@
             </main>
         </div>
     </div>
+@livewireScripts
 </body> 
 </html> 
 
