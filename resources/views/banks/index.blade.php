@@ -65,6 +65,22 @@
             });
         }
 
+        function editBank(id) {
+            $('#bank-content').css('opacity', '0.5');
+
+            $.ajax({
+                url: '/bank/' + id + '/edit',
+                type: 'GET',
+                success: function(response) {
+                    $('#bank-content').html(response).css('opacity', '1');
+                },
+                error: function() {
+                    alert('Could not load edit form.');
+                    $('#bank-content').css('opacity', '1');
+                }
+            });
+        }
+
         $(document).ready(function() {
             $('.bank-btn').on('click', function() {
                 const id = $(this).data('id');
@@ -77,7 +93,45 @@
                 loadBank(firstId);
             }
         });
-    </script>
 
+        $(document).ready(function() {
+            $(document).on('click', '.edit-bank-btn', function() {
+                const id = $(this).data('id');
+                editBank(id);
+            });
+
+            $(document).on('submit', '#edit-bank-form', function(e) {
+                e.preventDefault();
+                
+                let form = $(this);
+
+                form.find('.is-invalid').removeClass('is-invalid');
+                form.find('.invalid-feedback').text('');
+
+                $.ajax({
+                    url: form.attr('action'),
+                    type: 'POST',
+                    data: form.serialize(),
+                    success: function(response) {
+                        $(`#btn-${response.id}`).text(response.name);
+                        loadBank(response.id);
+                    },
+                    error: function(xhr) {
+                        if (xhr.status === 422) {
+                            let errors = xhr.responseJSON.errors;
+                            
+                            $.each(errors, function(key, messages) {
+                                let input = form.find(`[name="${key}"]`);
+                                input.addClass('is-invalid');
+                                input.siblings('.invalid-feedback').text(messages[0]);
+                            });
+                        } else {
+                            alert('An unexpected error occurred.');
+                        }
+                    }
+                });
+            });
+        });
+    </script>
 
 </x-layout>

@@ -87,7 +87,20 @@ class BankController extends Controller
      */
     public function edit(string $id)
     {
-        //
+        $bank = auth()->user()->banks()
+        ->with('questions')
+        ->where('id', $id)
+        ->first();
+
+        if(!$bank){
+            return redirect()->route('home');
+        }
+
+        if (request()->ajax()) {
+            return view('banks.details_edit', compact('bank'))->render();
+        }
+
+        return view('banks.edit', compact('bank'));
     }
 
     /**
@@ -95,7 +108,51 @@ class BankController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        //
+        $bank = auth()->user()->banks()
+        ->with('questions')
+        ->where('id', $id)
+        ->first();
+
+        if(!$bank){
+            return redirect()->route('home');
+        }
+
+        $rules = array(
+            'name' => [
+                'required',
+                'string',
+                'max:255',
+                Rule::unique('banks')->where(fn ($query) => 
+                    $query->where('user_id', auth()->id())
+                )->ignore($id),
+            ],
+            'description' => 'required|min:5|max:500'
+        );    
+
+        $validated = $request->validate($rules);
+
+        $request->merge([
+            'public' => $request->has('public'),
+            'collaborative' => $request->has('collaborative'),
+        ]);
+
+        $bank->name = $validated['name'];
+        $bank->description = $validated['description'];
+        $bank->public = $request->public;
+        $bank->collaborative = $request->collaborative;
+
+        $bank->save();
+
+        if(request()->ajax()){
+                return response()->json([
+                'id' => $bank->id,
+                'name' => $bank->name,
+                'success' => 'Bank updated successfully!'
+            ]);
+        }
+
+        return redirect()->route('bank.index')->with('success', 'Bank edited 
+        successfully!');
     }
 
     /**
@@ -103,6 +160,19 @@ class BankController extends Controller
      */
     public function destroy(string $id)
     {
-        //
+        $bank = auth()->user()->banks()
+        ->with('questions')
+        ->where('id', $id)
+        ->first();
+
+        if(!$bank){
+            return redirect()->route('home');
+        }
+
+        $bank->hidden = TRUE;
+        $bank->save();
+
+        return redirect()->route('bank.index')->with('success', 'Bank deleted 
+        successfully!');
     }
 }
