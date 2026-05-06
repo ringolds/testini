@@ -9,9 +9,10 @@
         body { overflow-x: hidden; }
         #wrapper { display: flex; width: 100%; align-items: stretch; }
         #sidebar { min-width: 250px; max-width: 250px; min-height: 100vh; transition: all 0.3s; }
-        #content { width: 100%; }
+        #content { flex-grow: 1; min-width: 0; }
         .navbar-top { border-bottom: 1px solid #dee2e6; }
     </style>
+    @stack('styles')
     @livewireStyles
 </head> 
 <body> 

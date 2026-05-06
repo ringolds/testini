@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Validation\Rule;
+use App\Models\Bank;
 
 
 class BankController extends Controller
@@ -24,7 +26,7 @@ class BankController extends Controller
      */
     public function create()
     {
-        //
+        return view('banks.create');
     }
 
     /**
@@ -32,7 +34,31 @@ class BankController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $rules = array(
+            'name' => [
+                'required',
+                'string',
+                'max:255',
+                Rule::unique('banks')->where(fn ($query) => 
+                    $query->where('user_id', auth()->id())
+                ),
+            ],
+            'description' => 'required|min:5|max:500'
+        );    
+
+        $validated = $request->validate($rules);
+    
+        Bank::create([ 
+            'name' => $validated['name'], 
+            'description' => $validated['description'], 
+            'user_id'=> auth()->id(),
+            'public'=> FALSE,
+            'collaborative'=> FALSE,
+            'hidden'=> FALSE,
+        ]); 
+
+        return redirect()->route('bank.index')->with('success', 'Bank created 
+        successfully!');     
     }
 
     /**

@@ -1,20 +1,43 @@
+@push('styles')
+<style>
+    .scroll-container .btn {
+      flex: 0 0 auto;
+    }
+    
+    .hide-scrollbar::-webkit-scrollbar {
+      display: none;
+    }
+    
+    .hide-scrollbar {
+      -ms-overflow-style: none;  
+      scrollbar-width: none;  
+    }
+</style>
+@endpush
+
 <x-layout> 
     <x-slot name="title"> 
         Banks 
     </x-slot> 
-    <div class="d-flex overflow-auto pb-3 mb-4" style="gap: 10px; white-space: nowrap;">
-        @foreach ($banks as $bank)
-            <button 
-                type="button"
-                onclick="loadBank({{$bank->id}})" 
-                class="btn btn-outline-primary px-4 rounded-pill bank-btn"
-                data-id="{{ $bank->id }}"
-                id="btn-{{ $bank->id }}">
-                {{ $bank->name }}
-            </button>
-        @endforeach
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1 class="h3 mb-0">My banks</h1>
+        <a href="{{ route('bank.create') }}" class="btn btn-success d-flex align-items-center">
+            <i class="bi bi-plus-lg me-2"></i> Create bank
+        </a>
     </div>
-
+    <div class="container">
+        <div class="d-flex flex-nowrap overflow-auto scroll-container hide-scrollbar">
+            @foreach ($banks as $bank)
+                <button 
+                    type="button"
+                    class="btn btn-outline-primary px-4 rounded-pill bank-btn flex-shrink-0"
+                    data-id="{{ $bank->id }}"
+                    id="btn-{{ $bank->id }}">
+                    {{ $bank->name }}
+                </button>
+            @endforeach
+        </div>
+    </div>
     <div id="bank-content">
         <div class="text-center py-5 text-muted">
             Select a bank above to view questions.
@@ -43,9 +66,16 @@
         }
 
         $(document).ready(function() {
-            @if($banks->count() > 0)
-                loadBank({{ $banks->first()->id }});
-            @endif
+            $('.bank-btn').on('click', function() {
+                const id = $(this).data('id');
+                loadBank(id);
+            });
+
+            const firstId = $('.bank-btn').first().data('id');
+        
+            if (firstId) {
+                loadBank(firstId);
+            }
         });
     </script>
 
