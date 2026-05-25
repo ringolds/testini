@@ -19,14 +19,20 @@
     </div>
     <div class="card-footer bg-white py-2">
         <div class="d-flex justify-content-end align-items-center gap-2">
-            <button type="button" 
-                class="btn btn-warning edit-bank-btn d-flex align-items-center" 
-                data-id="{{ $bank->id }}">
-                <i class="bi bi-pencil me-2"></i> Edit bank
-            </button>
-            <a href="{{ route('bank.create') }}" class="btn btn-danger d-flex align-items-center">
-                <i class="bi bi-trash me-2"></i> Delete bank
-            </a>
+            @can('update', $bank)
+                <button type="button" 
+                    class="btn btn-warning edit-bank-btn d-flex align-items-center" 
+                    data-id="{{ $bank->id }}">
+                    <i class="bi bi-pencil me-2"></i> Edit bank
+                </button>
+            @endcan
+            @can('delete', $bank)
+                <form action="{{ route('bank.destroy', $bank) }}" method="POST" onsubmit="return confirm('Are you sure you want to delete this bank?');"> 
+                    @csrf 
+                    @method('DELETE') 
+                    <button type="submit" class="btn btn-danger">Delete</button> 
+                </form>
+            @endcan
         </div>
     </div>
 </div>

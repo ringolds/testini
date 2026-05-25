@@ -16,7 +16,7 @@ class BankController extends Controller
     public function index()
     {
         $user = Auth::user();
-        $banks = $user->banks;
+        $banks = $user->banks->where('hidden', 0);
     
         return view('banks.index', compact('banks'));
     }
@@ -55,6 +55,7 @@ class BankController extends Controller
             'public'=> FALSE,
             'collaborative'=> FALSE,
             'hidden'=> FALSE,
+            'default'=> FALSE
         ]); 
 
         return redirect()->route('bank.index')->with('success', 'Bank created 
@@ -66,12 +67,9 @@ class BankController extends Controller
      */
     public function show(string $id)
     {
-        $bank = auth()->user()->banks()
-        ->with('questions')
-        ->where('id', $id)
-        ->first();
-
-        if(!$bank){
+        $bank = Bank::findOrFail($id);
+        $user = Auth::user();
+        if ($user->cannot('view', $bank)){
             return redirect()->route('home');
         }
 
@@ -87,12 +85,9 @@ class BankController extends Controller
      */
     public function edit(string $id)
     {
-        $bank = auth()->user()->banks()
-        ->with('questions')
-        ->where('id', $id)
-        ->first();
-
-        if(!$bank){
+        $bank = Bank::findOrFail($id);
+        $user = Auth::user();
+        if ($user->cannot('update', $bank)){
             return redirect()->route('home');
         }
 
@@ -108,12 +103,9 @@ class BankController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        $bank = auth()->user()->banks()
-        ->with('questions')
-        ->where('id', $id)
-        ->first();
+        $bank = Bank::findOrFail($id);
 
-        if(!$bank){
+        if($request->user()->cannot('update', $bank)){
             return redirect()->route('home');
         }
 
@@ -123,7 +115,7 @@ class BankController extends Controller
                 'string',
                 'max:255',
                 Rule::unique('banks')->where(fn ($query) => 
-                    $query->where('user_id', auth()->id())
+                    $query->where('user_id', Auth::id())
                 )->ignore($id),
             ],
             'description' => 'required|min:5|max:500'
@@ -160,19 +152,17 @@ class BankController extends Controller
      */
     public function destroy(string $id)
     {
-        $bank = auth()->user()->banks()
-        ->with('questions')
-        ->where('id', $id)
-        ->first();
+        $bank = Bank::findOrFail($id);
+        $user = Auth::user();
+        if ($user->can('delete', $bank)){
+            $bank->hidden = TRUE;
+            $bank->save();
 
-        if(!$bank){
-            return redirect()->route('home');
+            if (request()->ajax()) {
+                return response()->json(['success' => true, 'id' => $id]);
+            }
+
+            return redirect()->route('bank.index');
         }
-
-        $bank->hidden = TRUE;
-        $bank->save();
-
-        return redirect()->route('bank.index')->with('success', 'Bank deleted 
-        successfully!');
     }
 }

@@ -42,6 +42,7 @@ class AuthController extends Controller
             'public'=> FALSE,
             'collaborative'=> FALSE,
             'hidden'=> FALSE,
+            'default'=> TRUE
         ]);
 
         Auth::login($user);
@@ -105,6 +106,7 @@ class AuthController extends Controller
                     'public'=> FALSE,
                     'collaborative'=> FALSE,
                     'hidden'=> FALSE,
+                    'default'=> TRUE
                 ]);
             }
 

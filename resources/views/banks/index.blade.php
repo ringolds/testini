@@ -26,7 +26,7 @@
         </a>
     </div>
     <div class="container">
-        <div class="d-flex flex-nowrap overflow-auto scroll-container hide-scrollbar">
+        <div class="d-flex flex-nowrap overflow-auto scroll-container hide-scrollbar gap-2">
             @foreach ($banks as $bank)
                 <button 
                     type="button"
@@ -81,7 +81,33 @@
             });
         }
 
+        function deleteBank(id) {
+            $('#bank-content').css('opacity', '0.5');
+
+            if(confirm("Are you sure you want to delete this bank?")== TRUE){
+                $.ajax({
+                    type: 'DELETE',
+                    data: {
+                        _token: '{{ csrf_token() }}'
+                    },
+                    success: function(response) {
+                        loadBank(firstId)
+                    },
+                    error: function() {
+                        alert('Could not delete bank.');
+                        $('#bank-content').css('opacity', '1');
+                    }
+                });
+            }
+        }
+
         $(document).ready(function() {
+            $.ajaxSetup({
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                }
+            });
+
             $('.bank-btn').on('click', function() {
                 const id = $(this).data('id');
                 loadBank(id);
@@ -98,6 +124,11 @@
             $(document).on('click', '.edit-bank-btn', function() {
                 const id = $(this).data('id');
                 editBank(id);
+            });
+
+            $(document).on('click', '.delete-bank-btn', function() {
+                const id = $(this).data('id');
+                deleteBank(id);
             });
 
             $(document).on('submit', '#edit-bank-form', function(e) {

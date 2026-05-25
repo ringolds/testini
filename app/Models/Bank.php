@@ -13,6 +13,7 @@ class Bank extends Model
         'public',
         'collaborative',
         'hidden',
+        'default'
     ];
 
     public function user(){
