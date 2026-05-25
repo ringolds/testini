@@ -40,7 +40,7 @@ class BankController extends Controller
                 'string',
                 'max:255',
                 Rule::unique('banks')->where(fn ($query) => 
-                    $query->where('user_id', auth()->id())
+                    $query->where('user_id', Auth::id())
                 ),
             ],
             'description' => 'required|min:5|max:500'

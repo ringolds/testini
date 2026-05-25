@@ -15,7 +15,6 @@ return new class extends Migration
             $table->id();
             $table->string('path');
             $table->string('alt_text')->nullable();
-            $table->string('original_name')->nullable();
             $table->string('mime_type')->nullable();
             $table->unsignedInteger('size')->nullable();
             $table->unsignedInteger('width')->nullable();

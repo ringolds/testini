@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\BankController;
+use App\Http\Controllers\QuestionController;
 
 Route::get('/', function () {
     return view('home');
@@ -10,6 +11,7 @@ Route::get('/', function () {
 
 Route::middleware('auth')->group(function() {
     Route::resource('bank', BankController::class); 
+    Route::resource('question', QuestionController::class);
     Route::post('/logout', [AuthController::class, 'logout']) ->name('logout');    
 });
 

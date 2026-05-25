@@ -9,7 +9,6 @@ class QuestionImage extends Model
     protected $fillable = [
         'path',
         'alt_text',
-        'original_name',
         'mime_type',
         'size',
         'width',
