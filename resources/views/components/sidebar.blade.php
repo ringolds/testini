@@ -10,6 +10,9 @@
                 <li class="nav-item">
                     <a class="nav-link text-white" href="/bank">My banks</a>
                 </li>
+                <li class="nav-item">
+                    <a class="nav-link text-white" href="/question/create">Create questions</a>
+                </li>
 
                 @if(auth()->user()->is_admin)
                     <hr>

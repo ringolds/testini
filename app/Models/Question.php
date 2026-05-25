@@ -27,19 +27,15 @@ class Question extends Model
     }
 
     public function prompt(){
-        return $this->components()
-            ->where('role', 'question')
-            ->orderBy('order')
-            ->with('component')
-            ->get();
+        return $this->hasOne(QuestionComponent::class)->where('role', 'question');
     }
 
     public function answer(){
-        return $this->components()
-            ->where('role', 'answer')
-            ->orderBy('order')
-            ->with('component')
-            ->get();
+        return $this->hasOne(QuestionComponent::class)->where('role', 'answer');
+    }
+
+    public function description(){
+        return $this->hasOne(QuestionComponent::class)->where('role', 'description');
     }
 
     public function reports(){
