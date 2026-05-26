@@ -28,7 +28,7 @@
                 <div class="d-flex justify-content-end align-items-center gap-2">
                     @can('update', $question)
                         <button type="button" 
-                            class="btn btn-warning edit-bank-btn d-flex align-items-center" 
+                            class="btn btn-warning edit-question-btn d-flex align-items-center" 
                             data-id="{{ $question->id}}">
                             <i class="bi bi-pencil me-2"></i> Edit question
                         </button>
@@ -37,7 +37,7 @@
                         <form class="d-inline m-0" action="{{ route('question.destroy', $question) }}" method="POST" onsubmit="return confirm('Are you sure you want to delete this question?');"> 
                             @csrf 
                             @method('DELETE') 
-                            <button type="submit" class="btn btn-danger">Delete</button> 
+                            <button type="submit" class="btn btn-danger delete-question-btn">Delete</button> 
                         </form>
                     @endcan
                 </div>

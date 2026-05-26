@@ -19,7 +19,7 @@
                 <form class="d-inline m-0" action="{{ route('bank.destroy', $bank) }}" method="POST" onsubmit="return confirm('Are you sure you want to delete this bank?');"> 
                     @csrf 
                     @method('DELETE') 
-                    <button type="submit" class="btn btn-danger">Delete</button> 
+                    <button type="submit" class="btn btn-danger delete-bank-btn">Delete</button> 
                 </form>
             @endcan
         </div>

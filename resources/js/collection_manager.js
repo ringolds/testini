@@ -5,7 +5,7 @@ let editButton;
 let deleteButton;
 let editForm;
 
-function loadCollection(id, ) {
+function loadCollection(id) {
     $(content).css('opacity', '0.5');
 
     $.ajax({

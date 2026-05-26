@@ -15,6 +15,7 @@
 </style>
 @endpush
 @vite('resources/js/collection_manager.js')
+@vite('resources/js/question_manager.js')
 <x-layout> 
     <x-slot name="title"> 
         Banks 

@@ -1,5 +1,5 @@
 @props(['item'])
-<div class="list-group list-group-flush mt-3">
+<div class="list-group list-group-flush mt-3" id="question-content">
             @forelse($item->questions as $question)
                 <x-question_row :question="$question">
                     <x-slot:questionSlot>

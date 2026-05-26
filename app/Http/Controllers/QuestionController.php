@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\DB;
 use App\Models\QuestionImage;
 use App\Models\QuestionText;
 use App\Models\Bank;
+use APP\Models\Test;
 
 class QuestionController extends Controller
 {
@@ -62,8 +63,10 @@ class QuestionController extends Controller
             'question_text'       => 'required_if:question_type,text|nullable|string|min:1|max:250',
             'question_image'      => 'required_if:question_type,image|nullable|image|max:2048',
             'question_image_text' => 'nullable|string|max:250',
+            'question_image_alt'  => 'nullable|string|max:250',
             'answer_text'         => 'required_if:answer_type,text|nullable|string|min:1|max:250',
             'answer_image'        => 'required_if:answer_type,image|nullable|image|max:2048',
+            'answer_image_alt'  => 'nullable|string|max:250',
         ];
 
         $defaultBank = Bank::where('user_id', Auth::id())->where('default', 1)->first();
@@ -127,7 +130,7 @@ class QuestionController extends Controller
                         'role' => 'description',
                         'component_type' => QuestionText::class,
                         'component_id' => $descriptionText->id,
-                        'ordering_sequence' => $order,
+                        'order' => $order,
                     ]);
                     $order++;
                 }
@@ -157,7 +160,7 @@ class QuestionController extends Controller
                 'role' => $role,
                 'component_type' => QuestionImage::class,
                 'component_id' => $image->id,
-                'ordering_sequence' => $order,
+                'order' => $order,
             ]);
         }
     }
@@ -192,7 +195,109 @@ class QuestionController extends Controller
      */
     public function update(Request $request, Question $question)
     {
-        //
+        if($request->user()->cannot('update', $question)){
+            return redirect()->route('home');
+        }
+
+        $rules = [
+            'question_text'       => 'nullable|string|min:1|max:250',
+            'question_image'      => 'nullable|image|max:2048',
+            'question_image_text' => 'nullable|string|max:250',
+            'question_image_alt'  => 'nullable|string|max:250',
+            'answer_text'         => 'nullable|string|min:1|max:250',
+            'answer_image'        => 'nullable|image|max:2048',
+            'answer_image_alt'  => 'nullable|string|max:250',
+        ];
+
+        $validated = $request->validate($rules);
+
+        DB::transaction(function () use ($validated, $question) {
+            $this->editQuestionComponents($question, $validated, "question");
+            $this->editQuestionComponents($question, $validated, "answer");
+        });
+
+        if ($request->ajax()) {
+            if ($request->input('content_type') === 'test') {
+                $item = Test::findOrFail($request->input('content_id'));
+            } 
+            else {
+                $item = Bank::findOrFail($request->input('content_id'));
+            }
+
+            $html = view('components.question_block', compact('item'))->render();
+
+            return response()->json([
+                'success' => true,
+                'html'    => $html
+            ]);
+        }
+        //return redirect()->back()->with('success', 'Question edited successfully!');
+        return redirect()->route('bank.create');
+    }
+
+    private function editQuestionComponents(Question $question, array $validated, string $role){
+        if($role === "answer"){
+            $item = $question->answer->component;
+            $type = $question->answer->component_type;
+            $description = NULL;
+        }
+        else{
+            $item = $question->prompt->component;
+            $type = $question->prompt->component_type;
+            $description = $question->description;
+        }
+
+
+        if($type === 'App\Models\QuestionText' && isset($validated[$role.'_text'])){
+            $item->text = $validated[$role.'_text'];
+        }
+        else if($type === 'App\Models\QuestionImage'){
+            $order = 1;
+            //Part about description, if exists, update, else create
+            if(isset($validated['question_image_text'])){
+                if($description!=NULL){
+                    $descriptionText = $description->component;
+                    $descriptionText->text = $validated['question_image_text'];
+                    $descriptionText->save();
+                }
+                else{
+                    $descriptionText = QuestionText::create(['text' => $validated['question_image_text']]);
+                    $question->components()->create([
+                        'role' => 'description',
+                        'component_type' => QuestionText::class,
+                        'component_id' => $descriptionText->id,
+                        'order' => $order,
+                    ]);
+                    $order++;
+                }
+                
+            }
+            if(isset($validated[$role.'_image'])){
+                $file = $validated[$role.'_image'];
+                $path = $file->store('questions/images', 'public');
+                $imageSizes = getimagesize($file->getRealPath());
+                $width = $imageSizes[0] ?? null;
+                $height = $imageSizes[1] ?? null;
+
+                $item->path = $path;
+                $item->mime_type = $file->getClientMimeType();
+                $item->size=$file->getSize();
+                $item->width=$width;
+                $item->height=$height;
+            }
+
+            if(isset($validated[$role.'_image_alt'])){
+                $item->alt_text = $validated[$role.'_image_alt'];
+            }
+            
+            if($order!=1){
+                $question->answer->order = $order;
+                $question->answer->update();
+            }
+
+        }
+        
+        $item->update();
     }
 
     /**
