@@ -51,7 +51,7 @@ class BankController extends Controller
         Bank::create([ 
             'name' => $validated['name'], 
             'description' => $validated['description'], 
-            'user_id'=> auth()->id(),
+            'user_id'=> Auth::id(),
             'public'=> FALSE,
             'collaborative'=> FALSE,
             'hidden'=> FALSE,
@@ -68,7 +68,7 @@ class BankController extends Controller
     public function show(string $id)
     {
         $bank = Bank::findOrFail($id);
-        $user = Auth::user();
+        $user = request()->user();
         if ($user->cannot('view', $bank)){
             return redirect()->route('home');
         }
@@ -86,7 +86,7 @@ class BankController extends Controller
     public function edit(string $id)
     {
         $bank = Bank::findOrFail($id);
-        $user = Auth::user();
+        $user = request()->user();
         if ($user->cannot('update', $bank)){
             return redirect()->route('home');
         }
@@ -153,7 +153,7 @@ class BankController extends Controller
     public function destroy(string $id)
     {
         $bank = Bank::findOrFail($id);
-        $user = Auth::user();
+        $user = request()->user();
         if ($user->can('delete', $bank)){
             $bank->hidden = TRUE;
             $bank->save();

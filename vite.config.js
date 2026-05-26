@@ -11,8 +11,16 @@ export default defineConfig({
         tailwindcss(),
     ],
     server: {
-        watch: {
-            ignored: ['**/storage/framework/views/**'],
+        host: '0.0.0.0',
+        port: 5173,
+        strictPort: true,
+        cors: {
+            origin: /https?:\/\/([A-Za-z0-9\-.]+)?(\.ddev\.site)(?::\d+)?$/,
+            credentials: true,
         },
-    },
+        hmr: {
+            host: 'testini.ddev.site', 
+            protocol: 'wss'
+        }
+    }
 });

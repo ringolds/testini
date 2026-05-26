@@ -26,6 +26,9 @@ class QuestionController extends Controller
      */
     public function create()
     {   
+        if(request()->user()->cannot('create', Question::class)){
+            return redirect()->route('home');
+        }
         $user = Auth::user();
         $banks = $user->banks->where('hidden', 0);
         $tests = $user->tests->where('hidden', 0);
@@ -37,6 +40,10 @@ class QuestionController extends Controller
      */
     public function store(Request $request)
     {
+        if(request()->user()->cannot('create', Question::class)){
+            return redirect()->route('home');
+        }
+
         $rules = [
             'question_type' => 'required|in:text,image,map',
             'answer_type'   => 'required|in:text,image,map',
@@ -155,14 +162,10 @@ class QuestionController extends Controller
         }
     }
 
-    private function createAnswerComponents(Question $question, Request $request){
-        
-    }
-
     /**
      * Display the specified resource.
      */
-    public function show(string $id)
+    public function show(Question $question)
     {
         //
     }
@@ -170,15 +173,24 @@ class QuestionController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(string $id)
+    public function edit(Question $question)
     {
-        //
+
+        if(request()->user()->cannot('update', $question)){
+            return redirect()->route('home');
+        }
+        
+        if (request()->ajax()) {
+            return view('questions.details_edit', compact('question'))->render();
+        }
+
+        return view('questions.edit', compact('question'));
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(Request $request, Question $question)
     {
         //
     }
@@ -186,7 +198,7 @@ class QuestionController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(string $id)
+    public function destroy(Question $question)
     {
         //
     }

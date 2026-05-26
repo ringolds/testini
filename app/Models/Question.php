@@ -45,4 +45,8 @@ class Question extends Model
     public function tags(){
         return $this->morphMany(Tag::class, 'taggable');
     }
+
+    public function resultItems(){
+        return $this->hasMany(ResultItems::class, 'question_id');
+    }
 }

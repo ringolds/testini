@@ -1,3 +1,4 @@
+@props(['question'])
 <div class="list-group-item d-flex justify-content-between align-items-center px-3 py-3 mb-2 bg-white rounded border shadow-sm" style="min-height: 68px;">
     
     <div class="d-flex align-items-center gap-4 flex-grow-1 overflow-hidden">
@@ -16,15 +17,33 @@
 
         <div class="text-muted opacity-25">|</div>
 
-        <div class="d-flex align-items-center gap-2 overflow-hidden" style="flex: 1;">
-            <strong class="text-secondary small text-uppercase tracking-wider">Answer:</strong>
-            <div class="text-success small fw-medium text-truncate">
-                {{ $answerSlot }}
+        <div class="d-flex align-items-center gap-2 overflow-hidden" style="flex: 1">
+            <div class="d-flex align-items-start gap-2 overflow-hidden" style="flex: 1">
+                <strong class="text-secondary small text-uppercase tracking-wider">Answer:</strong>
+                <div class="text-success small fw-medium text-truncate">
+                    {{ $answerSlot }}
+                </div>
+            </div>
+            <div>
+                <div class="d-flex justify-content-end align-items-center gap-2">
+                    @can('update', $question)
+                        <button type="button" 
+                            class="btn btn-warning edit-bank-btn d-flex align-items-center" 
+                            data-id="{{ $question->id}}">
+                            <i class="bi bi-pencil me-2"></i> Edit question
+                        </button>
+                    @endcan
+                    @can('delete', $question)
+                        <form class="d-inline m-0" action="{{ route('question.destroy', $question) }}" method="POST" onsubmit="return confirm('Are you sure you want to delete this question?');"> 
+                            @csrf 
+                            @method('DELETE') 
+                            <button type="submit" class="btn btn-danger">Delete</button> 
+                        </form>
+                    @endcan
+                </div>
             </div>
         </div>
-
     </div>
-
     <div class="ms-3 flex-shrink-0">
         <button class="btn btn-sm btn-outline-danger border-0">
             <i class="bi bi-trash"></i>
