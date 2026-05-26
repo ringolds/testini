@@ -40,7 +40,7 @@ class BankController extends Controller
                 'string',
                 'max:255',
                 Rule::unique('banks')->where(fn ($query) => 
-                    $query->where('user_id', Auth::id())
+                    $query->where('user_id', Auth::id())->whereNull('deleted_at')
                 ),
             ],
             'description' => 'required|min:5|max:500'
@@ -54,7 +54,6 @@ class BankController extends Controller
             'user_id'=> Auth::id(),
             'public'=> FALSE,
             'collaborative'=> FALSE,
-            'hidden'=> FALSE,
             'default'=> FALSE
         ]); 
 
@@ -115,7 +114,7 @@ class BankController extends Controller
                 'string',
                 'max:255',
                 Rule::unique('banks')->where(fn ($query) => 
-                    $query->where('user_id', Auth::id())
+                    $query->where('user_id', Auth::id())->whereNull('deleted_at')
                 )->ignore($id),
             ],
             'description' => 'required|min:5|max:500'
@@ -155,8 +154,7 @@ class BankController extends Controller
         $bank = Bank::findOrFail($id);
         $user = request()->user();
         if ($user->can('delete', $bank)){
-            $bank->hidden = TRUE;
-            $bank->save();
+            $bank->delete();
 
             if (request()->ajax()) {
                 return response()->json(['success' => true, 'id' => $id]);

@@ -2,8 +2,9 @@ let type;
 let content;
 let button;
 let editButton;
-let deleteButton;
+let deleteForm;
 let editForm;
+let firstId;
 
 function loadCollection(id) {
     $(content).css('opacity', '0.5');
@@ -43,19 +44,19 @@ function editCollection(id) {
 function deleteCollection(id) {
     $(content).css('opacity', '0.5');
 
-    if(confirm("Are you sure you want to delete this "+ type + "?")== TRUE){
-        $.ajax({
-            url: '/' + type + '/' + id,
-            type: 'DELETE',
-            success: function(response) {
-                loadCollection(firstId)
-            },
-            error: function() {
-                alert('Could not delete ' +type+ '.');
-                $(content).css('opacity', '1');
-            }
-        });
-    }
+    $.ajax({
+        url: '/' + type + '/' + id,
+        type: 'DELETE',
+        success: function(response) {
+            loadCollection(firstId)
+            $('#btn-' + id).remove();
+            alert("deleted")
+        },
+        error: function() {
+            alert('Could not delete ' +type+ '.');
+            $(content).css('opacity', '1');
+        }
+    });
 }
 
 $(document).ready(function() {
@@ -69,7 +70,7 @@ $(document).ready(function() {
     content = '#' + type + '-content';
     button = '.' + type + '-btn';
     editButton = '.edit-' + type + '-btn';
-    deleteButton = '.delete-' + type + '-btn';
+    deleteForm = '#delete-' + type + '-form';
     editForm = '#edit-' + type + '-form';
 
     $(button).on('click', function() {
@@ -82,7 +83,11 @@ $(document).ready(function() {
         editCollection(id);
     });
 
-    $(document).on('click', deleteButton, function() {
+    $(document).on('submit', deleteForm, function(e) {
+        if (e.isDefaultPrevented()) return;
+        
+        e.preventDefault();
+
         const id = $(this).data('id');
         deleteCollection(id);
     });
@@ -119,7 +124,7 @@ $(document).ready(function() {
         });
     });
 
-    const firstId = $(button).first().data('id');
+    firstId = $(button).first().data('id');
 
     if (firstId) {
         loadCollection(firstId);

@@ -21,7 +21,7 @@ class BankPolicy
      */
     public function view(User $user, Bank $bank): bool
     {
-        return ((($user->id === $bank->user_id) || ($bank->public==TRUE)) && $bank->hidden==FALSE) || ($user->is_admin) ;
+        return ((($user->id === $bank->user_id) || ($bank->public==TRUE)) && $bank->deleted_at==NULL) || ($user->is_admin) ;
     }
 
     /**
@@ -37,7 +37,7 @@ class BankPolicy
      */
     public function update(User $user, Bank $bank): bool
     {
-        return ($user->id === $bank->user_id && $bank->default == FALSE) || $user->is_admin;
+        return (($user->id === $bank->user_id && $bank->default == FALSE) || $user->is_admin) && $bank->deleted_at==NULL;
     }
 
     /**
@@ -45,7 +45,7 @@ class BankPolicy
      */
     public function delete(User $user, Bank $bank): bool
     {
-        return ($user->id === $bank->user_id || $user->is_admin) && $bank->default == FALSE;
+        return ($user->id === $bank->user_id || $user->is_admin) && $bank->default == FALSE && $bank->deleted_at==NULL;
     }
 
     /**
