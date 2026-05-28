@@ -231,8 +231,8 @@ class QuestionController extends Controller
                 'html'    => $html
             ]);
         }
-        //return redirect()->back()->with('success', 'Question edited successfully!');
-        return redirect()->route('bank.create');
+        
+        return redirect()->route('home');
     }
 
     private function editQuestionComponents(Question $question, array $validated, string $role){
@@ -303,8 +303,19 @@ class QuestionController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Question $question)
+    public function destroy(Request $request, Question $question)
     {
-        //
+        $user = $request->user();
+        if ($user->can('delete', $question)){
+            $question->delete();
+
+            if (request()->ajax()) {
+                return response()->json(['success' => true, 'id' => $question->id]);
+            }
+        
+            return redirect()->route('home');
+        }
+
+        return redirect()->route('home');
     }
 }

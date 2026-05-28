@@ -17,6 +17,23 @@ function editQuestion(id) {
     });
 }
 
+function deleteQuestion(id) {
+    $('#question-content').css('opacity', '0.5');
+
+    $.ajax({
+        url: '/question/' + id,
+        type: 'DELETE',
+        success: function(response) {
+            $('#question-'+id).remove();
+            $('#question-content').css('opacity', '1');
+        },
+        error: function() {
+            alert('Could not delete question.');
+            $('#question-content').css('opacity', '1');
+        }
+    });
+}
+
 $(document).ready(function() {
     $.ajaxSetup({
         headers: {
@@ -72,5 +89,13 @@ $(document).ready(function() {
         });
     });
 
-    
+    $(document).on('submit', '#delete-question-form', function(e) {
+        if (e.isDefaultPrevented()) return;
+        
+        e.preventDefault();
+
+        const id = $(this).data('id');
+        deleteQuestion(id);
+    });
+
 });

@@ -45,7 +45,7 @@ class QuestionPolicy
      */
     public function delete(User $user, Question $question): bool
     {
-        return ($question->user_id === $user->id) && !($question->resultItems()->exists());
+        return ($question->user_id === $user->id);
     }
 
     /**
