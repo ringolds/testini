@@ -44,7 +44,7 @@
                             </form>
                         @endcan
                         @if($target && $target->default==FALSE)
-                            <form class="d-inline m-0" id="remove-question-form" data-id="{{ $question->id}}" action="{{ route('question.removeFromBank', ['question' => $question->id, 'bank' => $currentItemId]) }}" method="POST" onsubmit="return confirm('Are you sure you want to remove this question?');"> 
+                            <form class="d-inline m-0" id="remove-question-form" data-target-id="{{$currentItemId}}" data-id="{{ $question->id}}" action="{{ route('question.removeFromBank', ['question' => $question->id, 'bank' => $currentItemId]) }}" method="POST" onsubmit="return confirm('Are you sure you want to remove this question?');"> 
                                 @csrf 
                                 @method('DELETE') 
                                 <button type="submit" class="btn btn-danger remove-question-btn">Remove</button> 

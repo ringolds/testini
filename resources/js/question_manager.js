@@ -145,7 +145,7 @@ $(document).ready(function() {
         
         e.preventDefault();
 
-        let target = $('#bank-content').data('id');
+        const target = $(this).data('targetId');
         const id = $(this).data('id');
         removeQuestion(id, target);
     });
