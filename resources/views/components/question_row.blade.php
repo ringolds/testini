@@ -56,14 +56,9 @@
                 <div>
                     <div class="d-flex justify-content-end align-items-center gap-2">
                         @if(!$isInCurrentBank)
-                            <button type="button" 
-                                class="btn btn-warning edit-question-btn d-flex align-items-center" 
-                                data-id="{{ $question->id}}">
-                                <i class="bi bi-pencil me-2"></i> Move question
-                            </button>
                             <form class="d-inline m-0" id="add-existing-question-form" data-id="{{ $question->id}}" action="{{ route('question.addToBank', ['question' => $question->id, 'bank' => $currentItemId]) }}" method="POST"> 
                                 @csrf
-                                <button type="submit" class="btn btn-danger delete-question-btn">Add question</button> 
+                                <button type="submit" class="btn btn-primary delete-question-btn">Add question</button> 
                             </form>
                         @endif
                     </div>

@@ -31,8 +31,15 @@ class QuestionController extends Controller
             return redirect()->route('home');
         }
         $user = Auth::user();
-        $banks = $user->banks->where('hidden', 0);
-        $tests = $user->tests->where('hidden', 0);
+        $banks = $user->banks;
+        $tests = $user->tests;
+
+        if(request()->ajax()){
+            $type = request()->query('type');
+            $target_id = request()->query('id');
+
+            return view('questions.create_details', compact('banks', 'tests', 'type', 'target_id'));
+        }
         return view('questions.create', compact('banks', 'tests'));
     }
 
@@ -46,6 +53,7 @@ class QuestionController extends Controller
         }
 
         $rules = [
+            'type' => 'required|in:separate,bank,test',
             'question_type' => 'required|in:text,image,map',
             'answer_type'   => 'required|in:text,image,map',
             'bank_id' => [
@@ -90,11 +98,26 @@ class QuestionController extends Controller
         });
 
         if ($request->ajax()) {
-            return response()->json(['success' => true, 'message' => 'Question created!']);
+            if ($validated['type'] == 'test') {
+                $item = Test::findOrFail($validated['test_id']);
+            } 
+            else if($validated['type'] == 'bank'){
+                $item = Bank::findOrFail($validated['bank_id']);
+            }
+            else{
+                return redirect()->back()->with('success', 'Question created successfully!');
+            }
+
+            $mode = "manage";
+
+            $html = view('components.question_block', compact('item', 'mode'))->render();
+
+            return response()->json([
+                'success' => true,
+                'html'    => $html
+            ]);
         }
         return redirect()->back()->with('success', 'Question created successfully!');
-
-
     }
 
     private function createQuestionComponents(Question $question, Request $request, string $role){

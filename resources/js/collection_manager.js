@@ -7,6 +7,7 @@ let editForm;
 let firstId;
 let firstMode;
 let addExistingQuestionButton;
+let addNewQuestionButton;
 
 function loadCollection(id, mode, target_id) {
     $(content).css('opacity', '0.5');
@@ -37,6 +38,22 @@ function editCollection(id) {
 
     $.ajax({
         url: '/' +type + '/' + id + '/edit',
+        type: 'GET',
+        success: function(response) {
+            $(content).html(response).css('opacity', '1');
+        },
+        error: function() {
+            alert('Could not load edit form.');
+            $(content).css('opacity', '1');
+        }
+    });
+}
+
+function addNewQuestion(id) {
+    $(content).css('opacity', '0.5');
+
+    $.ajax({
+        url: '/question/create?type='+type+'&id='+id,
         type: 'GET',
         success: function(response) {
             $(content).html(response).css('opacity', '1');
@@ -97,6 +114,7 @@ $(document).ready(function() {
     deleteForm = '#delete-' + type + '-form';
     editForm = '#edit-' + type + '-form';
     addExistingQuestionButton = '.add-existing-question-' + type + '-btn';
+    addNewQuestionButton = '.add-new-question-btn';
 
     // $(button).on('click', function() {
     //     const id = $(this).data('id');
@@ -114,6 +132,47 @@ $(document).ready(function() {
     $(document).on('click', editButton, function() {
         const id = $(this).data('id');
         editCollection(id);
+    });
+
+    $(document).on('click', addNewQuestionButton, function() {
+        const id = $(this).data('id');
+        addNewQuestion(id);
+    });
+
+    $(document).on('submit', '#create-question-form', function(e) {
+        e.preventDefault();
+
+        let form = $(this);
+
+        form.find('.is-invalid').removeClass('is-invalid');
+        form.find('.invalid-feedback').text('');
+
+        let formData = new FormData(this);
+
+        $.ajax({
+            url: '/question',
+            type: 'POST',
+            data: formData,
+            processData: false,
+            contentType: false,
+            success: function(response) {
+                $(content).html(response.html).css('opacity', '1');
+            },
+            error: function(xhr) {
+                if (xhr.status === 422) {
+                    let errors = xhr.responseJSON.errors;
+                    
+                    $.each(errors, function(key, messages) {
+                        let input = form.find(`[name="${key}"]`);
+                        input.addClass('is-invalid');
+                        input.siblings('.invalid-feedback').text(messages[0]);
+                    });
+                } else {
+                    alert('An unexpected error occurred.');
+                }
+            }
+        });
+
     });
 
     $(document).on('click', addExistingQuestionButton, function() {
