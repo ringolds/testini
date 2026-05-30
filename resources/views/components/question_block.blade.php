@@ -1,7 +1,7 @@
-@props(['item'])
+@props(['item', 'mode'])
 <div class="list-group list-group-flush mt-3" id="question-content">
             @forelse($item->questions as $question)
-                <x-question_row :question="$question">
+                <x-question_row :question="$question" :mode="$mode">
                     <x-slot:questionSlot>
                         @if($question->prompt && $question->prompt->component)
                             @php

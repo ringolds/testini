@@ -41,7 +41,6 @@ class AuthController extends Controller
             'description' => "Default bank created at registration",
             'public'=> FALSE,
             'collaborative'=> FALSE,
-            'hidden'=> FALSE,
             'default'=> TRUE
         ]);
 

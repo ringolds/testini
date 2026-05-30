@@ -59,7 +59,7 @@ $(document).ready(function() {
 
         let formData = new FormData(this);
 
-        let activeId = $(button + '.btn-primary').data('id');
+        let activeId = $('#'+ type + '-content').data('id');
 
         formData.append('content_type', type);
         formData.append('content_id', activeId);

@@ -16,9 +16,10 @@ class BankController extends Controller
     public function index()
     {
         $user = Auth::user();
-        $banks = $user->banks->where('hidden', 0);
+        $banks = $user->banks;
+        $mode = "manage";
     
-        return view('banks.index', compact('banks'));
+        return view('banks.index', compact('banks', 'mode'));
     }
 
     /**
@@ -64,27 +65,27 @@ class BankController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(string $id)
+    public function show(Bank $bank)
     {
-        $bank = Bank::findOrFail($id);
         $user = request()->user();
         if ($user->cannot('view', $bank)){
             return redirect()->route('home');
         }
 
+        $mode = request()->query('mode', 'manage');
+
         if (request()->ajax()) {
-            return view('banks.details', compact('bank'))->render();
+            return view('banks.details', compact('bank', 'mode'))->render();
         }
 
-        return view('banks.show', compact('bank'));
+        return view('banks.show', compact('bank', 'mode'));
     }
 
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(string $id)
+    public function edit(Bank $bank)
     {
-        $bank = Bank::findOrFail($id);
         $user = request()->user();
         if ($user->cannot('update', $bank)){
             return redirect()->route('home');
@@ -100,9 +101,8 @@ class BankController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(Request $request, Bank $bank)
     {
-        $bank = Bank::findOrFail($id);
 
         if($request->user()->cannot('update', $bank)){
             return redirect()->route('home');
@@ -115,7 +115,7 @@ class BankController extends Controller
                 'max:255',
                 Rule::unique('banks')->where(fn ($query) => 
                     $query->where('user_id', Auth::id())->whereNull('deleted_at')
-                )->ignore($id),
+                )->ignore($bank->id),
             ],
             'description' => 'required|min:5|max:500'
         );    
@@ -149,18 +149,27 @@ class BankController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(string $id)
+    public function destroy(Bank $bank)
     {
-        $bank = Bank::findOrFail($id);
         $user = request()->user();
         if ($user->can('delete', $bank)){
             $bank->delete();
 
             if (request()->ajax()) {
-                return response()->json(['success' => true, 'id' => $id]);
+                return response()->json(['success' => true, 'id' => $bank->id]);
             }
 
             return redirect()->route('bank.index');
         }
+    }
+
+    public function addQuestion(Bank $bank){
+        $user = request()->user();
+        $banks = $user->banks()->where('id', '!=', $bank->id)->get();
+        $mode = "add";
+        if (request()->ajax()) {
+                return view('banks.index_details', compact('banks', 'mode'))->render();
+            }
+        return view('banks.index', compact('banks', 'mode'));
     }
 }

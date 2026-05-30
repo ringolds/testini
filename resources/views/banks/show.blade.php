@@ -1,8 +1,9 @@
+@vite('resources/js/collection_manager.js')
 <x-layout>
     <x-slot name="title"> 
         {{$bank->name}} 
     </x-slot>
-    <div id="bank-content">
-        @include('banks.details', ['bank' => $bank])
+    <div id="bank-content" data-id="{{$bank->id}}">
+        @include('banks.details', ['bank' => $bank, 'mode' => $mode])
     </div>
 </x-layout>

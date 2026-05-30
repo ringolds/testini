@@ -12,7 +12,8 @@ Route::get('/', function () {
 Route::middleware('auth')->group(function() {
     Route::resource('bank', BankController::class); 
     Route::resource('question', QuestionController::class);
-    Route::post('/logout', [AuthController::class, 'logout']) ->name('logout');    
+    Route::post('/logout', [AuthController::class, 'logout']) ->name('logout');  
+    Route::get('/bank/{bank}/questions', [BankController::class, 'addQuestion']) ->name('addQuestion');  
 });
 
 Route::middleware('guest')->group(function() {

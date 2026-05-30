@@ -82,7 +82,7 @@ class QuestionController extends Controller
 
             $question->banks()->syncWithoutDetaching([$validated['bank_id']]);
             if($validated['bank_id']!=$defaultBank){
-                 $question->banks()->syncWithoutDetaching($defaultBank);
+                $question->banks()->syncWithoutDetaching($defaultBank);
             }
             if (!is_null($validated['test_id'])) {
                 $question->tests()->syncWithoutDetaching([$validated['test_id']]);
@@ -224,7 +224,9 @@ class QuestionController extends Controller
                 $item = Bank::findOrFail($request->input('content_id'));
             }
 
-            $html = view('components.question_block', compact('item'))->render();
+            $mode = "manage";
+
+            $html = view('components.question_block', compact('item', 'mode'))->render();
 
             return response()->json([
                 'success' => true,

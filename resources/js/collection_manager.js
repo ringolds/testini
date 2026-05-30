@@ -5,18 +5,22 @@ let editButton;
 let deleteForm;
 let editForm;
 let firstId;
+let firstMode;
+let addExistingQuestionButton;
 
-function loadCollection(id) {
+function loadCollection(id, mode) {
     $(content).css('opacity', '0.5');
 
     $.ajax({
-        url: '/' + type + '/' + id,
+        url: '/' + type + '/' + id + '?mode=' + mode,
         type: 'GET',
         success: function(response) {
-            $(content).html(response).css('opacity', '1');
+            $(content+'[data-mode="' + mode + '"]').html(response).css('opacity', '1');
+            $(content).css('opacity', '1');
             
-            $(button).removeClass('btn-primary').addClass('btn-outline-primary');
-            $('#btn-' + id).removeClass('btn-outline-primary').addClass('btn-primary');
+            $(button+'[data-mode="' + mode + '"').removeClass('btn-primary').addClass('btn-outline-primary');
+            $('#btn-' + id+'[data-mode="' + mode + '"').removeClass('btn-outline-primary').addClass('btn-primary');
+            $(content+'[data-mode="' + mode + '"]').attr('data-id', id);
         },
         error: function() {
             alert('Could not load' +type + ' details.');
@@ -48,12 +52,28 @@ function deleteCollection(id) {
         url: '/' + type + '/' + id,
         type: 'DELETE',
         success: function(response) {
-            loadCollection(firstId)
+            loadCollection(firstId, firstMode)
             $('#btn-' + id).remove();
             alert("deleted")
         },
         error: function() {
             alert('Could not delete ' +type+ '.');
+            $(content).css('opacity', '1');
+        }
+    });
+}
+
+function addExistingQuestion(id){
+    $(content).css('opacity', '0.5');
+
+    $.ajax({
+        url: '/' + type + '/' + id + '/questions',
+        type: 'GET',
+        success: function(response) {
+            $(content).html(response).css('opacity', '1');
+        },
+        error: function() {
+            alert('Could not load question adding.');
             $(content).css('opacity', '1');
         }
     });
@@ -72,10 +92,18 @@ $(document).ready(function() {
     editButton = '.edit-' + type + '-btn';
     deleteForm = '#delete-' + type + '-form';
     editForm = '#edit-' + type + '-form';
+    addExistingQuestionButton = '.add-existing-question-' + type + '-btn';
 
-    $(button).on('click', function() {
+    // $(button).on('click', function() {
+    //     const id = $(this).data('id');
+    //     const mode =$(this).data('mode');
+    //     loadCollection(id, mode);
+    // });
+
+    $(document).on('click', button, function() {
         const id = $(this).data('id');
-        loadCollection(id);
+        const mode =$(this).data('mode');
+        loadCollection(id, mode);
     });
 
     $(document).on('click', editButton, function() {
@@ -83,9 +111,14 @@ $(document).ready(function() {
         editCollection(id);
     });
 
+    $(document).on('click', addExistingQuestionButton, function() {
+        const id = $(content).data('id');
+        addExistingQuestion(id);
+    });
+
     $(document).on('submit', deleteForm, function(e) {
         if (e.isDefaultPrevented()) return;
-        
+
         e.preventDefault();
 
         const id = $(this).data('id');
@@ -125,8 +158,9 @@ $(document).ready(function() {
     });
 
     firstId = $(button).first().data('id');
+    firstMode = $(button).first().data('mode');
 
     if (firstId) {
-        loadCollection(firstId);
+        loadCollection(firstId, firstMode);
     }
 });
