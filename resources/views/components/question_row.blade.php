@@ -1,10 +1,10 @@
 @props(['question', 'mode', 'currentItemId'])
 @php
     $isInCurrentBank = $question->banks->contains($currentItemId);
+    $target = $question->banks->firstwhere('id', $currentItemId);
 @endphp
 <div id="question-{{$question->id}}" class="list-group-item d-flex justify-content-between align-items-center px-3 py-3 mb-2 bg-white rounded border shadow-sm" style="min-height: 68px;">
     <div class="d-flex align-items-center gap-4 flex-grow-1 overflow-hidden">
-        
         <div class="d-flex align-items-center gap-2 overflow-hidden" style="flex: 1;">
             <strong class="text-secondary small text-uppercase tracking-wider">Question:</strong>
             <div class="text-dark small fw-medium text-truncate">
@@ -43,6 +43,13 @@
                                 <button type="submit" class="btn btn-danger delete-question-btn">Delete</button> 
                             </form>
                         @endcan
+                        @if($target && $target->default==FALSE)
+                            <form class="d-inline m-0" id="remove-question-form" data-id="{{ $question->id}}" action="{{ route('question.removeFromBank', ['question' => $question->id, 'bank' => $currentItemId]) }}" method="POST" onsubmit="return confirm('Are you sure you want to remove this question?');"> 
+                                @csrf 
+                                @method('DELETE') 
+                                <button type="submit" class="btn btn-danger remove-question-btn">Remove</button> 
+                            </form>
+                        @endif
                     </div>
                 </div>
             @elseif($mode == "add")

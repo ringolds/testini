@@ -67,6 +67,11 @@ class QuestionPolicy
 
     public function addQuestionToBank(User $user, Question $question, Bank $bank):bool
     {
-        return !$bank->questions()->where('id', $question->id)->exists() && $bank->user_id === $user->id;
+        return !$bank->questions()->where('id', $question->id)->exists() && $bank->user_id === $user->id && $bank->default==false;
+    }
+
+    public function removeQuestionFromBank(User $user, Question $question, Bank $bank):bool
+    {
+        return $bank->questions()->where('id', $question->id)->exists() && $bank->user_id === $user->id && $bank->default==false;
     }
 }

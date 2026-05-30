@@ -25,9 +25,27 @@ function addToBank(id, target_id) {
         type: 'POST',
         success: function(response) {
             $('#bank-content').html(response.html).css('opacity', '1');
+            $('#bank-content').attr('data-target-id', target_id);
         },
         error: function() {
             alert('Could not add question.');
+            $('#question-content').css('opacity', '1');
+        }
+    });
+}
+
+function removeQuestion(id, target) {
+    $('#question-content').css('opacity', '0.5');
+
+    $.ajax({
+        url: '/question/' + id + '/bank/' + target,
+        type: 'DELETE',
+        success: function(response) {
+            $('#question-'+id).remove();
+            $('#question-content').css('opacity', '1');
+        },
+        error: function() {
+            alert('Could not delete question.');
             $('#question-content').css('opacity', '1');
         }
     });
@@ -120,6 +138,16 @@ $(document).ready(function() {
 
         const id = $(this).data('id');
         deleteQuestion(id);
+    });
+
+    $(document).on('submit', '#remove-question-form', function(e) {
+        if (e.isDefaultPrevented()) return;
+        
+        e.preventDefault();
+
+        let target = $('#bank-content').data('id');
+        const id = $(this).data('id');
+        removeQuestion(id, target);
     });
 
 });

@@ -8,10 +8,11 @@ let firstId;
 let firstMode;
 let addExistingQuestionButton;
 
-function loadCollection(id, mode) {
+function loadCollection(id, mode, target_id) {
     $(content).css('opacity', '0.5');
-    let target_id = document.querySelector(content).getAttribute('data-target-id');
-
+    if(mode == "add"){
+        target_id = document.querySelector(content).getAttribute('data-target-id');
+    }
     $.ajax({
         url: '/' + type + '/' + id + '?mode=' + mode+'&target-id='+target_id,
         type: 'GET',
@@ -22,6 +23,7 @@ function loadCollection(id, mode) {
             $(button+'[data-mode="' + mode + '"').removeClass('btn-primary').addClass('btn-outline-primary');
             $('#btn-' + id+'[data-mode="' + mode + '"').removeClass('btn-outline-primary').addClass('btn-primary');
             $(content+'[data-mode="' + mode + '"]').attr('data-id', id);
+            $(content).attr('data-target-id', target_id)
         },
         error: function() {
             alert('Could not load' +type + ' details.');
@@ -53,7 +55,7 @@ function deleteCollection(id) {
         url: '/' + type + '/' + id,
         type: 'DELETE',
         success: function(response) {
-            loadCollection(firstId, firstMode)
+            loadCollection(firstId, firstMode, firstId)
             $('#btn-' + id).remove();
             alert("deleted")
         },
@@ -72,7 +74,7 @@ function addExistingQuestion(id){
         type: 'GET',
         success: function(response) {
             $(content).html(response).css('opacity', '1');
-            $(content).attr('data-target-id', id);
+            // $(content).attr('data-target-id', id);
         },
         error: function() {
             alert('Could not load question adding.');
@@ -105,7 +107,8 @@ $(document).ready(function() {
     $(document).on('click', button, function() {
         const id = $(this).data('id');
         const mode =$(this).data('mode');
-        loadCollection(id, mode);
+
+        loadCollection(id, mode, id);
     });
 
     $(document).on('click', editButton, function() {
@@ -141,7 +144,7 @@ $(document).ready(function() {
             data: form.serialize(),
             success: function(response) {
                 $(`#btn-${response.id}`).text(response.name);
-                loadCollection(response.id);
+                loadCollection(response.id, "manage", response.id);
             },
             error: function(xhr) {
                 if (xhr.status === 422) {
@@ -163,6 +166,6 @@ $(document).ready(function() {
     firstMode = $(button).first().data('mode');
 
     if (firstId) {
-        loadCollection(firstId, firstMode);
+        loadCollection(firstId, firstMode, firstId);
     }
 });

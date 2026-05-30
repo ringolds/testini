@@ -72,8 +72,10 @@ class BankController extends Controller
             return redirect()->route('home');
         }
 
+        $bank->load('questions.banks');
+
         $mode = request()->query('mode', 'manage');
-        $target_id = request()->query('target-id', null);
+        $target_id = request()->query('target-id', $bank->id);
 
         if (request()->ajax()) {
             return view('banks.details', compact('bank', 'mode', 'target_id'))->render();

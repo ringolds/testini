@@ -328,7 +328,7 @@ class QuestionController extends Controller
             $question->banks()->syncWithoutDetaching([$bank->id]);
             
             $mode="manage";
-            $target_id = null;
+            $target_id = $bank->id;
 
             if ($request->ajax()) {
                 $mode = "manage";
@@ -342,6 +342,30 @@ class QuestionController extends Controller
 
             return view('banks.show', compact('bank', 'mode', 'target_id'));
         }
-        return redirect()->route('bank');
+        return redirect()->route('home');
+    }
+
+    public function removeFromBank(Request $request, Question $question, Bank $bank){
+        $user = $request->user();
+        if ($user->can('removeQuestionFromBank', [$question, $bank])){
+            
+            $question->banks()->detach([$bank->id]);
+            
+            $mode="manage";
+            $target_id = $bank->id;
+
+            if ($request->ajax()) {
+                $mode = "manage";
+                $html = view('banks.details', compact('bank', 'mode', 'target_id'))->render();
+
+                return response()->json([
+                    'success' => true,
+                    'html'    => $html
+                ]);
+            }
+
+            return view('banks.show', compact('bank', 'mode', 'target_id'));
+        }
+        return redirect()->route('home');
     }
 }
