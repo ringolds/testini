@@ -63,4 +63,9 @@ class BankPolicy
     {
         return false;
     }
+
+    public function addExistingQuestion(User $user, Bank $bank): bool
+    {
+        return ($user->id === $bank->user_id || $user->is_admin) && $bank->default == FALSE && $bank->deleted_at==NULL;
+    }
 }

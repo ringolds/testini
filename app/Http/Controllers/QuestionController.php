@@ -320,4 +320,28 @@ class QuestionController extends Controller
 
         return redirect()->route('home');
     }
+
+    public function addToBank(Request $request, Question $question, Bank $bank){
+        $user = $request->user();
+        if ($user->can('addQuestionToBank', [$question, $bank])){
+            
+            $question->banks()->syncWithoutDetaching([$bank->id]);
+            
+            $mode="manage";
+            $target_id = null;
+
+            if ($request->ajax()) {
+                $mode = "manage";
+                $html = view('banks.details', compact('bank', 'mode', 'target_id'))->render();
+
+                return response()->json([
+                    'success' => true,
+                    'html'    => $html
+                ]);
+            }
+
+            return view('banks.show', compact('bank', 'mode', 'target_id'));
+        }
+        return redirect()->route('bank');
+    }
 }

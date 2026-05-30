@@ -17,6 +17,22 @@ function editQuestion(id) {
     });
 }
 
+function addToBank(id, target_id) {
+    $('#question-content').css('opacity', '0.5');
+
+    $.ajax({
+        url: '/question/' + id + '/bank/'+ target_id,
+        type: 'POST',
+        success: function(response) {
+            $('#bank-content').html(response.html).css('opacity', '1');
+        },
+        error: function() {
+            alert('Could not add question.');
+            $('#question-content').css('opacity', '1');
+        }
+    });
+}
+
 function deleteQuestion(id) {
     $('#question-content').css('opacity', '0.5');
 
@@ -87,6 +103,14 @@ $(document).ready(function() {
                 }
             }
         });
+    });
+
+    $(document).on('submit', '#add-existing-question-form', function(e) {
+        e.preventDefault();
+        
+        let target = $('#bank-content').data('targetId');
+        const id = $(this).data('id');
+        addToBank(id, target)
     });
 
     $(document).on('submit', '#delete-question-form', function(e) {

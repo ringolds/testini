@@ -29,7 +29,7 @@
         @endforeach
     </div>
 </div>
-<div id="bank-content" data-id=0 data-mode="{{$mode}}">
+<div id="bank-content" data-id=0 data-mode="{{$mode}}" data-target-id="{{$target_id}}">
     <div class="text-center py-5 text-muted">
         Select a bank above to view questions.
     </div>

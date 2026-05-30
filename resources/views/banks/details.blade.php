@@ -5,7 +5,7 @@
     </div>
     <div class="card-body">
         <p class="text-muted small">{{ $bank->description }}</p>
-        <x-question_block :item="$bank" :mode="$mode"></x-question_block>
+        <x-question_block :item="$bank" :mode="$mode" :currentItemId="$target_id"></x-question_block>
     </div>
     <div class="card-footer bg-white py-2">
         <div class="d-flex justify-content-end align-items-center gap-2">
@@ -24,10 +24,12 @@
                         <button type="submit" class="btn btn-danger delete-bank-btn">Delete</button> 
                     </form>
                 @endcan
+                @can('addExistingQuestion', $bank)
                     <button type="button" class="btn btn-info add-existing-question-bank-btn d-flex align-items-center" 
                         data-id="{{ $bank->id }}">
                         <i class="bi bi-pencil me-2"></i> Add existing question
                     </button>
+                @endcan
             @endif
         </div>
     </div>

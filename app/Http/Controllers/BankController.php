@@ -18,8 +18,8 @@ class BankController extends Controller
         $user = Auth::user();
         $banks = $user->banks;
         $mode = "manage";
-    
-        return view('banks.index', compact('banks', 'mode'));
+        $target_id = null;
+        return view('banks.index', compact('banks', 'mode', 'target_id'));
     }
 
     /**
@@ -73,12 +73,13 @@ class BankController extends Controller
         }
 
         $mode = request()->query('mode', 'manage');
+        $target_id = request()->query('target-id', null);
 
         if (request()->ajax()) {
-            return view('banks.details', compact('bank', 'mode'))->render();
+            return view('banks.details', compact('bank', 'mode', 'target_id'))->render();
         }
 
-        return view('banks.show', compact('bank', 'mode'));
+        return view('banks.show', compact('bank', 'mode', 'target_id'));
     }
 
     /**
@@ -167,9 +168,10 @@ class BankController extends Controller
         $user = request()->user();
         $banks = $user->banks()->where('id', '!=', $bank->id)->get();
         $mode = "add";
+        $target_id = $bank->id;
         if (request()->ajax()) {
-                return view('banks.index_details', compact('banks', 'mode'))->render();
+                return view('banks.index_details', compact('banks', 'mode', 'target_id'))->render();
             }
-        return view('banks.index', compact('banks', 'mode'));
+        return view('banks.index', compact('banks', 'mode', 'target_id'));
     }
 }

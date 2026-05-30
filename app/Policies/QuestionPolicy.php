@@ -4,6 +4,7 @@ namespace App\Policies;
 
 use App\Models\Question;
 use App\Models\User;
+use App\Models\Bank;
 use Illuminate\Auth\Access\Response;
 
 class QuestionPolicy
@@ -62,5 +63,10 @@ class QuestionPolicy
     public function forceDelete(User $user, Question $question): bool
     {
         return false;
+    }
+
+    public function addQuestionToBank(User $user, Question $question, Bank $bank):bool
+    {
+        return !$bank->questions()->where('id', $question->id)->exists() && $bank->user_id === $user->id;
     }
 }

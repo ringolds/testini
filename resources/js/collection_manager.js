@@ -10,9 +10,10 @@ let addExistingQuestionButton;
 
 function loadCollection(id, mode) {
     $(content).css('opacity', '0.5');
+    let target_id = document.querySelector(content).getAttribute('data-target-id');
 
     $.ajax({
-        url: '/' + type + '/' + id + '?mode=' + mode,
+        url: '/' + type + '/' + id + '?mode=' + mode+'&target-id='+target_id,
         type: 'GET',
         success: function(response) {
             $(content+'[data-mode="' + mode + '"]').html(response).css('opacity', '1');
@@ -71,6 +72,7 @@ function addExistingQuestion(id){
         type: 'GET',
         success: function(response) {
             $(content).html(response).css('opacity', '1');
+            $(content).attr('data-target-id', id);
         },
         error: function() {
             alert('Could not load question adding.');
@@ -112,7 +114,7 @@ $(document).ready(function() {
     });
 
     $(document).on('click', addExistingQuestionButton, function() {
-        const id = $(content).data('id');
+        const id = $(addExistingQuestionButton).data('id');
         addExistingQuestion(id);
     });
 

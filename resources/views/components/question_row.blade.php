@@ -1,6 +1,8 @@
-@props(['question', 'mode'])
+@props(['question', 'mode', 'currentItemId'])
+@php
+    $isInCurrentBank = $question->banks->contains($currentItemId);
+@endphp
 <div id="question-{{$question->id}}" class="list-group-item d-flex justify-content-between align-items-center px-3 py-3 mb-2 bg-white rounded border shadow-sm" style="min-height: 68px;">
-    
     <div class="d-flex align-items-center gap-4 flex-grow-1 overflow-hidden">
         
         <div class="d-flex align-items-center gap-2 overflow-hidden" style="flex: 1;">
@@ -46,20 +48,17 @@
             @elseif($mode == "add")
                 <div>
                     <div class="d-flex justify-content-end align-items-center gap-2">
-                        @can('update', $question)
+                        @if(!$isInCurrentBank)
                             <button type="button" 
                                 class="btn btn-warning edit-question-btn d-flex align-items-center" 
                                 data-id="{{ $question->id}}">
                                 <i class="bi bi-pencil me-2"></i> Move question
                             </button>
-                        @endcan
-                        @can('delete', $question)
-                            <form class="d-inline m-0" id="delete-question-form" data-id="{{ $question->id}}" action="{{ route('question.destroy', $question) }}" method="POST" onsubmit="return confirm('Are you sure you want to delete this question?');"> 
-                                @csrf 
-                                @method('DELETE') 
+                            <form class="d-inline m-0" id="add-existing-question-form" data-id="{{ $question->id}}" action="{{ route('question.addToBank', ['question' => $question->id, 'bank' => $currentItemId]) }}" method="POST"> 
+                                @csrf
                                 <button type="submit" class="btn btn-danger delete-question-btn">Add question</button> 
                             </form>
-                        @endcan
+                        @endif
                     </div>
                 </div>
             @endif
