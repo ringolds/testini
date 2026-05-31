@@ -18,7 +18,10 @@
                     <hr>
                     <small class="text-uppercase text-secondary">Admin Tools</small>
                     <li class="nav-item">
-                        <a class="nav-link text-warning" href="/bank">Manage Banks</a>
+                        <a class="nav-link text-warning" href="/bank">Manage banks</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link text-warning" href="/map">Manage maps</a>
                     </li>
                 @endif
             @else

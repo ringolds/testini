@@ -13,7 +13,8 @@ class MapController extends Controller
      */
     public function index()
     {
-        return view('maps.index');
+        $maps = Map::all();
+        return view('maps.index', compact('maps'));
     }
 
     /**
