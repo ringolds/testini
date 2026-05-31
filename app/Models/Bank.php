@@ -15,7 +15,6 @@ class Bank extends Model
         'description',
         'public',
         'collaborative',
-        'hidden',
         'default'
     ];
 

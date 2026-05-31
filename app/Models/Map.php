@@ -8,8 +8,8 @@ class Map extends Model
 {
     protected $fillable = [
         'name',
-        'svh_path',
-        'js_config_path',
+        'js_path',
+        'svg_path'
     ];
 
     public function questionMaps(){
