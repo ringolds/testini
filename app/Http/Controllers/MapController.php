@@ -5,9 +5,18 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
 use App\Models\Map;
+use Illuminate\Routing\Controllers\Middleware;
+use Illuminate\Routing\Controllers\HasMiddleware;
 
-class MapController extends Controller
+class MapController extends Controller implements HasMiddleware
 {
+    public static function middleware(): array
+    {
+        return [
+            new Middleware('auth'),
+            new Middleware('admin', except: ['getConfig']),
+        ];
+    }
     /**
      * Display a listing of the resource.
      */
@@ -102,7 +111,7 @@ class MapController extends Controller
         }
         
         $map->update();
-        
+
         return redirect()->route('map.index')->with('success', 'Map registered successfully!');
     }
 

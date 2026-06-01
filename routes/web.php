@@ -10,9 +10,12 @@ Route::get('/', function () {
     return view('home');
 })->name('home');
 
+Route::middleware('admin')->group(function(){
+    Route::resource('map', MapController::class); 
+});
+
 Route::middleware('auth')->group(function() {
     Route::get('map/{map}/config', [MapController::class, 'getConfig'])->name('map.config'); 
-    Route::resource('map', MapController::class); 
     Route::resource('bank', BankController::class); 
     Route::resource('question', QuestionController::class);
     Route::post('/logout', [AuthController::class, 'logout']) ->name('logout');  

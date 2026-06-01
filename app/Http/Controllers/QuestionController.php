@@ -79,17 +79,29 @@ class QuestionController extends Controller
             'answer_text'         => 'required_if:answer_type,text|nullable|string|min:1|max:250',
             'answer_image'        => 'required_if:answer_type,image|nullable|image|max:2048',
             'answer_image_alt'  => 'nullable|string|max:250',
-            'question_map_id' => 'required_if:question_type,map|nullable|exists:maps,id|',
-            'question_map_text' => 'nullable|string|max:250',
-            'question_map_target' => ['required_if:question_type,map|nullable', 
-                new ValidMapTarget($request->input('question_map_id'))],
-            'answer_map_id' => 'required_if:answer_type,map|nullable|exists:maps,id',
-            'answer_map_target' => ['required_if:answer_type,map|nullable', 
-                new ValidMapTarget($request->input('answer_map_id'))],
         ];
 
         $defaultBank = Bank::where('user_id', Auth::id())->where('default', 1)->first();
         $validated = $request->validate($rules);
+
+        if($request->input('question_type')==='map'){
+            $rules = [
+                'question_map_id' => 'required_if:question_type,map|nullable|exists:maps,id|',
+                'question_map_text' => 'nullable|string|max:250',
+                'question_map_target' => ['required_if:question_type,map|nullable', 
+                    new ValidMapTarget($request->input('question_map_id'))],
+            ];
+            $request->validate($rules);
+        }
+
+        if($request->input('answer_type')==='map'){
+            $rules = [
+                'answer_map_id' => 'required_if:answer_type,map|nullable|exists:maps,id',
+                'answer_map_target' => ['required_if:answer_type,map|nullable', 
+                    new ValidMapTarget($request->input('answer_map_id'))],
+            ];
+            $request->validate($rules);
+        }
 
         DB::transaction(function () use ($request, $validated, $defaultBank) {
             
