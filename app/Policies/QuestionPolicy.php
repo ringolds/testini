@@ -5,6 +5,7 @@ namespace App\Policies;
 use App\Models\Question;
 use App\Models\User;
 use App\Models\Bank;
+use App\Models\Test;
 use Illuminate\Auth\Access\Response;
 
 class QuestionPolicy
@@ -73,5 +74,15 @@ class QuestionPolicy
     public function removeQuestionFromBank(User $user, Question $question, Bank $bank):bool
     {
         return $bank->questions()->where('id', $question->id)->exists() && $bank->user_id === $user->id && $bank->default==false;
+    }
+
+    public function addQuestionToTest(User $user, Question $question, Test $test):bool
+    {
+        return !$test->questions()->where('id', $question->id)->exists() && $test->user_id === $user->id;
+    }
+
+    public function removeQuestionFromTest(User $user, Question $question, Test $test):bool
+    {
+        return $test->questions()->where('id', $question->id)->exists() && $test->user_id === $user->id;
     }
 }

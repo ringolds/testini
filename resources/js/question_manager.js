@@ -17,15 +17,15 @@ function editQuestion(id) {
     });
 }
 
-function addToBank(id, target_id) {
+function addToCollection(id, target_id) {
     $('#question-content').css('opacity', '0.5');
 
     $.ajax({
-        url: '/question/' + id + '/bank/'+ target_id,
+        url: '/question/' + id + '/'+type+'/'+ target_id,
         type: 'POST',
         success: function(response) {
-            $('#bank-content').html(response.html).css('opacity', '1');
-            $('#bank-content').attr('data-target-id', target_id);
+            $('#'+type+'-content').html(response.html).css('opacity', '1');
+            $('#'+type+'-content').attr('data-target-id', target_id);
         },
         error: function() {
             alert('Could not add question.');
@@ -34,11 +34,12 @@ function addToBank(id, target_id) {
     });
 }
 
+
 function removeQuestion(id, target) {
     $('#question-content').css('opacity', '0.5');
 
     $.ajax({
-        url: '/question/' + id + '/bank/' + target,
+        url: '/question/' + id + '/' +type+'/' + target,
         type: 'DELETE',
         success: function(response) {
             $('#question-'+id).remove();
@@ -126,9 +127,9 @@ $(document).ready(function() {
     $(document).on('submit', '#add-existing-question-form', function(e) {
         e.preventDefault();
         
-        let target = $('#bank-content').data('targetId');
+        let target = $('#'+type+'-content').data('targetId');
         const id = $(this).data('id');
-        addToBank(id, target)
+        addToCollection(id, target)
     });
 
     $(document).on('submit', '#delete-question-form', function(e) {

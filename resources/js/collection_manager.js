@@ -9,28 +9,54 @@ let firstMode;
 let addExistingQuestionButton;
 let addNewQuestionButton;
 
-function loadCollection(id, mode, target_id) {
-    $(content).css('opacity', '0.5');
-    if(mode == "add"){
-        target_id = document.querySelector(content).getAttribute('data-target-id');
-    }
-    $.ajax({
-        url: '/' + type + '/' + id + '?mode=' + mode+'&target-id='+target_id,
-        type: 'GET',
-        success: function(response) {
-            $(content+'[data-mode="' + mode + '"]').html(response).css('opacity', '1');
-            $(content).css('opacity', '1');
-            
-            $(button+'[data-mode="' + mode + '"').removeClass('btn-primary').addClass('btn-outline-primary');
-            $('#btn-' + id+'[data-mode="' + mode + '"').removeClass('btn-outline-primary').addClass('btn-primary');
-            $(content+'[data-mode="' + mode + '"]').attr('data-id', id);
-            $(content).attr('data-target-id', target_id)
-        },
-        error: function() {
-            alert('Could not load' +type + ' details.');
-            $(content).css('opacity', '1');
+function loadCollection(id, mode, target_id, optional_type=null) {
+    if(optional_type!=null){
+       $('#' + optional_type + '-content').css('opacity', '0.5');
+        if(mode == "add"){
+            target_id = document.querySelector('#' + optional_type + '-content').getAttribute('data-target-id');
         }
-    });
+        $.ajax({
+            url: '/' + optional_type + '/' + id + '?mode=' + mode+'&target-id='+target_id+'&type='+type,
+            type: 'GET',
+            success: function(response) {
+                $('#' + optional_type + '-content'+'[data-mode="' + mode + '"]').html(response).css('opacity', '1');
+                $('#' + optional_type + '-content').css('opacity', '1');
+                
+                $('.' + type + '-btn'+'[data-mode="' + mode + '"').removeClass('btn-primary').addClass('btn-outline-primary');
+                $('#btn-' + id+'[data-mode="' + mode + '"').removeClass('btn-outline-primary').addClass('btn-primary');
+                $('#' + optional_type + '-content'+'[data-mode="' + mode + '"]').attr('data-id', id);
+                $('#' + optional_type + '-content').attr('data-target-id', target_id)
+            },
+            error: function() {
+                alert('Could not load' +optional_type + ' details.');
+                $('#' + optional_type + '-content').css('opacity', '1');
+            }
+        }); 
+    }
+    else{
+        $(content).css('opacity', '0.5');
+        if(mode == "add"){
+            target_id = document.querySelector(content).getAttribute('data-target-id');
+        }
+        $.ajax({
+            url: '/' + type + '/' + id + '?mode=' + mode+'&target-id='+target_id+'&type='+type,
+            type: 'GET',
+            success: function(response) {
+                $(content+'[data-mode="' + mode + '"]').html(response).css('opacity', '1');
+                $(content).css('opacity', '1');
+                
+                $(button+'[data-mode="' + mode + '"').removeClass('btn-primary').addClass('btn-outline-primary');
+                $('#btn-' + id+'[data-mode="' + mode + '"').removeClass('btn-outline-primary').addClass('btn-primary');
+                $(content+'[data-mode="' + mode + '"]').attr('data-id', id);
+                $(content).attr('data-target-id', target_id)
+            },
+            error: function() {
+                alert('Could not load' +type + ' details.');
+                $(content).css('opacity', '1');
+            }
+        });
+    }
+    
 }
 
 function editCollection(id) {
@@ -116,17 +142,18 @@ $(document).ready(function() {
     addExistingQuestionButton = '.add-existing-question-' + type + '-btn';
     addNewQuestionButton = '.add-new-question-btn';
 
-    // $(button).on('click', function() {
-    //     const id = $(this).data('id');
-    //     const mode =$(this).data('mode');
-    //     loadCollection(id, mode);
-    // });
-
-    $(document).on('click', button, function() {
+    $(document).on('click', '.bank-btn', function() {
         const id = $(this).data('id');
         const mode =$(this).data('mode');
 
-        loadCollection(id, mode, id);
+        loadCollection(id, mode, id, "bank");
+    });
+
+    $(document).on('click', '.test-btn', function() {
+        const id = $(this).data('id');
+        const mode =$(this).data('mode');
+
+        loadCollection(id, mode, id, "test");
     });
 
     $(document).on('click', editButton, function() {

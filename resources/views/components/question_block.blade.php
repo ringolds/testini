@@ -1,7 +1,7 @@
-@props(['item', 'mode', 'currentItemId' => null])
+@props(['item', 'mode', 'currentItemId' => null, 'collection_type'])
 <div class="list-group list-group-flush mt-3" id="question-content">
             @forelse($item->questions as $question)
-                <x-question_row :question="$question" :mode="$mode" :currentItemId="$currentItemId">
+                <x-question_row :question="$question" :mode="$mode" :currentItemId="$currentItemId" :type="$collection_type">
                     <x-slot:questionSlot>
                         @if($question->prompt && $question->prompt->component)
                             @php

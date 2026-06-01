@@ -1,7 +1,15 @@
-@props(['question', 'mode', 'currentItemId'])
+@props(['question', 'mode', 'currentItemId', 'type'])
 @php
     $isInCurrentBank = $question->banks->contains($currentItemId);
-    $target = $question->banks->firstwhere('id', $currentItemId);
+    $isInCurrentTest = $question->tests->contains($currentItemId);
+    if($type=='bank'){
+        $target = $question->banks->firstwhere('id', $currentItemId);
+    }
+    else{
+        $target = $question->tests->firstwhere('id', $currentItemId);
+    }
+    
+
 @endphp
 <div id="question-{{$question->id}}" class="list-group-item d-flex justify-content-between align-items-center px-3 py-3 mb-2 bg-white rounded border shadow-sm" style="min-height: 68px;">
     <div class="d-flex align-items-center gap-4 flex-grow-1 overflow-hidden">
@@ -55,8 +63,13 @@
             @elseif($mode == "add")
                 <div>
                     <div class="d-flex justify-content-end align-items-center gap-2">
-                        @if(!$isInCurrentBank)
+                        @if($type=='bank' && !$isInCurrentBank)
                             <form class="d-inline m-0" id="add-existing-question-form" data-id="{{ $question->id}}" action="{{ route('question.addToBank', ['question' => $question->id, 'bank' => $currentItemId]) }}" method="POST"> 
+                                @csrf
+                                <button type="submit" class="btn btn-primary delete-question-btn">Add question</button> 
+                            </form>
+                        @elseif($type=='test' && !$isInCurrentTest)
+                            <form class="d-inline m-0" id="add-existing-question-form" data-id="{{ $question->id}}" action="{{ route('question.addToTest', ['question' => $question->id, 'test' => $currentItemId]) }}" method="POST"> 
                                 @csrf
                                 <button type="submit" class="btn btn-primary delete-question-btn">Add question</button> 
                             </form>

@@ -62,9 +62,24 @@ class TestController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(string $id)
+    public function show(Test $test)
     {
-        //
+        $user = request()->user();
+        if ($user->cannot('view', $test)){
+            return redirect()->route('home');
+        }
+
+        $test->load('questions.tests');
+
+        $mode = request()->query('mode', 'manage');
+        $target_id = request()->query('target-id', $test->id);
+        $type = request()->query('type');
+
+        if (request()->ajax()) {
+            return view('tests.details', compact('test', 'mode', 'target_id', 'type'))->render();
+        }
+
+        return view('tests.show', compact('test', 'mode', 'target_id', 'type'));
     }
 
     /**
@@ -89,5 +104,16 @@ class TestController extends Controller
     public function destroy(string $id)
     {
         //
+    }
+
+    public function addQuestion(Test $test){
+        $user = request()->user();
+        $banks = $user->banks()->get();
+        $mode = "add";
+        $target_id = $test->id;
+        if (request()->ajax()) {
+                return view('banks.index_details', compact('banks', 'mode', 'target_id'))->render();
+            }
+        return view('banks.index', compact('banks', 'mode', 'target_id'));
     }
 }

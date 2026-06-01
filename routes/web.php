@@ -21,9 +21,12 @@ Route::middleware('auth')->group(function() {
     Route::resource('bank', BankController::class); 
     Route::resource('question', QuestionController::class);
     Route::post('/logout', [AuthController::class, 'logout']) ->name('logout');  
-    Route::get('/bank/{bank}/questions', [BankController::class, 'addQuestion']) ->name('addQuestion');  
+    Route::get('/bank/{bank}/questions', [BankController::class, 'addQuestion']) ->name('addQuestion');
+    Route::get('/test/{test}/questions', [TestController::class, 'addQuestion']) ->name('addQuestionToTest');   
     Route::post('/question/{question}/bank/{bank}', [QuestionController::class, 'addToBank'])->name('question.addToBank');
     Route::delete('/question/{question}/bank/{bank}', [QuestionController::class, 'removeFromBank'])->name('question.removeFromBank');
+    Route::post('/question/{question}/test/{test}', [QuestionController::class, 'addToTest'])->name('question.addToTest');
+    Route::delete('/question/{question}/test/{test}', [QuestionController::class, 'removeFromTest'])->name('question.removeFromTest');
 });
 
 Route::middleware('guest')->group(function() {

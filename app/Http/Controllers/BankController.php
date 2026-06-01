@@ -76,12 +76,13 @@ class BankController extends Controller
 
         $mode = request()->query('mode', 'manage');
         $target_id = request()->query('target-id', $bank->id);
+        $type = request()->query('type');
 
         if (request()->ajax()) {
-            return view('banks.details', compact('bank', 'mode', 'target_id'))->render();
+            return view('banks.details', compact('bank', 'mode', 'target_id', 'type'))->render();
         }
 
-        return view('banks.show', compact('bank', 'mode', 'target_id'));
+        return view('banks.show', compact('bank', 'mode', 'target_id', 'type'));
     }
 
     /**

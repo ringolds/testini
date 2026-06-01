@@ -132,8 +132,9 @@ class QuestionController extends Controller
             }
 
             $mode = "manage";
+            $collection_type = $request->input('type');
 
-            $html = view('components.question_block', compact('item', 'mode'))->render();
+            $html = view('components.question_block', compact('item', 'mode', 'collection_type'))->render();
 
             return response()->json([
                 'success' => true,
@@ -304,8 +305,9 @@ class QuestionController extends Controller
             }
 
             $mode = "manage";
+            $collection_type = $request->input('content_type');
 
-            $html = view('components.question_block', compact('item', 'mode'))->render();
+            $html = view('components.question_block', compact('item', 'mode', 'collection_type'))->render();
 
             return response()->json([
                 'success' => true,
@@ -444,10 +446,11 @@ class QuestionController extends Controller
             
             $mode="manage";
             $target_id = $bank->id;
+            $type = "bank";
 
             if ($request->ajax()) {
                 $mode = "manage";
-                $html = view('banks.details', compact('bank', 'mode', 'target_id'))->render();
+                $html = view('banks.details', compact('bank', 'mode', 'target_id', 'type'))->render();
 
                 return response()->json([
                     'success' => true,
@@ -455,7 +458,7 @@ class QuestionController extends Controller
                 ]);
             }
 
-            return view('banks.show', compact('bank', 'mode', 'target_id'));
+            return view('banks.show', compact('bank', 'mode', 'target_id', 'type'));
         }
         return redirect()->route('home');
     }
@@ -468,10 +471,11 @@ class QuestionController extends Controller
             
             $mode="manage";
             $target_id = $bank->id;
+            $type = "bank";
 
             if ($request->ajax()) {
                 $mode = "manage";
-                $html = view('banks.details', compact('bank', 'mode', 'target_id'))->render();
+                $html = view('banks.details', compact('bank', 'mode', 'target_id', 'type'))->render();
 
                 return response()->json([
                     'success' => true,
@@ -479,7 +483,57 @@ class QuestionController extends Controller
                 ]);
             }
 
-            return view('banks.show', compact('bank', 'mode', 'target_id'));
+            return view('banks.show', compact('bank', 'mode', 'target_id', 'type'));
+        }
+        return redirect()->route('home');
+    }
+
+    public function addToTest(Request $request, Question $question, Test $test){
+        $user = $request->user();
+        if ($user->can('addQuestionToTest', [$question, $test])){
+            
+            $question->tests()->syncWithoutDetaching([$test->id]);
+            
+            $mode="manage";
+            $target_id = $test->id;
+            $type = "test";
+
+            if ($request->ajax()) {
+                $mode = "manage";
+                $html = view('tests.details', compact('test', 'mode', 'target_id', 'type'))->render();
+
+                return response()->json([
+                    'success' => true,
+                    'html'    => $html
+                ]);
+            }
+
+            return view('tests.show', compact('test', 'mode', 'target_id', 'type'));
+        }
+        return redirect()->route('home');
+    }
+
+    public function removeFromTest(Request $request, Question $question, Test $test){
+        $user = $request->user();
+        if ($user->can('removeQuestionFromTest', [$question, $test])){
+            
+            $question->tests()->detach([$test->id]);
+            
+            $mode="manage";
+            $target_id = $test->id;
+            $type = "test";
+
+            if ($request->ajax()) {
+                $mode = "manage";
+                $html = view('tests.details', compact('test', 'mode', 'target_id', 'type'))->render();
+
+                return response()->json([
+                    'success' => true,
+                    'html'    => $html
+                ]);
+            }
+
+            return view('tests.show', compact('test', 'mode', 'target_id', 'type'));
         }
         return redirect()->route('home');
     }
