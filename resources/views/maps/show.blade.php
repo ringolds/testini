@@ -13,8 +13,8 @@
             <div class="col-lg-9 mb-4">
                 <div class="card shadow-sm border-0 rounded-lg overflow-hidden">
                     <div class="card-body p-0 bg-light">
-                        <div id="chartdiv" style="width: 100%; height: 600px; min-height: 600px; background-color: #ffffff;" 
-                        data-config-endpoint="{{ route('map.config', $map) }}"-></div>
+                        <div id="chartdiv" class="interactive-map" style="width: 100%; height: 600px; min-height: 600px; background-color: #ffffff;" 
+                        data-config-endpoint="{{ route('map.config', $map) }}"></div>
                     </div>
                 </div>
             </div>
@@ -54,6 +54,4 @@
             </div>
         </div>
     </div>
-    <script src="https://cdn.amcharts.com/lib/5/index.js"></script>
-    <script src="https://cdn.amcharts.com/lib/5/map.js"></script>
 </x-layout>

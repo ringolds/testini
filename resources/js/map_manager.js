@@ -1,13 +1,52 @@
 import * as am5 from "@amcharts/amcharts5";
 import * as am5map from "@amcharts/amcharts5/map";
 
-document.addEventListener('DOMContentLoaded', function () {
-    var chartContainer = document.getElementById("chartdiv");
-    if (!chartContainer) return;
+const activeMapRoots = new WeakSet();
 
-    var configEndpoint = chartContainer.getAttribute("data-config-endpoint");
+// 1. Create a global observer that watches the entire document for DOM changes
+const globalMapObserver = new MutationObserver(function (mutations) {
+    mutations.forEach(function (mutation) {
+        mutation.addedNodes.forEach(function (node) {
+            if (node.nodeType === Node.ELEMENT_NODE) {
+                const maps = node.classList?.contains('interactive-map') 
+                    ? [node] 
+                    : node.querySelectorAll('.interactive-map');
+
+                maps.forEach(function (container) {
+                    if (activeMapRoots.has(container)) return;
+                    activeMapRoots.add(container);
+                    
+                    loadMapConfig(container);
+                });
+            }
+        });
+
+        if (mutation.type === "attributes" && mutation.attributeName === "data-config-endpoint") {
+            const container = mutation.target;
+            if (container.classList.contains('interactive-map')) {
+                console.log("Map config endpoint changed, reloading...", container);
+                loadMapConfig(container);
+            }
+        }
+    });
+});
+$(document).ready(function(){
+    globalMapObserver.observe(document.body, { 
+        childList: true,
+        subtree: true,   
+        attributes: true, 
+        attributeFilter: ["data-config-endpoint"]
+    });
+
+    document.querySelectorAll('.interactive-map').forEach(function (container) {
+        loadMapConfig(container);
+    });
+});
+
+function loadMapConfig(container){
+    var configEndpoint = container.getAttribute("data-config-endpoint");
     if (!configEndpoint) return;
-
+    console.log("hey")
     fetch(configEndpoint, {
         headers: {
             'X-Requested-With': 'XMLHttpRequest',
@@ -16,28 +55,37 @@ document.addEventListener('DOMContentLoaded', function () {
     })
     .then(response => response.json())
     .then(config => {
+        var oldScript = document.querySelector(`script[src="${config.js_path}"]`);
+        if (oldScript) oldScript.remove();
+
         var mapScript = document.createElement("script");
         mapScript.src = config.js_path;
         
         mapScript.onload = function() {
-            initializeMap(config);
+            initializeMap(config, container);
         };
         
         document.head.appendChild(mapScript);
     })
     .catch(error => console.error("Security/Configuration loading error:", error));
-});
 
-function initializeMap(config){
+}
+
+function initializeMap(config, container){
     am5.ready(function() {
-        
-        am5.array.each(am5.registry.rootElements, function(re) {
-            if (re.get("id") === "chartdiv") {
-                re.dispose();
-            }
-        });
+        console.log(container)
+        var containerId = container.id;
 
-        var root = am5.Root.new("chartdiv");
+        if (activeMapRoots[containerId]) {
+            activeMapRoots[containerId].dispose();
+            delete activeMapRoots[containerId];
+        }
+
+        container.innerHTML = ""; 
+
+        var root = am5.Root.new(containerId);
+        
+        activeMapRoots[containerId] = root;
 
         var jsUrl = config.js_path;
         var prefix = "https://cdn.amcharts.com/lib/5/geodata/";
@@ -86,6 +134,25 @@ function initializeMap(config){
         });
 
         var lastSelectedPolygon;
+
+        polygonSeries.events.on("datavalidated", function() {
+            var parentWrapper = container.closest('.dynamic-field-map');
+            if (parentWrapper) {
+                var hiddenInput = parentWrapper.querySelector('.selected-target');
+                if (hiddenInput && hiddenInput.value !== "") {
+                    var dataItem = polygonSeries.getDataItemById(hiddenInput.value);
+                    if (dataItem) {
+                        var targetPolygon = dataItem.get("mapPolygon");
+                        if (targetPolygon) {
+                            lastSelectedPolygon = targetPolygon;
+                            lastSelectedPolygon.set("active", true);
+                        }
+                    }
+                }
+            }
+        });
+
+        
         polygonSeries.mapPolygons.template.events.on("click", function(ev) {
             if (lastSelectedPolygon && lastSelectedPolygon !== ev.target) {
                 lastSelectedPolygon.set("active", false);
@@ -101,6 +168,7 @@ function initializeMap(config){
             var inspector = document.getElementById('inspector-data');
             var name = document.getElementById('selected-name');
             var id = document.getElementById('selected-id');
+            var parentWrapper = container.closest('.dynamic-field-map');
 
             if(placeholder){
                 placeholder.style.display = 'none';
@@ -116,6 +184,13 @@ function initializeMap(config){
 
             if(id){
                 id.innerText = dataContext.id;
+            }
+
+            if (parentWrapper) {
+                var hiddenInput = parentWrapper.querySelector('.selected-target');
+                if (hiddenInput) {
+                    hiddenInput.value = dataContext.id;
+                }
             }
         });
 

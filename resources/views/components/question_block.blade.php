@@ -18,6 +18,12 @@
                                     class="rounded border" 
                                     style="width: 45px; height: 45px; object-fit: cover;"
                                     title="{{ $comp->alt_text }}">
+                            @elseif($type === 'App\Models\QuestionMap')
+                                <img src="{{ asset('storage/' . $comp->map->svg_path) }}" 
+                                    alt="{{$comp->map->name}}", 
+                                    class="rounded border" 
+                                    style="width: 45px; height: 45px; object-fit: cover;"
+                                    title="{{ $comp->alt_text }}">
                             @else
                                 <span class="text-muted fst-italic">Alternative Component</span>
                             @endif
@@ -45,6 +51,12 @@
                             @elseif($type === 'App\Models\QuestionImage')
                                 <img src="{{ asset('storage/' . $comp->path) }}" 
                                     alt="A preview" 
+                                    class="rounded border" 
+                                    style="width: 45px; height: 45px; object-fit: cover;"
+                                    title="{{ $comp->alt_text }}">
+                            @elseif($type === 'App\Models\QuestionMap')
+                                <img src="{{ asset('storage/' . $comp->map->svg_path) }}" 
+                                    alt="{{$comp->map->name}}", 
                                     class="rounded border" 
                                     style="width: 45px; height: 45px; object-fit: cover;"
                                     title="{{ $comp->alt_text }}">

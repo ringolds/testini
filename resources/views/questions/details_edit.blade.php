@@ -1,3 +1,4 @@
+@vite('resources/js/map_manager.js')
 @if ($errors->any())
     <div>
         <ul>
@@ -38,8 +39,17 @@
                 @endif
             </div>
         @elseif($type === 'App\Models\QuestionMap')
-            <div class="form-group mb-3 dynamic-field-map d-none">
-                <div class="alert alert-secondary">Question Map Placeholder</div>
+            <div class="form-group mb-3 dynamic-field-map">
+                <div id="question-map" class="interactive-map" style="width: 100%; height: 600px; min-height: 600px; background-color: #ffffff;" 
+                            data-config-endpoint="{{ route('map.config', $comp->map->id) }}">
+                </div>
+                <input type="hidden" class="selected-target" name="question_map_target" value="{{old('question_map_target', $comp->target_region)}}">
+                <label>Text question to go along with map (optional)</label>
+                @if($question->description && $question->description->component)
+                    <input type="text" class="form-control" name="question_map_text" value="{{old('question_map_text', $description->component->text)}}">
+                @else
+                    <input type="text" class="form-control" name="question_map_text" value="{{old('question_map_text')}}">
+                @endif
             </div>
         @else
             <div>Unknown question type</div>
@@ -66,7 +76,10 @@
             </div>
         @elseif($type === 'App\Models\QuestionMap')
             <div class="form-group mb-3 dynamic-field-map">
-                <div class="alert alert-secondary">Answer Map Placeholder</div>
+                <div id="answer-map" class="interactive-map" style="width: 100%; height: 600px; min-height: 600px; background-color: #ffffff;" 
+                            data-config-endpoint="{{ route('map.config', $comp->map->id) }}">
+                </div>
+                <input type="hidden" class="selected-target" name="answer_map_target" value="{{old('answer_map_target', $comp->target_region)}}">
             </div>
         @else
             <div>Unknown answer type</div>

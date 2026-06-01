@@ -1,3 +1,4 @@
+@vite('resources/js/map_manager.js')
 @if ($errors->any())
 <div>
     <ul>
@@ -67,7 +68,21 @@
                 <input type="text" class="form-control" name="question_image_text" value="{{old('question_image_text')}}">
             </div>
             <div class="form-group mb-3 dynamic-field-map d-none">
-                <div class="alert alert-secondary">Question Map Placeholder</div>
+                <label for="mapSelectQuestion">Map</label>
+                <select class="form-control" id="mapSelectQuestion" name="question_map_id">
+                    <option value="" {{ old('map_id') == '-1' || !old('map_id') ? 'selected' : '' }}>None</option>
+                    @foreach($maps as $map)
+                        <option value="{{ $map->id }}" {{ old('test_id') == $map->id ? 'selected' : '' }}>
+                            {{ $map->name }}
+                        </option>
+                    @endforeach
+                </select>
+                <div id="question-map" class="interactive-map" style="width: 100%; height: 600px; min-height: 600px; background-color: #ffffff;" 
+                            data-config-endpoint=""->
+                </div>
+                <input type="hidden" class="selected-target" name="question_map_target" value="{{old('question_map_target')}}">
+                <label>Text question to go along with map (optional)</label>
+                <input type="text" class="form-control" name="question_map_text" value="{{old('question_map_text')}}">
             </div>
         </div>
     </div>
@@ -95,7 +110,19 @@
                 <input type="text" class="form-control" name="answer_image_alt" value="{{old('answer_image_alt')}}">
             </div>
             <div class="form-group mb-3 dynamic-field-map d-none">
-                <div class="alert alert-secondary">Answer Map Placeholder</div>
+                <label for="mapSelectAnswer">Map</label>
+                <select class="form-control" id="mapSelectAnswer" name="answer_map_id">
+                    <option value="" {{ old('map_id') == '-1' || !old('map_id') ? 'selected' : '' }}>None</option>
+                    @foreach($maps as $map)
+                        <option value="{{ $map->id }}" {{ old('test_id') == $map->id ? 'selected' : '' }}>
+                            {{ $map->name }}
+                        </option>
+                    @endforeach
+                </select>
+                <div id="answer-map" class="interactive-map" style="width: 100%; height: 600px; min-height: 600px; background-color: #ffffff;" 
+                            data-config-endpoint=""->
+                </div>
+                <input type="hidden" class="selected-target" name="answer_map_target" value="{{old('answer_map_target')}}">
             </div>
         </div>
     </div>
@@ -130,5 +157,30 @@
 
             handleTypeChange(select);
         });
+
+        const questionSelect = document.getElementById('mapSelectQuestion');
+        const answerSelect = document.getElementById('mapSelectAnswer');
+
+        if (questionSelect) {
+            questionSelect.addEventListener('change', function(event) {
+                const selectedId = event.target.value;
+                const container = document.getElementById("question-map");
+                
+                if (container && selectedId) {
+                    container.setAttribute('data-config-endpoint', '/map/' + selectedId + '/config');
+                }
+            });
+        }
+
+        if (answerSelect) {
+            answerSelect.addEventListener('change', function(event) {
+                const selectedId = event.target.value;
+                const container = document.getElementById("answer-map");
+                
+                if (container && selectedId) {
+                    container.setAttribute('data-config-endpoint', '/map/' + selectedId + '/config');
+                }
+            });
+        }
     })();
 </script>
