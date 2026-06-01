@@ -37,4 +37,10 @@ class Test extends Model
     public function tags(){
         return $this->morphMany(Tag::class, 'taggable');
     }
+
+    public function banks(){
+        return $this->belongsToMany(Bank::class, 'bank_test')
+                    ->withPivot('random_count')
+                    ->withTimestamps();
+    }
 }

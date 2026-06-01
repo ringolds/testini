@@ -71,4 +71,9 @@
             @empty
                 <div class="py-3 text-center text-muted">No questions yet.</div>
             @endforelse
+            @if($item instanceof \App\Models\Test && $collection_type=='test')
+                @foreach($item->banks as $bank)
+                    <x-bank_row :count="$bank->pivot->random_count" :bank="$bank" :test="$currentItemId"></x-bank_row>
+                @endforeach
+            @endif
         </div>

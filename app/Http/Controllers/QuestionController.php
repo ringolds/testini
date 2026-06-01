@@ -123,9 +123,11 @@ class QuestionController extends Controller
         if ($request->ajax()) {
             if ($validated['type'] == 'test') {
                 $item = Test::findOrFail($validated['test_id']);
+                $currentItemId = $validated['test_id'];
             } 
             else if($validated['type'] == 'bank'){
                 $item = Bank::findOrFail($validated['bank_id']);
+                $currentItemId = $validated['bank_id'];
             }
             else{
                 return redirect()->back()->with('success', 'Question created successfully!');
@@ -134,7 +136,7 @@ class QuestionController extends Controller
             $mode = "manage";
             $collection_type = $request->input('type');
 
-            $html = view('components.question_block', compact('item', 'mode', 'collection_type'))->render();
+            $html = view('components.question_block', compact('item', 'mode', 'collection_type', 'currentItemId'))->render();
 
             return response()->json([
                 'success' => true,

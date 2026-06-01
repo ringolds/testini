@@ -16,6 +16,7 @@ Route::middleware('admin')->group(function(){
 });
 
 Route::middleware('auth')->group(function() {
+    Route::delete('/test/{test}/bank/{bank}', [TestController::class, 'removeBank'])->name('test.removeBank');
     Route::get('map/{map}/config', [MapController::class, 'getConfig'])->name('map.config'); 
     Route::resource('test', TestController::class); 
     Route::resource('bank', BankController::class); 
