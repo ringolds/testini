@@ -12,7 +12,7 @@
             @if($mode=="manage")
                 @can('update', $test)
                     <button type="button" 
-                        class="btn btn-warning edit-bank-btn d-flex align-items-center" 
+                        class="btn btn-warning edit-test-btn d-flex align-items-center" 
                         data-id="{{ $test->id }}">
                         <i class="bi bi-pencil me-2"></i> Edit test
                     </button>

@@ -85,25 +85,79 @@ class TestController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(string $id)
+    public function edit(Test $test)
     {
-        //
+        $user = request()->user();
+        if ($user->cannot('update', $test)){
+            return redirect()->route('home');
+        }
+
+        if (request()->ajax()) {
+            return view('tests.details_edit', compact('test'))->render();
+        }
+
+        return view('tests.edit', compact('test'));
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(Request $request, Test $test)
     {
-        //
+        if($request->user()->cannot('update', $test)){
+            return redirect()->route('home');
+        }
+
+        $rules = array(
+            'name' => [
+                'required',
+                'string',
+                'max:255',
+                Rule::unique('tests')->where(fn ($query) => 
+                    $query->where('user_id', Auth::id()))->ignore($test->id),
+            ],
+            'description' => 'required|min:5|max:500'
+        );    
+
+        $validated = $request->validate($rules);
+
+        $request->merge([
+            'public' => $request->has('public'),
+        ]);
+
+        $test->name = $validated['name'];
+        $test->description = $validated['description'];
+        $test->public = $request->public;
+
+        $test->save();
+
+        if(request()->ajax()){
+                return response()->json([
+                'id' => $test->id,
+                'name' => $test->name,
+                'success' => 'Test updated successfully!'
+            ]);
+        }
+
+        return redirect()->route('test.index')->with('success', 'Test edited 
+        successfully!');
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(string $id)
+    public function destroy(Test $test)
     {
-        //
+        $user = request()->user();
+        if ($user->can('delete', $test)){
+            $test->delete();
+
+            if (request()->ajax()) {
+                return response()->json(['success' => true, 'id' => $test->id]);
+            }
+
+            return redirect()->route('test.index');
+        }
     }
 
     public function addQuestion(Test $test){
