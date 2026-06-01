@@ -68,9 +68,9 @@ class MapController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(string $id)
+    public function show(Map $map)
     {
-        //
+        return view('maps.show', compact('map'));
     }
 
     /**
@@ -95,5 +95,12 @@ class MapController extends Controller
     public function destroy(string $id)
     {
         //
+    }
+
+    public function getConfig(Map $map){
+        return response()->json([
+            'js_path' => $map->js_path,
+            'mode'    => "create",
+        ]);
     }
 }

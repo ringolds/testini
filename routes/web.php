@@ -11,6 +11,7 @@ Route::get('/', function () {
 })->name('home');
 
 Route::middleware('auth')->group(function() {
+    Route::get('map/{map}/config', [MapController::class, 'getConfig'])->name('map.config'); 
     Route::resource('map', MapController::class); 
     Route::resource('bank', BankController::class); 
     Route::resource('question', QuestionController::class);
