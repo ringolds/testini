@@ -76,25 +76,44 @@ class MapController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(string $id)
+    public function edit(Map $map)
     {
-        //
+        return view('maps.edit', compact('map'));
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(Request $request, Map $map)
     {
-        //
+        $request->validate([
+            'name' => 'nullable|string|max:255',
+            'map_image' => 'nullable|file|mimes:svg|mimetypes:image/svg+xml|max:2048',             
+        ]);
+
+        $file = $request->file('map_image');
+        if($file){
+            $path = $file->store('maps/images', 'public');
+            $map->svg_path = $path;
+        }
+
+        if($request->name){
+            $map->name = $request->name;
+        }
+        
+        $map->update();
+        
+        return redirect()->route('map.index')->with('success', 'Map registered successfully!');
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(string $id)
+    public function destroy(Map $map)
     {
-        //
+        $map->delete();
+        return redirect()->route('map.index');
+        
     }
 
     public function getConfig(Map $map){
