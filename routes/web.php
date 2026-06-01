@@ -5,6 +5,7 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\BankController;
 use App\Http\Controllers\MapController;
 use App\Http\Controllers\QuestionController;
+use App\Http\Controllers\TestController;
 
 Route::get('/', function () {
     return view('home');
@@ -16,6 +17,7 @@ Route::middleware('admin')->group(function(){
 
 Route::middleware('auth')->group(function() {
     Route::get('map/{map}/config', [MapController::class, 'getConfig'])->name('map.config'); 
+    Route::resource('test', TestController::class); 
     Route::resource('bank', BankController::class); 
     Route::resource('question', QuestionController::class);
     Route::post('/logout', [AuthController::class, 'logout']) ->name('logout');  
