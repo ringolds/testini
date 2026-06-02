@@ -52,6 +52,24 @@ function removeQuestion(id, target) {
     });
 }
 
+function removeBank(id, target) {
+    $('#question-content').css('opacity', '0.5');
+
+    $.ajax({
+        url: '/test/' + target + '/bank/' + id,
+        type: 'DELETE',
+        success: function(response) {
+            $('#bank-'+id).remove();
+            $('#question-content').css('opacity', '1');
+        },
+        error: function() {
+            alert('Could not delete question.');
+            $('#question-content').css('opacity', '1');
+        }
+    });
+}
+
+
 function deleteQuestion(id) {
     $('#question-content').css('opacity', '0.5');
 
@@ -149,6 +167,16 @@ $(document).ready(function() {
         const target = $(this).data('targetId');
         const id = $(this).data('id');
         removeQuestion(id, target);
+    });
+
+    $(document).on('submit', '#remove-bank-form', function(e) {
+        if (e.isDefaultPrevented()) return;
+        
+        e.preventDefault();
+
+        const target = $(this).data('targetId');
+        const id = $(this).data('id');
+        removeBank(id, target);
     });
 
 });

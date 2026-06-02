@@ -36,6 +36,14 @@
                     <i class="bi bi-pencil me-2"></i> Add new question
                 </button>
             @endif
+            @if($mode=="addBank")
+                <form id="add-random-questions-form" data-id="{{ $bank->id }}" data-target-id="{{$target_id}}" class="d-inline m-0" action="{{ route('test.saveBank', ['test'=>$target_id, 'bank'=>$bank]) }}" method="POST"> 
+                    @csrf
+                    <label for="count">Choose Amount:</label>
+                    <input type="number" id="count" name="count" min="1" max="100" step="1" value="1">
+                    <button type="submit" class="btn btn-success">Add</button> 
+                </form>
+            @endif
         </div>
     </div>
 </div>

@@ -4,6 +4,7 @@ namespace App\Policies;
 
 use App\Models\Test;
 use App\Models\User;
+use App\Models\Bank;
 use Illuminate\Auth\Access\Response;
 
 class TestPolicy
@@ -75,5 +76,15 @@ class TestPolicy
     public function addExistingQuestion(User $user, Test $test): bool
     {
         return ($user->id === $test->user_id);
+    }
+
+    public function addBankToTest(User $user, Test $test, Bank $bank): bool
+    {
+        return $user->id === $test->user_id && !$test->banks->where('id', $bank->id)->exists();
+    }
+
+    public function removeBankFromTest(User $user, Test $test, Bank $bank): bool
+    {
+        return $user->id === $test->user_id && $test->banks->where('id', $bank->id)->exists();
     }
 }

@@ -11,8 +11,9 @@ let addNewQuestionButton;
 
 function loadCollection(id, mode, target_id, optional_type=null) {
     if(optional_type!=null){
+        console.log(optional_type)
        $('#' + optional_type + '-content').css('opacity', '0.5');
-        if(mode == "add"){
+        if(mode == "add" || mode=="addBank"){
             target_id = document.querySelector('#' + optional_type + '-content').getAttribute('data-target-id');
         }
         $.ajax({
@@ -22,7 +23,7 @@ function loadCollection(id, mode, target_id, optional_type=null) {
                 $('#' + optional_type + '-content'+'[data-mode="' + mode + '"]').html(response).css('opacity', '1');
                 $('#' + optional_type + '-content').css('opacity', '1');
                 
-                $('.' + type + '-btn'+'[data-mode="' + mode + '"').removeClass('btn-primary').addClass('btn-outline-primary');
+                $('.' + optional_type + '-btn'+'[data-mode="' + mode + '"').removeClass('btn-primary').addClass('btn-outline-primary');
                 $('#btn-' + id+'[data-mode="' + mode + '"').removeClass('btn-outline-primary').addClass('btn-primary');
                 $('#' + optional_type + '-content'+'[data-mode="' + mode + '"]').attr('data-id', id);
                 $('#' + optional_type + '-content').attr('data-target-id', target_id)
@@ -80,6 +81,22 @@ function addNewQuestion(id) {
 
     $.ajax({
         url: '/question/create?type='+type+'&id='+id,
+        type: 'GET',
+        success: function(response) {
+            $(content).html(response).css('opacity', '1');
+        },
+        error: function() {
+            alert('Could not load edit form.');
+            $(content).css('opacity', '1');
+        }
+    });
+}
+
+function addRandomQuestions(id) {
+    $(content).css('opacity', '0.5');
+
+    $.ajax({
+        url: '/test/'+id+'/banks',
         type: 'GET',
         success: function(response) {
             $(content).html(response).css('opacity', '1');
@@ -154,6 +171,11 @@ $(document).ready(function() {
         const mode =$(this).data('mode');
 
         loadCollection(id, mode, id, "test");
+    });
+
+    $(document).on('click', '.add-random-question-btn', function(){
+        const id = $(this).data('id');
+        addRandomQuestions(id);
     });
 
     $(document).on('click', editButton, function() {
@@ -231,6 +253,40 @@ $(document).ready(function() {
             success: function(response) {
                 $(`#btn-${response.id}`).text(response.name);
                 loadCollection(response.id, "manage", response.id);
+            },
+            error: function(xhr) {
+                if (xhr.status === 422) {
+                    let errors = xhr.responseJSON.errors;
+                    
+                    $.each(errors, function(key, messages) {
+                        let input = form.find(`[name="${key}"]`);
+                        input.addClass('is-invalid');
+                        input.siblings('.invalid-feedback').text(messages[0]);
+                    });
+                } else {
+                    alert('An unexpected error occurred.');
+                }
+            }
+        });
+    });
+
+    $(document).on('submit', '#add-random-questions-form', function(e) {
+        e.preventDefault();
+        
+        let form = $(this);
+
+        form.find('.is-invalid').removeClass('is-invalid');
+        form.find('.invalid-feedback').text('');
+
+        let testId = $(this).data('targetId');
+        let bankId = $(this).data('id');
+
+        $.ajax({
+            url: '/test/'+testId + '/bank/' + bankId,
+            type: 'POST',
+            data: form.serialize(),
+            success: function(response) {
+                $(content).html(response.html).css('opacity', '1');
             },
             error: function(xhr) {
                 if (xhr.status === 422) {

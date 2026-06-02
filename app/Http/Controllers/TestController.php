@@ -5,7 +5,9 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Validation\Rule;
+use App\Models\Bank;
 use App\Models\Test;
+use App\Rules\ValidQuestionCount;
 
 class TestController extends Controller
 {
@@ -169,5 +171,77 @@ class TestController extends Controller
                 return view('banks.index_details', compact('banks', 'mode', 'target_id'))->render();
             }
         return view('banks.index', compact('banks', 'mode', 'target_id'));
+    }
+
+    public function addBank(Test $test){
+        $user = request()->user();
+        $used_banks = $test->banks()->get();
+        $allBanks = $user->banks()->get();
+
+        $banks = $allBanks->diff($used_banks);
+
+        $mode="addBank";
+        $target_id = $test->id;
+
+        if (request()->ajax()) {
+                return view('banks.index_details', compact('banks', 'mode', 'target_id'))->render();
+            }
+        return view('banks.index', compact('banks', 'mode', 'target_id'));
+        
+    }
+
+    public function saveBank(Request $request, Test $test, Bank $bank){
+        $user = $request->user();
+        if ($user->can('addBankToTest', [$test, $bank])){
+
+            $rules = [
+                'count' => ['required', 'integer', 'min:1', new ValidQuestionCount($bank)]
+            ];
+
+            $request->validate($rules);
+            
+            $test->banks()->attach($bank, ['random_count'=>$request->input('count')]);
+            
+            $mode="manage";
+            $target_id = $test->id;
+            $type = "test";
+
+            if ($request->ajax()) {
+                $mode = "manage";
+                $html = view('tests.details', compact('test', 'mode', 'target_id', 'type'))->render();
+
+                return response()->json([
+                    'success' => true,
+                    'html'    => $html
+                ]);
+            }
+
+            return view('tests.show', compact('test', 'mode', 'target_id', 'type'));
+        }
+        return redirect()->route('home');
+    }
+
+    public function removeBank(Request $request, Test $test, Bank $bank){
+        $user = $request->user();
+        if ($user->can('removeBankFromTest', [$test, $bank])){         
+            $test->banks()->detach($bank);
+            
+            $mode="manage";
+            $target_id = $test->id;
+            $type = "test";
+
+            if ($request->ajax()) {
+                $mode = "manage";
+                $html = view('tests.details', compact('test', 'mode', 'target_id', 'type'))->render();
+
+                return response()->json([
+                    'success' => true,
+                    'html'    => $html
+                ]);
+            }
+
+            return view('tests.show', compact('test', 'mode', 'target_id', 'type'));
+        }
+        return redirect()->route('home');
     }
 }

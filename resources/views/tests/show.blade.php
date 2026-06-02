@@ -4,6 +4,6 @@
         {{$test->name}} 
     </x-slot>
     <div id="test-content" data-id="{{$test->id}}">
-        @include('tests.details', ['test' => $test, 'mode' => $mode, 'target_id' => $test->id, 'collection_type'=$type])
+        @include('tests.details', ['test' => $test, 'mode' => $mode, 'target_id' => $test->id, 'collection_type'=>$type])
     </div>
 </x-layout>

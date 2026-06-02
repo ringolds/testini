@@ -33,6 +33,11 @@
                     data-id="{{ $test->id }}">
                     <i class="bi bi-pencil me-2"></i> Add new question
                 </button>
+                <button type="button" 
+                    class="btn btn-success add-random-question-btn d-flex align-items-center" 
+                    data-id="{{ $test->id }}">
+                    <i class="bi bi-pencil me-2"></i> Add random questions
+                </button>
             @endif
         </div>
     </div>
