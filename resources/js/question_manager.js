@@ -59,11 +59,55 @@ function removeBank(id, target) {
         url: '/test/' + target + '/bank/' + id,
         type: 'DELETE',
         success: function(response) {
-            $('#bank-'+id).remove();
+            $('#bank-'+id+'-row').remove();
             $('#question-content').css('opacity', '1');
         },
         error: function() {
             alert('Could not delete question.');
+            $('#question-content').css('opacity', '1');
+        }
+    });
+}
+
+function editBankCount(id, target){
+    $('#question-content').css('opacity', '0.5');
+
+    $.ajax({
+        url: '/test/' + target + '/bank/' + id +'/edit',
+        type: 'GET',
+        success: function(response) {
+            $('#bank-'+id+'-row').replaceWith(response.html).css('opacity', '1');;
+            $('#question-content').css('opacity', '1');
+        },
+        error: function() {
+            alert('Could not edit question.');
+            $('#question-content').css('opacity', '1');
+        }
+    });
+}
+
+function changeBankCount(id, target, formElement){
+    $('#question-content').css('opacity', '0.5');
+
+    let form = $(formElement);
+
+    form.find('.is-invalid').removeClass('is-invalid');
+    form.find('.invalid-feedback').text('');
+
+    let formData = new FormData(formElement);
+
+    $.ajax({
+        url: form.attr('action'),
+        type: 'POST',
+        data: formData,
+        processData: false,
+        contentType: false,
+        success: function(response) {
+            $('#bank-'+id+'-row').replaceWith(response.html).css('opacity', '1');;
+            $('#question-content').css('opacity', '1');
+        },
+        error: function() {
+            alert('Could not save question update.');
             $('#question-content').css('opacity', '1');
         }
     });
@@ -100,6 +144,16 @@ $(document).ready(function() {
     $(document).on('click', '.edit-question-btn', function() {
         const id = $(this).data('id');
         editQuestion(id);
+    });
+
+    $(document).on('click', '.edit-bank-count-btn', function(e){
+        if (e.isDefaultPrevented()) return;
+        
+        e.preventDefault();
+
+        const target = $(this).data('targetId');
+        const id = $(this).data('id');
+        editBankCount(id, target);
     });
 
     $(document).on('submit', '#edit-question-form', function(e) {
@@ -177,6 +231,16 @@ $(document).ready(function() {
         const target = $(this).data('targetId');
         const id = $(this).data('id');
         removeBank(id, target);
+    });
+
+    $(document).on('submit', '#change-bank-count-form', function(e) {
+        if (e.isDefaultPrevented()) return;
+        
+        e.preventDefault();
+
+        const target = $(this).data('targetId');
+        const id = $(this).data('id');
+        changeBankCount(id, target, this);
     });
 
 });

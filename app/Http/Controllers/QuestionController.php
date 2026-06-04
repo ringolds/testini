@@ -140,7 +140,7 @@ class QuestionController extends Controller
 
             return response()->json([
                 'success' => true,
-                'html'    => $html
+                'id'    => $currentItemId
             ]);
         }
         return redirect()->back()->with('success', 'Question created successfully!');

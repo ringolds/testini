@@ -244,4 +244,49 @@ class TestController extends Controller
         }
         return redirect()->route('home');
     }
+
+    public function changeBankCount(Test $test, Bank $bank){
+        $user = request()->user();
+        if ($user->can('changeBankCount', [$test, $bank])){  
+            $count = $test->banks->where('id', $bank->id)->first()->pivot->random_count;       
+            if (request()->ajax()) {
+                $mode = "change";
+                $test = $test->id;
+                $html = view('components.bank_row', compact('count', 'bank', 'test', 'mode'))->render();
+
+                return response()->json([
+                    'success' => true,
+                    'html'    => $html
+                ]);
+            }
+        }
+        return redirect()->route('home');
+    }
+
+    public function updateBankCount(Request $request, Test $test, Bank $bank){
+        $user = $request->user();
+        if ($user->can('changeBankCount', [$test, $bank])){
+
+            $rules = [
+                'count' => ['required', 'integer', 'min:1', new ValidQuestionCount($bank)]
+            ];
+
+            $request->validate($rules);
+            if ($request->ajax()) {
+                $test->banks()->updateExistingPivot($bank->id, [
+                    'random_count' => $request->input('count')
+                ]);
+                $count = $request->input('count');
+                $mode = "view";
+                $test = $test->id;
+                $html = view('components.bank_row', compact('count', 'bank', 'test', 'mode'))->render();
+
+                return response()->json([
+                    'success' => true,
+                    'html'    => $html
+                ]);
+            }
+        }
+        return redirect()->route('home');
+    }
 }

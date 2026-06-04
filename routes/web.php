@@ -17,6 +17,8 @@ Route::middleware('admin')->group(function(){
 
 Route::middleware('auth')->group(function() {
     route::get('test/{test}/banks', [TestController::class, 'addBank'])->name('test.addBank');
+    route::get('test/{test}/bank/{bank}/edit', [TestController::class, 'changeBankCount'])->name('test.changeBankCount');
+    route::put('test/{test}/bank/{bank}/edit', [TestController::class, 'updateBankCount'])->name('test.updateBankCount');
     route::post('test/{test}/bank/{bank}', [TestController::class, 'saveBank'])->name('test.saveBank');
     Route::delete('/test/{test}/bank/{bank}', [TestController::class, 'removeBank'])->name('test.removeBank');
     Route::get('map/{map}/config', [MapController::class, 'getConfig'])->name('map.config'); 

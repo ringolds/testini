@@ -205,7 +205,7 @@ $(document).ready(function() {
             processData: false,
             contentType: false,
             success: function(response) {
-                $(content).html(response.html).css('opacity', '1');
+                loadCollection(response.id, 'manage', response.id)
             },
             error: function(xhr) {
                 if (xhr.status === 422) {

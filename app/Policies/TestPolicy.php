@@ -44,9 +44,15 @@ class TestPolicy
     /**
      * Determine whether the user can update the model.
      */
-    public function update(User $user, Test $test): bool
+    public function update(User $user, Test|int $test): bool
     {
-        return $test->user_id === $user->id;
+        if($test instanceof Test){
+            return $test->user_id === $user->id;
+        }
+        else{
+            return Test::where('id', $test)->where('user_id', $user->id)->exists();
+        }
+        
     }
 
     /**
@@ -80,11 +86,16 @@ class TestPolicy
 
     public function addBankToTest(User $user, Test $test, Bank $bank): bool
     {
-        return $user->id === $test->user_id && !$test->banks->where('id', $bank->id)->exists();
+        return $user->id === $test->user_id && !$test->banks()->where('id', $bank->id)->exists();
     }
 
     public function removeBankFromTest(User $user, Test $test, Bank $bank): bool
     {
-        return $user->id === $test->user_id && $test->banks->where('id', $bank->id)->exists();
+        return $user->id === $test->user_id && $test->banks()->where('id', $bank->id)->exists();
+    }
+
+    public function changeBankCount(User $user, Test $test, Bank $bank): bool
+    {
+        return $user->id === $test->user_id && $test->banks()->where('id', $bank->id)->exists();
     }
 }
