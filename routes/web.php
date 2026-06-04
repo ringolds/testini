@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\BankController;
+use App\Http\Controllers\GameController;
 use App\Http\Controllers\MapController;
 use App\Http\Controllers\QuestionController;
 use App\Http\Controllers\TestController;
@@ -16,6 +17,7 @@ Route::middleware('admin')->group(function(){
 });
 
 Route::middleware('auth')->group(function() {
+    route::get('game/{test}', [GameController::class, 'start'])->name('game.start');
     route::get('test/{test}/banks', [TestController::class, 'addBank'])->name('test.addBank');
     route::get('test/{test}/bank/{bank}/edit', [TestController::class, 'changeBankCount'])->name('test.changeBankCount');
     route::put('test/{test}/bank/{bank}/edit', [TestController::class, 'updateBankCount'])->name('test.updateBankCount');

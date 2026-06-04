@@ -51,6 +51,6 @@ class Question extends Model
     }
 
     public function resultItems(){
-        return $this->hasMany(ResultItems::class, 'question_id');
+        return $this->hasMany(ResultItem::class, 'question_id');
     }
 }

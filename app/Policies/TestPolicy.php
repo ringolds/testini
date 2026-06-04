@@ -98,4 +98,16 @@ class TestPolicy
     {
         return $user->id === $test->user_id && $test->banks()->where('id', $bank->id)->exists();
     }
+
+    public function start(User $user, Test $test): bool
+    {
+        return !$user->results()->where('test_id', $test->id)->whereNull('end_time')->exists() 
+        && ($test->user_id==$user->id || $test->public==true);
+    }
+
+    public function continue(User $user, Test $test): bool
+    {
+        return $user->results()->where('test_id', $test->id)->whereNull('end_time')->exists() 
+        && ($test->user_id==$user->id || $test->public==true);
+    }
 }

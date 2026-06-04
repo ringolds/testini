@@ -14,6 +14,10 @@ class Test extends Model
         'user_id',
     ];
 
+    protected $casts = [
+        'public' => 'boolean',
+    ];
+
     public function user(){
         return $this->belongsTo(User::class, 'user_id');
     }

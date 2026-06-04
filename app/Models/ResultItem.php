@@ -4,14 +4,15 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
-class ResultItems extends Model
+class ResultItem extends Model
 {
     protected $fillable = [
         'result_id',
         'question_id',
         'is_correct',
         'duration',
-        'user_answer_content'
+        'user_answer_content',
+        'order'
     ];
 
     public function result(){

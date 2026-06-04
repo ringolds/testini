@@ -10,6 +10,8 @@ class Result extends Model
         'score',
         'user_id',
         'test_id',
+        'start_time',
+        'end_time'
     ];
 
     public function user(){
@@ -21,6 +23,6 @@ class Result extends Model
     }
 
     public function items(){
-        return $this->hasMany(ResultItems::class);
+        return $this->hasMany(ResultItem::class)->orderBy('order', 'asc');
     }
 }
