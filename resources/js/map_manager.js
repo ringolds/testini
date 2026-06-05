@@ -46,7 +46,6 @@ $(document).ready(function(){
 function loadMapConfig(container){
     var configEndpoint = container.getAttribute("data-config-endpoint");
     if (!configEndpoint) return;
-    console.log("hey")
     fetch(configEndpoint, {
         headers: {
             'X-Requested-With': 'XMLHttpRequest',
@@ -125,22 +124,81 @@ function initializeMap(config, container){
             });
         }
 
-        polygonSeries.mapPolygons.template.states.create("hover", {
-            fill: am5.color("#9de7b6")
-        });
-
         polygonSeries.mapPolygons.template.states.create("active", {
             fill: am5.color("#1b26bd")
         });
 
         var lastSelectedPolygon;
 
-        polygonSeries.events.on("datavalidated", function() {
-            var parentWrapper = container.closest('.dynamic-field-map');
-            if (parentWrapper) {
-                var hiddenInput = parentWrapper.querySelector('.selected-target');
+        if(config.mode!='question'){
+            polygonSeries.mapPolygons.template.states.create("hover", {
+                fill: am5.color("#9de7b6")
+            });
+
+            polygonSeries.events.on("datavalidated", function() {
+                var parentWrapper = container.closest('.dynamic-field-map');
+                if (parentWrapper) {
+                    var hiddenInput = parentWrapper.querySelector('.selected-target');
+                    if (hiddenInput && hiddenInput.value !== "") {
+                        var dataItem = polygonSeries.getDataItemById(hiddenInput.value);
+                        if (dataItem) {
+                            var targetPolygon = dataItem.get("mapPolygon");
+                            if (targetPolygon) {
+                                lastSelectedPolygon = targetPolygon;
+                                lastSelectedPolygon.set("active", true);
+                            }
+                        }
+                    }
+                }
+            });
+
+            
+            polygonSeries.mapPolygons.template.events.on("click", function(ev) {
+                if (lastSelectedPolygon && lastSelectedPolygon !== ev.target) {
+                    lastSelectedPolygon.set("active", false);
+                }
+
+                var polygon = ev.target;
+                polygon.set("active", true);
+                lastSelectedPolygon = polygon;
+
+                var dataContext = polygon.dataItem.dataContext;
+
+                var placeholder = document.getElementById('inspector-placeholder');
+                var inspector = document.getElementById('inspector-data');
+                var name = document.getElementById('selected-name');
+                var id = document.getElementById('selected-id');
+                var parentWrapper = container.closest('.dynamic-field-map');
+
+                if(placeholder){
+                    placeholder.style.display = 'none';
+                }
+
+                if(inspector){
+                    inspector.style.display = 'block';
+                }
+
+                if(name){
+                    name.innerText = dataContext.name;
+                }
+
+                if(id){
+                    id.innerText = dataContext.id;
+                }
+
+                if (parentWrapper) {
+                    var hiddenInput = parentWrapper.querySelector('.selected-target');
+                    if (hiddenInput) {
+                        hiddenInput.value = dataContext.id;
+                    }
+                }
+            });
+        }
+        else{
+            polygonSeries.events.on("datavalidated", function() {
+                var hiddenInput = config.target;
                 if (hiddenInput && hiddenInput.value !== "") {
-                    var dataItem = polygonSeries.getDataItemById(hiddenInput.value);
+                    var dataItem = polygonSeries.getDataItemById(hiddenInput);
                     if (dataItem) {
                         var targetPolygon = dataItem.get("mapPolygon");
                         if (targetPolygon) {
@@ -149,52 +207,9 @@ function initializeMap(config, container){
                         }
                     }
                 }
-            }
-        });
+            });
+        }
 
-        
-        polygonSeries.mapPolygons.template.events.on("click", function(ev) {
-            if (lastSelectedPolygon && lastSelectedPolygon !== ev.target) {
-                lastSelectedPolygon.set("active", false);
-            }
-
-            var polygon = ev.target;
-            polygon.set("active", true);
-            lastSelectedPolygon = polygon;
-
-            var dataContext = polygon.dataItem.dataContext;
-
-            var placeholder = document.getElementById('inspector-placeholder');
-            var inspector = document.getElementById('inspector-data');
-            var name = document.getElementById('selected-name');
-            var id = document.getElementById('selected-id');
-            var parentWrapper = container.closest('.dynamic-field-map');
-
-            if(placeholder){
-                placeholder.style.display = 'none';
-            }
-
-            if(inspector){
-                inspector.style.display = 'block';
-            }
-
-            if(name){
-                name.innerText = dataContext.name;
-            }
-
-            if(id){
-                id.innerText = dataContext.id;
-            }
-
-            if (parentWrapper) {
-                var hiddenInput = parentWrapper.querySelector('.selected-target');
-                if (hiddenInput) {
-                    hiddenInput.value = dataContext.id;
-                }
-            }
-        });
-
-        
         polygonSeries.events.on("datavalidated", function() {
             chart.goHome();
         });

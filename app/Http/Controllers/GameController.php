@@ -67,4 +67,79 @@ class GameController extends Controller
         }
         return redirect(route('home'));
     }
+
+    public function getQuestion(Result $result, ResultItem $resultItem){
+        if(request()->user()->can('getQuestion', [$result, $resultItem])){
+            $question = $resultItem->question->prompt->component;
+            $description = $resultItem->question->description?->component;
+            
+            $componentType = $resultItem->question->answer->component_type;
+
+            if($componentType == 'App\Models\QuestionImage'){
+                $answerMode = 'multiple';
+            }
+            else{
+                $answerMode = 'single';
+            }
+
+            if($answerMode == 'multiple'){
+                $randomItems = $result->items()->where('id', '!=', $resultItem->id)
+                    ->whereHas('question.answer', function ($query) use ($componentType){
+                        $query->where('component_type', $componentType);
+                    })
+                    ->with(['question.answer.component'])
+                    ->inRandomOrder()
+                    ->limit(3)
+                    ->get();
+
+                if($randomItems->count()<1){
+                    abort(404, 'No matching question options found.');
+                }
+
+                $choices = $randomItems->map(function ($item) {
+                    return $item->question->answer->component;
+                });
+
+                $correctAnswerComponent = $resultItem->question->answer->component;
+                $choices->push($correctAnswerComponent);
+                $choices = $choices->shuffle();
+            }
+            else{
+                $choices = null;
+            }
+            
+            return view('games.game_entry', [
+                'question' => $question,
+                'resultItem' => $resultItem,
+                'answerMode' => $answerMode,
+                'description' => $description,
+                'choices' => $choices,
+                'answerType' => $componentType
+            ]);
+        }
+        else{
+            return redirect(route('home'));
+        }
+    }
+
+    public function mapConfig(ResultItem $resultItem, string $mode){
+        if($mode == 'question' && $resultItem->question->prompt->component_type == 'App\Models\QuestionMap'){
+            $config = [
+                'js_path' => $resultItem->question->prompt->component->map->js_path,
+                'target' => $resultItem->question->prompt->component->target_region    
+            ];
+        }
+        else if($mode == 'answer' && $resultItem->question->answer->component_type == 'App\Models\QuestionMap'){
+            $config = [
+                'js_path' => $resultItem->question->answer->component->map->js_path,
+            ];
+        }
+        else{
+           abort(404, "Map not found for this question");
+        }
+
+        $config['mode'] = $mode;
+        
+        return response()->json($config);
+    }
 }

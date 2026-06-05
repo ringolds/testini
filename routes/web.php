@@ -17,6 +17,8 @@ Route::middleware('admin')->group(function(){
 });
 
 Route::middleware('auth')->group(function() {
+    route::get('game/{resultItem}/config/{mode}', [GameController::class, 'mapConfig'])->name('game.mapConfig');
+    route::get('game/{result}/question/{resultItem}', [GameController::class, 'getQuestion'])->name('game.getQuestion');
     route::get('game/{test}', [GameController::class, 'start'])->name('game.start');
     route::get('test/{test}/banks', [TestController::class, 'addBank'])->name('test.addBank');
     route::get('test/{test}/bank/{bank}/edit', [TestController::class, 'changeBankCount'])->name('test.changeBankCount');
