@@ -12,18 +12,57 @@ class GameController extends Controller
 {
     public function start(Test $test){
         if(request()->user()->can('start', $test)){
+            $staticQuestions = $test->questions()->pluck('id')->toArray();
+
+            $staticQuestions = $test->questions()->pluck('id')->toArray();
+
+            $staticImageIds = \App\Models\Question::whereIn('id', $staticQuestions)
+                ->whereHas('answer', fn($q) => $q->where('component_type', \App\Models\QuestionImage::class))
+                ->pluck('id')
+                ->toArray();
+
+            $staticImageCount = count($staticImageIds);
+
+            $bankIds = $test->banks->pluck('id')->toArray();
+            $allAvailableBankImageIds = \App\Models\Question::whereHas('banks', fn($q) => $q->whereIn('banks.id', $bankIds))
+                ->whereHas('answer', fn($q) => $q->where('component_type', \App\Models\QuestionImage::class))
+                ->pluck('id')
+                ->unique() // 
+                ->toArray();
+
+            $eligibleBankImageIds = array_diff($allAvailableBankImageIds, $staticImageIds);
+            $totalBankImagesAvailable = count($eligibleBankImageIds);
+            $totalPotentialImages = $staticImageCount + $totalBankImagesAvailable;
+
+            if ($totalPotentialImages === 1) {
+                return response()->json(['error' => 'This test blueprint has exactly 1 total image question available, making multiple-choice generation impossible.'], 422);
+            }
+
+            $guaranteedImageIds = [];
+
+            if ($staticImageCount === 1 && $totalBankImagesAvailable >= 1) {
+                // We need exactly 1 more from any bank to make it 2
+                $guaranteedImageIds = \App\Models\Question::whereHas('banks', fn($q) => $q->whereIn('banks.id', $bankIds))
+                    ->whereHas('answer', fn($q) => $q->where('component_type', \App\Models\QuestionImage::class))
+                    ->inRandomOrder()->limit(1)->pluck('id')->toArray();
+            } 
+            elseif ($staticImageCount === 0 && $totalBankImagesAvailable >= 2) {
+                // We need exactly 2 from the banks to ensure our multiple choice has choices
+                $guaranteedImageIds = \App\Models\Question::whereHas('banks', fn($q) => $q->whereIn('banks.id', $bankIds))
+                    ->whereHas('answer', fn($q) => $q->where('component_type', \App\Models\QuestionImage::class))
+                    ->inRandomOrder()->limit(2)->pluck('id')->toArray();
+            }
+
+            $randomQuestions = $guaranteedImageIds;
+
             $result = Result::create([
                 'user_id' => request()->user()->id,
                 'test_id' => $test->id,
                 'start_time'=> now()
             ]);
 
-            $staticQuestions = $test->questions()->pluck('id')->toArray();
-            $randomQuestions = [];
-
-            foreach($test->banks as $bank){
+            foreach ($test->banks as $bank) {
                 $count = $bank->pivot->random_count;
-
                 $available = $bank->questions()->count();
 
                 if($available<$count){
@@ -33,8 +72,19 @@ class GameController extends Controller
                     ]);
                 }
 
-                $bankIds = $bank->questions()->inRandomOrder()->take($count)->pluck('id')->toArray();
-                $randomQuestions = array_merge($randomQuestions, $bankIds);
+                if ($count > 0) {
+                    $available = $bank->questions()->whereNotIn('id', $randomQuestions)->count();
+                    if ($available < $count) { $count = $available; }
+
+                    $fetchedIds = $bank->questions()
+                        ->whereNotIn('id', $guaranteedImageIds)
+                        ->inRandomOrder()
+                        ->take($count)
+                        ->pluck('id')
+                        ->toArray();
+
+                    $randomQuestions = array_merge($randomQuestions, $fetchedIds);
+                }
             }
 
             $allQuestions = array_merge($staticQuestions, $randomQuestions);
@@ -88,7 +138,7 @@ class GameController extends Controller
                         $query->where('component_type', $componentType);
                     })
                     ->with(['question.answer.component'])
-                    ->inRandomOrder()
+                    ->inRandomOrder($result->id+$resultItem->id)
                     ->limit(3)
                     ->get();
 
@@ -108,14 +158,44 @@ class GameController extends Controller
                 $choices = null;
             }
             
-            return view('games.game_entry', [
+            $preExistingResults = null;
+
+            if ($resultItem->is_correct !== null) {
+                $preExistingResults = [
+                    'next_question_index' => $this->calculateNextIndex($result, $resultItem),
+                    'correct'             => $resultItem->is_correct,
+                    'userAnswer'          => $resultItem->user_answer_content
+                ];
+
+                switch ($resultItem->question->answer->component_type) {
+                    case 'App\Models\QuestionText':
+                        $preExistingResults['answer'] = (string) $resultItem->question->answer->component->text;
+                        break;
+
+                    case 'App\Models\QuestionImage':
+                        $preExistingResults['answer'] = (string) $resultItem->question->answer->component->id;
+                        break;
+
+                    case 'App\Models\QuestionMap':
+                        $preExistingResults['answer'] = (string) $resultItem->question->answer->component->target_region;
+                        break;
+
+                    default:
+                        abort(422, 'Invalid question component type detected.');
+                }
+
+            }
+
+            $html =  view('games.game_entry', [
                 'question' => $question,
                 'resultItem' => $resultItem,
                 'answerMode' => $answerMode,
                 'description' => $description,
                 'choices' => $choices,
-                'answerType' => $componentType
-            ]);
+                'answerType' => $componentType,
+            ])->render();
+
+            return response()->json(['html' => $html, 'results'=>$preExistingResults]);
         }
         else{
             return redirect(route('home'));
@@ -173,22 +253,7 @@ class GameController extends Controller
                 'user_answer' => $userAnswer
             ]);
 
-            $currentIndex = $resultItem->order; 
-
-            $nextIndex = null;
-            $totalItems = $result->items->count();
-
-            for ($i = 0; $i < $totalItems; $i++) {
-                $checkIndex = ($currentIndex + $i) % $totalItems;
-                $checkIndex++;
-
-                $item = $result->items()->where('order', '=', $checkIndex)->first();
-
-                if ($item && $item->is_correct === null) {
-                    $nextIndex = $item->id;
-                    break;
-                }
-            }
+            $nextIndex = $this->calculateNextIndex($result, $resultItem);
 
             if ($nextIndex !== null) {
                 return response()->json(['next_question_index' => $nextIndex, 'correct'=>$correct, 'answer'=>str($answer), 'userAnswer'=>$userAnswer, 'finished'=>false]);
@@ -203,6 +268,26 @@ class GameController extends Controller
         else{
             return redirect(route('home'));
         }
+    }
+
+    private function calculateNextIndex(Result $result, ResultItem $resultItem): ?int
+    {
+        $currentIndex = $resultItem->order; 
+
+        $totalItems = $result->items->count();
+
+        for ($i = 0; $i < $totalItems; $i++) {
+            $checkIndex = ($currentIndex + $i) % $totalItems;
+            $checkIndex++;
+
+            $item = $result->items()->where('order', '=', $checkIndex)->first();
+
+            if ($item && $item->is_correct === null) {
+                return $item->id;
+            }
+        }
+
+        return null;
     }
 
     public function summary(Result $result){

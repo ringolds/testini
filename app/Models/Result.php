@@ -28,6 +28,6 @@ class Result extends Model
     }
 
     public function items(){
-        return $this->hasMany(ResultItem::class)->orderBy('order', 'asc');
+        return $this->hasMany(ResultItem::class);
     }
 }
