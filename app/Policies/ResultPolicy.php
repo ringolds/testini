@@ -13,4 +13,17 @@ class ResultPolicy
     {
         return $result->user_id == $user->id && $resultItem->result_id == $result->id;
     }
+
+    public function submitQuestion(User $user, Result $result, ResultItem $resultItem):bool
+    {
+        return $result->user_id == $user->id && 
+        $resultItem->result_id == $result->id &&
+        $result->end_time == null &&
+        $resultItem->is_correct == null;
+    }
+
+    public function getSummary(User $user, Result $result):bool
+    {
+        return $result->user_id == $user->id && $result->end_time != null;
+    }
 }

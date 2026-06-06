@@ -122,6 +122,100 @@ class GameController extends Controller
         }
     }
 
+    public function submitQuestion(Request $request, Result $result, ResultItem $resultItem){
+        if($request->user()->can('submitQuestion', [$result, $resultItem])){
+            $answer = $resultItem->question->answer;
+
+            switch ($answer->component_type) {
+                case 'App\Models\QuestionText':
+                    $rules['question_answer'] = 'required|string|max:250';
+                    break;
+
+                case 'App\Models\QuestionImage':
+                    $rules['multiple_choice'] = 'required|integer';
+                    break;
+
+                case 'App\Models\QuestionMap':
+                    $rules['answer_map_target'] = 'required|string|max:50';
+                    break;
+
+                default:
+                    abort(422, 'Invalid question component type detected.');
+            }
+
+            $request->validate($rules);
+            
+            switch ($answer->component_type) {
+                case 'App\Models\QuestionText':
+                    $userAnswer = $request->input('question_answer');
+                    $answer = $answer->component->text;
+                    $correct = !strcasecmp($answer, $userAnswer);
+                    break;
+                case 'App\Models\QuestionImage':
+                    $userAnswer = $request->input('multiple_choice');
+                    $answer = $answer->component->id;
+                    $correct = $answer == $userAnswer;
+                    break;
+                case 'App\Models\QuestionMap':
+                    $userAnswer = $request->input('answer_map_target');
+                    $answer = $answer->component->target_region;
+                    $correct = !strcasecmp($answer, $userAnswer);
+                    break;
+                default:
+                    abort(422, 'Invalid question component type detected.');
+            }
+
+            $resultItem->is_correct = $correct;
+            $resultItem->user_answer_content = $userAnswer;
+            $resultItem->update();
+
+            session()->put("verified_map_item_{$resultItem->id}", [
+                'user_answer' => $userAnswer
+            ]);
+
+            $currentIndex = $resultItem->order; 
+
+            $nextIndex = null;
+            $totalItems = $result->items->count();
+
+            for ($i = 0; $i < $totalItems; $i++) {
+                $checkIndex = ($currentIndex + $i) % $totalItems;
+                $checkIndex++;
+
+                $item = $result->items()->where('order', '=', $checkIndex)->first();
+
+                if ($item && $item->is_correct === null) {
+                    $nextIndex = $item->id;
+                    break;
+                }
+            }
+
+            if ($nextIndex !== null) {
+                return response()->json(['next_question_index' => $nextIndex, 'correct'=>$correct, 'answer'=>str($answer), 'userAnswer'=>$userAnswer, 'finished'=>false]);
+            } else {
+                $correctCount = $result->items()->where('is_correct', '=', 1)->count();
+                $result->score= $correctCount;
+                $result->end_time = now();
+                $result->update();
+                return response()->json(['next_question_index' => $nextIndex, 'correct'=>$correct, 'answer'=>str($answer), 'userAnswer'=>$userAnswer, 'finished'=>true]);
+            }
+        }
+        else{
+            return redirect(route('home'));
+        }
+    }
+
+    public function summary(Result $result){
+        if(request()->user()->can('getSummary', $result)){
+            $durationString = $result->end_time->diffAsCarbonInterval($result->start_time)->forHumans();
+            return view('games.summary', ['score'=>$result->score, 'total'=> $result->items()->count(), 'duration'=> $durationString]);
+        }
+        else{
+            return redirect(route('home'));
+        }
+        
+    }
+
     public function mapConfig(ResultItem $resultItem, string $mode){
         if($mode == 'question' && $resultItem->question->prompt->component_type == 'App\Models\QuestionMap'){
             $config = [
@@ -132,6 +226,22 @@ class GameController extends Controller
         else if($mode == 'answer' && $resultItem->question->answer->component_type == 'App\Models\QuestionMap'){
             $config = [
                 'js_path' => $resultItem->question->answer->component->map->js_path,
+            ];
+        }
+        else if($mode == 'result' && $resultItem->question->answer->component_type == 'App\Models\QuestionMap'){
+            $sessionData = session()->get("verified_map_item_{$resultItem->id}");
+            $isAnswered = !empty($sessionData) || $resultItem->is_correct !== null;
+
+            if (!$isAnswered) {
+                abort(403, "Access denied. You must submit an answer first.");
+            }
+
+            $userAnswer   = $sessionData['user_answer'] ?? $resultItem->user_answer_content;
+
+            $config = [
+                'js_path' => $resultItem->question->answer->component->map->js_path,
+                'target' => $resultItem->question->answer->component->target_region,
+                'user_answer' => $userAnswer,
             ];
         }
         else{

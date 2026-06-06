@@ -2,7 +2,7 @@
 <div class="card p-3" id="question-{{$resultItem->id}}">
     <h4>Question</h4>
     @if($question instanceof \App\Models\QuestionText)
-        <p>{{$question->text}}</p>
+        <h3>{{$question->text}}</h3>
     @elseif($question instanceof \App\Models\QuestionImage)
         <div class="d-flex justify-content-center w-100">
             <img src="{{ asset('storage/' . $question->path) }}" 
@@ -22,6 +22,6 @@
         </div>
     @endif
     @if($description!=null)
-        <p>{{$description->text}}</p>
+        <h3>{{$description->text}}</h3>
     @endif
 </div>

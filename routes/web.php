@@ -17,23 +17,32 @@ Route::middleware('admin')->group(function(){
 });
 
 Route::middleware('auth')->group(function() {
+    //game
     route::get('game/{resultItem}/config/{mode}', [GameController::class, 'mapConfig'])->name('game.mapConfig');
+    route::get('game/{result}/summary', [GameController::class, 'summary'])->name('game.summary');
     route::get('game/{result}/question/{resultItem}', [GameController::class, 'getQuestion'])->name('game.getQuestion');
+    route::post('game/{result}/question/{resultItem}', [GameController::class, 'submitQuestion'])->name('game.submitQuestion');
     route::get('game/{test}', [GameController::class, 'start'])->name('game.start');
+    //test-bank
     route::get('test/{test}/banks', [TestController::class, 'addBank'])->name('test.addBank');
     route::get('test/{test}/bank/{bank}/edit', [TestController::class, 'changeBankCount'])->name('test.changeBankCount');
     route::put('test/{test}/bank/{bank}/edit', [TestController::class, 'updateBankCount'])->name('test.updateBankCount');
     route::post('test/{test}/bank/{bank}', [TestController::class, 'saveBank'])->name('test.saveBank');
     Route::delete('/test/{test}/bank/{bank}', [TestController::class, 'removeBank'])->name('test.removeBank');
+    //map
     Route::get('map/{map}/config', [MapController::class, 'getConfig'])->name('map.config'); 
-    Route::resource('test', TestController::class); 
+    //resources
+    Route::resource('test', TestController::class);
     Route::resource('bank', BankController::class); 
     Route::resource('question', QuestionController::class);
+    //auth
     Route::post('/logout', [AuthController::class, 'logout']) ->name('logout');  
+    //bank-question
     Route::get('/bank/{bank}/questions', [BankController::class, 'addQuestion']) ->name('addQuestion');
-    Route::get('/test/{test}/questions', [TestController::class, 'addQuestion']) ->name('addQuestionToTest');   
     Route::post('/question/{question}/bank/{bank}', [QuestionController::class, 'addToBank'])->name('question.addToBank');
     Route::delete('/question/{question}/bank/{bank}', [QuestionController::class, 'removeFromBank'])->name('question.removeFromBank');
+    //test-question
+    Route::get('/test/{test}/questions', [TestController::class, 'addQuestion']) ->name('addQuestionToTest'); 
     Route::post('/question/{question}/test/{test}', [QuestionController::class, 'addToTest'])->name('question.addToTest');
     Route::delete('/question/{question}/test/{test}', [QuestionController::class, 'removeFromTest'])->name('question.removeFromTest');
 });

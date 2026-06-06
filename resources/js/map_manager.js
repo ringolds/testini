@@ -24,7 +24,6 @@ const globalMapObserver = new MutationObserver(function (mutations) {
         if (mutation.type === "attributes" && mutation.attributeName === "data-config-endpoint") {
             const container = mutation.target;
             if (container.classList.contains('interactive-map')) {
-                console.log("Map config endpoint changed, reloading...", container);
                 loadMapConfig(container);
             }
         }
@@ -113,7 +112,7 @@ function initializeMap(config, container){
         
         polygonSeries.mapPolygons.template.setAll({
             interactive: true,
-            fill: am5.color("#1bbd51"), 
+            fill: am5.color("#1b9dbd"), 
             stroke: am5.color("#cbd1c2"), 
             strokeWidth: 1.5
         });
@@ -125,12 +124,12 @@ function initializeMap(config, container){
         }
 
         polygonSeries.mapPolygons.template.states.create("active", {
-            fill: am5.color("#1b26bd")
+            fill: am5.color("#ecfc0e")
         });
 
         var lastSelectedPolygon;
 
-        if(config.mode!='question'){
+        if(config.mode!='question' && config.mode!='result'){
             polygonSeries.mapPolygons.template.states.create("hover", {
                 fill: am5.color("#9de7b6")
             });
@@ -194,7 +193,7 @@ function initializeMap(config, container){
                 }
             });
         }
-        else{
+        if(config.mode =='question'){
             polygonSeries.events.on("datavalidated", function() {
                 var hiddenInput = config.target;
                 if (hiddenInput && hiddenInput.value !== "") {
@@ -202,8 +201,32 @@ function initializeMap(config, container){
                     if (dataItem) {
                         var targetPolygon = dataItem.get("mapPolygon");
                         if (targetPolygon) {
-                            lastSelectedPolygon = targetPolygon;
-                            lastSelectedPolygon.set("active", true);
+                            targetPolygon.set("active", true);
+                        }
+                    }
+                }
+            });
+        }
+        if(config.mode =='result'){
+            polygonSeries.events.on("datavalidated", function() {
+                var correctTargetId = config.target;      
+                var userAnswerId = config.user_answer;
+
+                if (correctTargetId && correctTargetId !== "") {
+                    var correctDataItem = polygonSeries.getDataItemById(correctTargetId);
+                    if (correctDataItem) {
+                        var correctPolygon = correctDataItem.get("mapPolygon");
+                        if (correctPolygon) {
+                            correctPolygon.set("fill", am5.color("#3be21a")); // Bootstrap success green
+                        }
+                    }
+                    if (userAnswerId && userAnswerId !== "" && userAnswerId !== correctTargetId) {
+                        var userNonCorrectDataItem = polygonSeries.getDataItemById(userAnswerId);
+                        if (userNonCorrectDataItem) {
+                            var userPolygon = userNonCorrectDataItem.get("mapPolygon");
+                            if (userPolygon) {
+                                userPolygon.set("fill", am5.color("#dc3545"));
+                            }
                         }
                     }
                 }
