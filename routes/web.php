@@ -23,6 +23,7 @@ Route::middleware('auth')->group(function() {
     route::get('game/{result}/question/{resultItem}', [GameController::class, 'getQuestion'])->name('game.getQuestion');
     route::post('game/{result}/question/{resultItem}', [GameController::class, 'submitQuestion'])->name('game.submitQuestion');
     route::get('game/{test}', [GameController::class, 'start'])->name('game.start');
+    route::get('/', [TestController::class, 'availableTestIndex'])->name('home');
     //test-bank
     route::get('test/{test}/banks', [TestController::class, 'addBank'])->name('test.addBank');
     route::get('test/{test}/bank/{bank}/edit', [TestController::class, 'changeBankCount'])->name('test.changeBankCount');

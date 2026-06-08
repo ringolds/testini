@@ -173,6 +173,22 @@ $(document).ready(function() {
         loadSummary(resultId);
     });
 
+    $(document).on('keydown', '#answer-form', function(event) {
+        if (event.keyCode === 13 || event.key === 'Enter') {
+            console.log("entered");
+            let activeElement = document.activeElement;
+            console.log(activeElement
+            )
+            if ($('#submit-btn').length > 0) {
+                event.preventDefault(); 
+                $('#submit-btn').click(); 
+                return false;
+            }
+            event.preventDefault();
+            return false;
+        }
+    });
+
 
 
     firstId = $('.question-btn').first().data('id');

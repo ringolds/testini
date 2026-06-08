@@ -11,7 +11,13 @@ class TestPolicy
 {
     public function before(User $user, string $ability): ?bool
     {
+        $exceptions = ['start', 'continue'];
+
         if ($user->is_admin) {
+            if (in_array($ability, $exceptions)) {
+                return null; 
+            }
+
             return true;
         }
 

@@ -289,4 +289,24 @@ class TestController extends Controller
         }
         return redirect()->route('home');
     }
+
+    public function availableTestIndex(Request $request)
+    {
+        $perPage = $request->input('per_page', 12);
+        if (!in_array($perPage, [12, 24])) {
+            $perPage = 12; 
+        }
+        $userId = $request->user()->id;
+        $tests = \App\Models\Test::with('user')->where(function ($query) use ($userId){
+            $query->where('public', true);
+            if ($userId) {
+                $query->orWhere('user_id', $userId);
+            }
+        })
+        ->latest()
+        ->paginate($perPage)
+        ->withQueryString();
+
+        return view('tests.available_index', compact('tests'));
+    }
 }

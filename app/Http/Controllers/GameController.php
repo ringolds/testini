@@ -7,6 +7,7 @@ use App\Models\Question;
 use App\Models\Result;
 use App\Models\ResultItem;
 use App\Models\Test;
+use Illuminate\Support\Str;
 
 class GameController extends Controller
 {
@@ -229,22 +230,20 @@ class GameController extends Controller
                 case 'App\Models\QuestionText':
                     $userAnswer = $request->input('question_answer');
                     $answer = $answer->component->text;
-                    $correct = !strcasecmp($answer, $userAnswer);
                     break;
                 case 'App\Models\QuestionImage':
                     $userAnswer = $request->input('multiple_choice');
                     $answer = $answer->component->id;
-                    $correct = $answer == $userAnswer;
                     break;
                 case 'App\Models\QuestionMap':
                     $userAnswer = $request->input('answer_map_target');
                     $answer = $answer->component->target_region;
-                    $correct = !strcasecmp($answer, $userAnswer);
                     break;
                 default:
                     abort(422, 'Invalid question component type detected.');
             }
-
+            
+            $correct = Str::lower($answer) === Str::lower($userAnswer);
             $resultItem->is_correct = $correct;
             $resultItem->user_answer_content = $userAnswer;
             $resultItem->update();
