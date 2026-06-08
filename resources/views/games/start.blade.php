@@ -46,7 +46,7 @@
         </div>
         <div id="game-content" class="container mt-4" data-id=0 data-target-id="">
             <div class="text-center py-5 text-muted">
-                Select a question above!
+                {{__('game.select')}}
             </div>
         </div>
     </div>

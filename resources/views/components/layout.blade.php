@@ -8,6 +8,7 @@
     <title>{{ $title }}</title> 
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css"> 
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
     <style>
         body { overflow-x: hidden; }
         #wrapper { display: flex; width: 100%; align-items: stretch; }
@@ -24,19 +25,44 @@
         <div id="content">
             <nav class="navbar navbar-expand-lg navbar-light bg-light navbar-top p-3">
                 <div class="container-fluid">
-                    <div class="ms-auto">
+                    <div class="ms-auto d-flex align-items-center gap-3">
                         @auth
                             <div class="dropdown">
-                                <span class="me-3">Hi, {{ auth()->user()->name }}</span>
+                                <span class="me-3">{{ auth()->user()->name }}</span>
                                 <form action="{{ route('logout') }}" method="POST" class="d-inline">
                                     @csrf
-                                    <button type="submit" class="btn btn-sm btn-outline-danger">Logout</button>
+                                    <button type="submit" class="btn btn-sm btn-outline-danger">{{__('auth.logout')}}</button>
                                 </form>
                             </div>
                         @else
-                            <a href="{{ route('login') }}" class="btn btn-sm btn-outline-primary">Login</a>
-                            <a href="{{ route('register') }}" class="btn btn-sm btn-primary">Sign Up</a>
+                            <a href="{{ route('login') }}" class="btn btn-sm btn-outline-primary">{{__('auth.login')}}</a>
+                            <a href="{{ route('register') }}" class="btn btn-sm btn-primary">{{__('auth.register')}}</a>
                         @endauth
+                        <div class="dropdown me-3">
+                            <button class="btn btn-outline-secondary dropdown-toggle d-flex align-items-center gap-2" 
+                                    type="button" 
+                                    id="languageDropdown" 
+                                    data-bs-toggle="dropdown" 
+                                    aria-expanded="false">
+                                <span>{{ strtoupper(app()->getLocale()) }}</span>
+                            </button>
+                            
+                            <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="languageDropdown">
+                                <li>
+                                    <a class="dropdown-item d-flex justify-content-between align-items-center {{ app()->getLocale() === 'en' ? 'active' : '' }}" 
+                                    href="{{ route('lang.switch', 'en') }}">
+                                        English <span>EN</span>
+                                    </a>
+                                </li>
+                                
+                                <li>
+                                    <a class="dropdown-item d-flex justify-content-between align-items-center {{ app()->getLocale() === 'lv' ? 'active' : '' }}" 
+                                    href="{{ route('lang.switch', 'lv') }}">
+                                        Latviešu <span>LV</span>
+                                    </a>
+                                </li>
+                            </ul>
+                        </div>
                     </div>
                 </div>
             </nav>

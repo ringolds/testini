@@ -17,12 +17,12 @@
         </style>
     @endpush
     <x-slot name="title"> 
-        Tests 
+        {{__('tests.tests')}} 
     </x-slot> 
     <div class="d-flex justify-content-between align-items-center mb-4">
-        <h1 class="h3 mb-0">My Tests</h1>
+        <h1 class="h3 mb-0">{{__('tests.myTests')}} </h1>
         <a href="{{ route('test.create') }}" class="btn btn-success d-flex align-items-center">
-            <i class="bi bi-plus-lg me-2"></i> Create test
+            <i class="bi bi-plus-lg me-2"></i> {{__('tests.createButton')}} 
         </a>
     </div>
     <div class="container">
@@ -41,7 +41,7 @@
     </div>
     <div id="test-content" data-id=0 data-mode="{{$mode}}" data-target-id="{{$target_id}}">
         <div class="text-center py-5 text-muted">
-            Select a test above to view questions.
+            {{__('tests.select')}} 
         </div>
     </div>
 </x-layout>

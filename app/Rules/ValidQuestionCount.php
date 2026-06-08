@@ -24,10 +24,10 @@ class ValidQuestionCount implements ValidationRule
     public function validate(string $attribute, mixed $value, Closure $fail): void
     {
         if(!$this->bank){
-            $fail("Invalid bank");
+            $fail(__('errors.invalidBank'));
         }
         if($this->bank && $value > $this->bank->questions->count()){
-            $fail("Not enough questions in the bank");
+            $fail(__('errors.notEnoughQuestions'));
         }
     }
 }

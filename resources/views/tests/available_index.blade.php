@@ -1,12 +1,12 @@
 <x-layout> 
     <x-slot name="title"> 
-        Available tests 
+        {{__('tests.available')}} 
     </x-slot> 
     <div class="container my-5">
-        <h2 class="mb-4">Available Public Tests</h2>
+        <h2 class="mb-4">{{__('tests.available')}} </h2>
 
         <div class="d-flex justify-content-end mb-3">
-            <label class="me-2 align-self-center">Cards per page:</label>
+            <label class="me-2 align-self-center">{{__('tests.cardsPerPage')}} :</label>
             <a href="{{ request()->fullUrlWithQuery(['per_page' => 12, 'page' => 1]) }}" class="btn btn-sm {{ request('per_page', 12) == 12 ? 'btn-primary' : 'btn-outline-primary' }} me-1">12</a>
             <a href="{{ request()->fullUrlWithQuery(['per_page' => 24, 'page' => 1]) }}" class="btn btn-sm {{ request('per_page') == 24 ? 'btn-primary' : 'btn-outline-primary' }}">24</a>
         </div>
@@ -17,9 +17,9 @@
                     <div class="card h-100 shadow-sm">
                         <div class="card-body d-flex flex-column">
                             <h5 class="card-title">{{ $test->name }}</h5>
-                            <p class="card-text text-muted small">Author: {{ $test->user->name}}</p>
-                            <p class="card-text text-muted small">Description: {{ $test->description}}</p>
-                            <a href="{{ route('game.start', $test->id) }}" class="btn btn-success mt-auto w-100">Play Test</a>
+                            <p class="card-text text-muted small">{{__('tests.author')}} : {{ $test->user->name}}</p>
+                            <p class="card-text text-muted small">{{__('tests.description')}} : {{ $test->description}}</p>
+                            <a href="{{ route('game.start', $test->id) }}" class="btn btn-success mt-auto w-100">{{__('tests.play')}} </a>
                         </div>
                     </div>
                 </div>

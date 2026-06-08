@@ -1,6 +1,6 @@
 <x-layout> 
     <x-slot name="title"> 
-        Edit a new Map
+        {{__('maps.edit')}}
     </x-slot> 
     
     @if ($errors->any())
@@ -18,7 +18,7 @@
         @csrf
         @method('PUT') 
         <div class="mb-3"> 
-            <label class="form-label">Name</label> 
+            <label class="form-label">{{__('maps.name')}}</label> 
             <input type="text" name="name" value = "{{ old('name', $map->name)}}" class="form-control"> 
         </div> 
         <img id="map-preview" src="{{ asset('storage/' . $map->svg_path) }}" 
@@ -26,11 +26,11 @@
                                 class="img-fluid mw-100 mh-100" 
                                 style="object-fit: contain; filter: drop-shadow(0px 4px 6px rgba(0,0,0,0.06));">
         <div class="mb-3"> 
-            <label>Image</label> 
+            <label>{{__('maps.image')}}</label> 
             <input id="map-input" type="file" class="form-control" name="map_image">
         </div>  
         
-        <button type="submit" class="btn btn-primary">Save changes</button> 
+        <button type="submit" class="btn btn-primary">{{__('maps.save')}}</button> 
     </form> 
     <script>
         document.getElementById('map-input').addEventListener('change', function(event) {

@@ -29,7 +29,7 @@ class ValidMapTarget implements ValidationRule
 
         $map = Map::find($this->mapId);
         if (!$map) {
-            $fail('The selected map infrastructure does not exist.');
+            $fail(__('errors.mapNotExists'));
             return;
         }
 
@@ -43,11 +43,11 @@ class ValidMapTarget implements ValidationRule
             $response = Http::timeout(3)->get($jsonUrl);
 
             if (! $response->successful()) {
-                $fail('The selected map could not be retrieved.');
+                $fail(__('errors.mapUrlError'));
                 return;
             }
         } catch (\Exception $e) {
-            $fail('There was an exception when retrieving the map retrieved.');
+            $fail(__('errors.mapRetrievalError'));
             return;
         }
 
@@ -55,7 +55,7 @@ class ValidMapTarget implements ValidationRule
         $validIds = $this->extractValidIds($fileContents);
 
         if (!in_array($value, $validIds)) {
-            $fail("The selected region \"{$value}\" is invalid for the chosen map.");
+            $fail(__('errors.invalidRegion', ['value'=>$value]));
         }
     }
 

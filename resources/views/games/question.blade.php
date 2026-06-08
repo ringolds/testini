@@ -1,6 +1,6 @@
 @props(['question', 'resultItem', 'description'=>null])
 <div class="card p-3" id="question-{{$resultItem->id}}">
-    <h4>Question</h4>
+    <h4>{{__('questions.question')}}</h4>
     @if($question instanceof \App\Models\QuestionText)
         <h3>{{$question->text}}</h3>
     @elseif($question instanceof \App\Models\QuestionImage)

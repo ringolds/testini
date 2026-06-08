@@ -57,8 +57,7 @@ class TestController extends Controller
             'public'=> FALSE,
         ]); 
 
-        return redirect()->route('test.index')->with('success', 'Test created 
-        successfully!');   
+        return redirect()->route('test.index')->with('success', __('tests.createSuccess'));   
     }
 
     /**
@@ -137,12 +136,11 @@ class TestController extends Controller
                 return response()->json([
                 'id' => $test->id,
                 'name' => $test->name,
-                'success' => 'Test updated successfully!'
+                'success' => __('tests.updateSuccess')
             ]);
         }
 
-        return redirect()->route('test.index')->with('success', 'Test edited 
-        successfully!');
+        return redirect()->route('test.index')->with('success', __('tests.updateSuccess'));
     }
 
     /**

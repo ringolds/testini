@@ -4,7 +4,7 @@
         <div class="d-flex align-items-center gap-2 overflow-hidden" style="flex: 1;">
             <strong class="text-primary large text-uppercase tracking-wider">{{$bank->name}}</strong>
             <div class="text-dark small fw-medium text-truncate">
-                {{$count}} questions
+                {{$count}} {{__('questions.questions')}}
             </div>
         </div>
 
@@ -15,22 +15,22 @@
                 <button type="button" 
                     class="btn btn-warning edit-bank-count-btn d-flex align-items-center" 
                     data-id="{{ $bank->id}}" data-target-id="{{$test}}">
-                    <i class="bi bi-pencil me-2"></i> Change question amount
+                    <i class="bi bi-pencil me-2"></i> {{__('questions.changeAmount')}}
                 </button>
                 @endif
                 @if($mode == 'change')
                     <form class="d-inline m-0" id="change-bank-count-form" data-target-id="{{$test}}" data-id="{{ $bank->id}}" action="{{ route('test.updateBankCount', ['test' => $test, 'bank' => $bank]) }}" method="POST"> 
                     @csrf
                     @method('PUT') 
-                        <label for="count">Choose Amount:</label>
+                        <label for="count">{{__('buttons.amount')}}</label>
                         <input type="number" id="count" name="count" min="1" max="100" step="1" value="{{ old('count', $count) }}">
-                        <button type="submit" class="btn btn-info change-bank-count-btn">Change</button> 
+                        <button type="submit" class="btn btn-info change-bank-count-btn">{{__('buttons.change')}}</button> 
                     </form>
                 @endif
-                <form class="d-inline m-0" id="remove-bank-form" data-target-id="{{$test}}" data-id="{{ $bank->id}}" action="{{ route('test.removeBank', ['test' => $test, 'bank' => $bank]) }}" method="POST" onsubmit="return confirm('Are you sure you want to remove this bank from test?');"> 
+                <form class="d-inline m-0" id="remove-bank-form" data-target-id="{{$test}}" data-id="{{ $bank->id}}" action="{{ route('test.removeBank', ['test' => $test, 'bank' => $bank]) }}" method="POST" onsubmit="return confirm(@js(__('banks.removeBankConfirm')));"> 
                     @csrf 
                     @method('DELETE') 
-                    <button type="submit" class="btn btn-danger remove-bank-btn">Remove</button> 
+                    <button type="submit" class="btn btn-danger remove-bank-btn">{{__('buttons.remove')}}</button> 
                 </form>
             @endcan
         </div>

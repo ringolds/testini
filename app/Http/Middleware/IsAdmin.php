@@ -19,6 +19,6 @@ class IsAdmin
             return $next($request);
         }
 
-        abort(403, 'Unauthorized action. Admin only!');
+        abort(403, __('errors.adminAction'));
     }
 }

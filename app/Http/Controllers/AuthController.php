@@ -36,9 +36,9 @@ class AuthController extends Controller
         ]);
 
         $bank = Bank::create([
-            'name' => "Default",
+            'name' => __('banks.defaultName'),
             'user_id'=> $user->id,
-            'description' => "Default bank created at registration",
+            'description' => __('banks.defaultDescription'),
             'public'=> FALSE,
             'collaborative'=> FALSE,
             'default'=> TRUE
@@ -60,7 +60,7 @@ class AuthController extends Controller
             return redirect()->intended(route('home'));
         }
         return back()-> 
-            with('error', 'Invalid credentials');
+            with('error', __('errors.invalidCredentials'));
     }
 
 
@@ -99,9 +99,9 @@ class AuthController extends Controller
                 ]);
 
                 $bank = Bank::create([
-                    'name' => "Default",
+                    'name' => __('banks.defaultName'),
                     'user_id'=> $user->id,
-                    'description' => "Default bank created at registration",
+                    'description' => __('banks.defaultDescription'),
                     'public'=> FALSE,
                     'collaborative'=> FALSE,
                     'hidden'=> FALSE,
@@ -113,7 +113,7 @@ class AuthController extends Controller
             return redirect()->route('home');
 
         } catch (\Exception $e) {
-            return redirect('/login')->withErrors(['login_error' => 'Google authentication failed.']);
+            return redirect('/login')->withErrors(['login_error' =>  __('errors.googleError')]);
         }
     }
 }

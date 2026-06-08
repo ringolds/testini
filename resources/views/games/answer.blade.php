@@ -1,7 +1,7 @@
 @props(['answerType', 'answerMode', 'resultItem', 'choices'=>null])
 
 <div class="card p-3" id="answer-{{$resultItem->id}}">
-    <h4>Answer</h4>
+    <h4>{{__('questions.answer')}}</h4>
     <form id="answer-form">
         @if($answerMode=='single')
             @if($answerType=='App\Models\QuestionText')
@@ -44,6 +44,6 @@
                 </div>
             </div>
         @endif
-        <button type="submit" id="submit-btn" class="btn btn-primary mt-4">Submit</button> 
+        <button type="submit" id="submit-btn" class="btn btn-primary mt-4">{{__('game.submit')}}</button> 
     </form>
 </div>

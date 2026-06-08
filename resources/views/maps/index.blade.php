@@ -1,11 +1,11 @@
 <x-layout> 
     <x-slot name="title"> 
-        Maps
+        {{__('maps.maps')}}
     </x-slot> 
         <div class="d-flex justify-content-between align-items-center mb-4">
-            <h1 class="h3 mb-0">Maps</h1>
+            <h1 class="h3 mb-0">{{__('map.maps')}}</h1>
             <a href="{{ route('map.create') }}" class="btn btn-success d-flex align-items-center">
-                <i class="bi bi-plus-lg me-2"></i> Create map
+                <i class="bi bi-plus-lg me-2"></i> {{__('maps.create')}}
             </a>
         </div>
     <div class="row g-4"> 
@@ -19,7 +19,7 @@
                                 class="img-fluid mw-100 mh-100" 
                                 style="object-fit: contain; filter: drop-shadow(0px 4px 6px rgba(0,0,0,0.06));">
                         @else
-                            <span class="text-muted small text-uppercase">No Preview</span>
+                            <span class="text-muted small text-uppercase">{{__('maps.missingPreview')}}</span>
                         @endif
                     </div>
 
@@ -31,17 +31,17 @@
                     <div class="card-footer bg-white py-2">
                         <div class="d-flex justify-content-end align-items-center gap-2">
                             <a href="{{ route('map.edit', $map) }}" class="btn btn-warning d-flex align-items-center">
-                                <i class="bi bi-pencil me-2"></i> Edit map
+                                <i class="bi bi-pencil me-2"></i> {{__('maps.edit')}}
                             </a>
 
-                            <form class="d-inline m-0" action="{{ route('map.destroy', $map) }}" method="POST" onsubmit="return confirm('Are you sure you want to delete this map?');"> 
+                            <form class="d-inline m-0" action="{{ route('map.destroy', $map) }}" method="POST" onsubmit="return confirm(@js(__('maps.deleteConfirmation')));"> 
                                 @csrf 
                                 @method('DELETE') 
-                                <button type="submit" class="btn btn-danger">Delete</button> 
+                                <button type="submit" class="btn btn-danger">{{__('buttons.delete')}}</button> 
                             </form>
 
                             <a href="{{ route('map.show', $map) }}" class="btn btn-primary d-flex align-items-center">
-                                <i class="bi bi-eye me-2"></i> Interactive view
+                                <i class="bi bi-eye me-2"></i> {{__('maps.interactive')}}
                             </a>
                         </div>
                     </div>
