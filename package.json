@@ -15,5 +15,9 @@
     },
     "dependencies": {
         "@amcharts/amcharts5": "^5.17.3"
+    },
+    "overrides": {
+        "@emnapi/core": "1.11.0",
+        "@emnapi/runtime": "1.11.0"
     }
 }
