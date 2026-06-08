@@ -1,6 +1,6 @@
 @props(['item', 'mode', 'currentItemId' => null, 'collection_type'])
 <div class="list-group list-group-flush mt-3" id="question-content">
-    <h2>Individual questions</h2>
+    <h2>{{__('questions.individual')}}</h2>
     @forelse($item->questions as $question)
         <x-question_row :question="$question" :mode="$mode" :currentItemId="$currentItemId" :type="$collection_type">
             <x-slot:questionSlot>
@@ -26,10 +26,10 @@
                             style="width: 45px; height: 45px; object-fit: cover;"
                             title="{{ $comp->alt_text }}">
                     @else
-                        <span class="text-muted fst-italic">Alternative Component</span>
+                        <span class="text-muted fst-italic">{{__('questions.unknownComponent')}}</span>
                     @endif
                 @else
-                    <span class="text-danger">Missing Prompt</span>
+                    <span class="text-danger">{{__('questions.missingPrompt')}}</span>
                 @endif
             </x-slot:questionSlot>
             @if($question->description && $question->description->component)
@@ -62,18 +62,18 @@
                             style="width: 45px; height: 45px; object-fit: cover;"
                             title="{{ $comp->alt_text }}">
                     @else
-                        <span class="text-muted fst-italic">Alternative Component</span>
+                        <span class="text-muted fst-italic">{{__('questions.unknownComponent')}}</span>
                     @endif
                 @else
-                    <span class="text-danger">Missing Answer</span>
+                    <span class="text-danger">{{__('questions.missingAnswer')}}</span>
                 @endif
             </x-slot:answerSlot>
         </x-question_row>
     @empty
-        <div class="py-3 text-center text-muted">No questions yet.</div>
+        <div class="py-3 text-center text-muted">{{__('questions.noQuestions')}}</div>
     @endforelse
     @if($item instanceof \App\Models\Test && $collection_type=='test')
-        <h2>Random questions</h2>
+        <h2>{{__('questions.randomQuestions')}}</h2>
         @foreach($item->banks as $bank)
             <x-bank_row :count="$bank->pivot->random_count" :bank="$bank" :test="$currentItemId"></x-bank_row>
         @endforeach

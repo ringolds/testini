@@ -130,7 +130,7 @@ class QuestionController extends Controller
                 $currentItemId = $validated['bank_id'];
             }
             else{
-                return redirect()->back()->with('success', 'Question created successfully!');
+                return redirect()->back()->with('success', __('questions.createSuccess'));
             }
 
             $mode = "manage";
@@ -143,7 +143,7 @@ class QuestionController extends Controller
                 'id'    => $currentItemId
             ]);
         }
-        return redirect()->back()->with('success', 'Question created successfully!');
+        return redirect()->back()->with('success', __('questions.createSuccess'));
     }
 
     private function createQuestionComponents(Question $question, Request $request, string $role){

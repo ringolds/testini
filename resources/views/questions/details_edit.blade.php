@@ -9,7 +9,7 @@
     </div>
 @endif
 
-<h1 class="mb-4">Edit a question</h1> 
+<h1 class="mb-4">{{__('questions.edit')}}</h1> 
 <form id="edit-question-form" method="POST" action="{{ route('question.update', $question) }}" enctype="multipart/form-data"> 
     @csrf 
     @method('PUT') 
@@ -22,16 +22,16 @@
         @endphp
         @if($type === 'App\Models\QuestionText')
             <div class="form-group mb-3 dynamic-field-text">
-                <label>Text</label>
+                <label>{{__('questions.text')}}</label>
                 <input type="text" class="form-control" name="question_text" value="{{old('question_text', $comp->text)}}">
             </div>
         @elseif($type === 'App\Models\QuestionImage')
             <div class="form-group mb-3 dynamic-field-image">
-                <label>Image</label>
+                <label>{{__('questions.image')}}</label>
                 <input type="file" class="form-control" name="question_image">
-                <label>Image description</label>
+                <label>{{__('questions.imageDescription')}}</label>
                 <input type="text" class="form-control" name="question_image_alt" value="{{old('question_image_alt', $comp->alt_text)}}">
-                <label>Text question to go along with image (optional)</label>
+                <label>{{__('questions.imageQuestion')}}</label>
                 @if($question->description && $question->description->component)
                     <input type="text" class="form-control" name="question_image_text" value="{{old('question_image_text', $description->component->text)}}">
                 @else
@@ -44,7 +44,7 @@
                             data-config-endpoint="{{ route('map.config', $comp->map->id) }}">
                 </div>
                 <input type="hidden" class="selected-target" name="question_map_target" value="{{old('question_map_target', $comp->target_region)}}">
-                <label>Text question to go along with map (optional)</label>
+                <label>{{__('questions.mapQuestion')}}</label>
                 @if($question->description && $question->description->component)
                     <input type="text" class="form-control" name="question_map_text" value="{{old('question_map_text', $description->component->text)}}">
                 @else
@@ -52,7 +52,7 @@
                 @endif
             </div>
         @else
-            <div>Unknown question type</div>
+            <div>{{__('questions.unknownQuestion')}}</div>
         @endif
     </div>
 
@@ -64,14 +64,14 @@
         @endphp
         @if($type === 'App\Models\QuestionText')
             <div class="form-group mb-3 dynamic-field-text">
-                <label>Text</label>
+                <label>{{__('questions.text')}}</label>
                 <input type="text" class="form-control" name="answer_text" value="{{old('answer_text', $comp->text)}}">
             </div>
         @elseif($type === 'App\Models\QuestionImage')
             <div class="form-group mb-3 dynamic-field-image">
-                <label>Image</label>
+                <label>{{__('questions.image')}}</label>
                 <input type="file" class="form-control" name="answer_image">
-                <label>Image description</label>
+                <label>{{__('questions.imageDescription')}}</label>
                 <input type="text" class="form-control" name="answer_image_alt" value="{{old('answer_image_alt', $comp->alt_text)}}">
             </div>
         @elseif($type === 'App\Models\QuestionMap')
@@ -82,8 +82,8 @@
                 <input type="hidden" class="selected-target" name="answer_map_target" value="{{old('answer_map_target', $comp->target_region)}}">
             </div>
         @else
-            <div>Unknown answer type</div>
+            <div>{{__('questions.unknownAnswer')}}</div>
         @endif
     </div>
-    <button type="submit" class="btn btn-primary">Save question</button> 
+    <button type="submit" class="btn btn-primary">{{__('questions.save')}}</button> 
 </form> 

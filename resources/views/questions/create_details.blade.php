@@ -9,13 +9,13 @@
 </div>
 @endif
 
-<h1 class="mb-4">Create a New Question</h1> 
+<h1 class="mb-4">{{__('questions.create')}}</h1> 
 <form method="POST" id="create-question-form" action="{{ route('question.store') }}" enctype="multipart/form-data"> 
     <input type="hidden" name="type" value="{{$type}}">
     @csrf 
     @if($type=="separate")
         <div class="form-group mb-3">
-            <label for="bankSelect">Bank</label>
+            <label for="bankSelect">{{__('questions.bank')}}</label>
             <select class="form-control" id="bankSelect" name="bank_id">
                 @foreach ($banks as $bank)
                     <option value="{{$bank->id}}" {{ old('bank_id') == $bank->id ? 'selected' : '' }}>{{$bank->name}}</option>
@@ -24,9 +24,9 @@
         </div>
 
         <div class="form-group mb-3">
-            <label for="testSelect">Test</label>
+            <label for="testSelect">{{__('questions.test')}}</label>
             <select class="form-control" id="testSelect" name="test_id">
-                <option value="" {{ old('test_id') == '-1' || !old('test_id') ? 'selected' : '' }}>None</option>
+                <option value="" {{ old('test_id') == '-1' || !old('test_id') ? 'selected' : '' }}>{{__('questions.none')}}</option>
                 @foreach($tests as $test)
                     <option value="{{ $test->id }}" {{ old('test_id') == $test->id ? 'selected' : '' }}>
                         {{ $test->name }}
@@ -46,31 +46,31 @@
     <div class="card mb-4 p-3">
         <h4>Question</h4>
         <div class="form-group mb-3">
-            <label for="questionType">Type</label>
+            <label for="questionType">{{__('questions.answer')}} {{__('questions.type')}}</label>
             <select class="form-control type-selector" id="questionType" name="question_type" data-target-wrapper="#questionFields">
-                <option value="text" {{ old('question_type') === 'text' ? 'selected' : '' }}>Text</option>
-                <option value="image" {{ old('question_type') === 'image' ? 'selected' : '' }}>Image</option>
-                <option value="map" {{ old('question_type') === 'map' ? 'selected' : '' }}>Map</option>
+                <option value="text" {{ old('question_type') === 'text' ? 'selected' : '' }}>{{__('questions.text')}}</option>
+                <option value="image" {{ old('question_type') === 'image' ? 'selected' : '' }}>{{__('questions.image')}}</option>
+                <option value="map" {{ old('question_type') === 'map' ? 'selected' : '' }}>{{__('questions.map')}}</option>
             </select>
         </div>
 
         <div id="questionFields">
             <div class="form-group mb-3 dynamic-field-text">
-                <label>Text</label>
+                <label>{{__('questions.text')}}</label>
                 <input type="text" class="form-control" name="question_text" value="{{old('question_text')}}">
             </div>
             <div class="form-group mb-3 dynamic-field-image d-none">
-                <label>Image</label>
+                <label>{{__('questions.image')}}</label>
                 <input type="file" class="form-control" name="question_image">
-                <label>Image description</label>
+                <label>{{__('questions.imageDescription')}}</label>
                 <input type="text" class="form-control" name="question_image_alt" value="{{old('question_image_alt')}}">
-                <label>Text question to go along with image (optional)</label>
+                <label>{{__('questions.imageQuestion')}}</label>
                 <input type="text" class="form-control" name="question_image_text" value="{{old('question_image_text')}}">
             </div>
             <div class="form-group mb-3 dynamic-field-map d-none">
-                <label for="mapSelectQuestion">Map</label>
+                <label for="mapSelectQuestion">{{__('questions.map')}}</label>
                 <select class="form-control" id="mapSelectQuestion" name="question_map_id">
-                    <option value="" {{ old('map_id') == '-1' || !old('map_id') ? 'selected' : '' }}>None</option>
+                    <option value="" {{ old('map_id') == '-1' || !old('map_id') ? 'selected' : '' }}>{{__('questions.none')}}</option>
                     @foreach($maps as $map)
                         <option value="{{ $map->id }}" {{ old('test_id') == $map->id ? 'selected' : '' }}>
                             {{ $map->name }}
@@ -81,38 +81,38 @@
                             data-config-endpoint=""->
                 </div>
                 <input type="hidden" class="selected-target" name="question_map_target" value="{{old('question_map_target')}}">
-                <label>Text question to go along with map (optional)</label>
+                <label>{{__('questions.mapQuestion')}}</label>
                 <input type="text" class="form-control" name="question_map_text" value="{{old('question_map_text')}}">
             </div>
         </div>
     </div>
 
     <div class="card mb-4 p-3">
-        <h4>Answer</h4>
+        <h4>{{__('questions.answer')}}</h4>
         <div class="form-group mb-3">
-            <label for="answerType">Answer Type</label>
+            <label for="answerType">{{__('questions.answer')}} {{__('questions.type')}}</label>
             <select class="form-control type-selector" id="answerType" name="answer_type" data-target-wrapper="#answerFields">
-                <option value="text" {{ old('answer_type') === 'text' ? 'selected' : '' }}>Text</option>
-                <option value="image" {{ old('answer_type') === 'image' ? 'selected' : '' }}>Image</option>
-                <option value="map" {{ old('answer_type') === 'map' ? 'selected' : '' }}>Map</option>
+                <option value="text" {{ old('answer_type') === 'text' ? 'selected' : '' }}>{{__('questions.text')}}</option>
+                <option value="image" {{ old('answer_type') === 'image' ? 'selected' : '' }}>{{__('questions.image')}}</option>
+                <option value="map" {{ old('answer_type') === 'map' ? 'selected' : '' }}>{{__('questions.map')}}</option>
             </select>
         </div>
 
         <div id="answerFields">
             <div class="form-group mb-3 dynamic-field-text">
-                <label>Text</label>
+                <label>{{__('questions.text')}}</label>
                 <input type="text" class="form-control" name="answer_text" value="{{old('answer_text')}}">
             </div>
             <div class="form-group mb-3 dynamic-field-image d-none">
-                <label>Image</label>
+                <label>{{__('questions.image')}}</label>
                 <input type="file" class="form-control" name="answer_image">
-                <label>Image description</label>
+                <label>{{__('questions.imageDescription')}}</label>
                 <input type="text" class="form-control" name="answer_image_alt" value="{{old('answer_image_alt')}}">
             </div>
             <div class="form-group mb-3 dynamic-field-map d-none">
-                <label for="mapSelectAnswer">Map</label>
+                <label for="mapSelectAnswer">{{__('questions.map')}}</label>
                 <select class="form-control" id="mapSelectAnswer" name="answer_map_id">
-                    <option value="" {{ old('map_id') == '-1' || !old('map_id') ? 'selected' : '' }}>None</option>
+                    <option value="" {{ old('map_id') == '-1' || !old('map_id') ? 'selected' : '' }}>{{__('questions.none')}}</option>
                     @foreach($maps as $map)
                         <option value="{{ $map->id }}" {{ old('test_id') == $map->id ? 'selected' : '' }}>
                             {{ $map->name }}
@@ -126,7 +126,7 @@
             </div>
         </div>
     </div>
-    <button type="submit" class="btn btn-primary">Create question</button> 
+    <button type="submit" class="btn btn-primary">{{__('questions.createButton')}}</button> 
 </form> 
 <script>
     (function () {

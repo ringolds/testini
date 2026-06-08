@@ -58,8 +58,7 @@ class BankController extends Controller
             'default'=> FALSE
         ]); 
 
-        return redirect()->route('bank.index')->with('success', 'Bank created 
-        successfully!');     
+        return redirect()->route('bank.index')->with('success', __('banks.succesfulCreation'));     
     }
 
     /**
@@ -142,12 +141,11 @@ class BankController extends Controller
                 return response()->json([
                 'id' => $bank->id,
                 'name' => $bank->name,
-                'success' => 'Bank updated successfully!'
+                'success' => __('banks.successfulUpdate')
             ]);
         }
 
-        return redirect()->route('bank.index')->with('success', 'Bank edited 
-        successfully!');
+        return redirect()->route('bank.index')->with('success', __('banks.successfulUpdate'));
     }
 
     /**

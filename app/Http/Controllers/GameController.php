@@ -36,7 +36,7 @@ class GameController extends Controller
             $totalPotentialImages = $staticImageCount + $totalBankImagesAvailable;
 
             if ($totalPotentialImages === 1) {
-                return response()->json(['error' => 'This test blueprint has exactly 1 total image question available, making multiple-choice generation impossible.'], 422);
+                return response()->json(['error' => __('errors.imageTest')], 422);
             }
 
             $guaranteedImageIds = [];
@@ -144,7 +144,7 @@ class GameController extends Controller
                     ->get();
 
                 if($randomItems->count()<1){
-                    abort(404, 'No matching question options found.');
+                    abort(404, __('errors.questionNotFound'));
                 }
 
                 $choices = $randomItems->map(function ($item) {
@@ -182,7 +182,7 @@ class GameController extends Controller
                         break;
 
                     default:
-                        abort(422, 'Invalid question component type detected.');
+                        abort(422, __('errors.invalidQuestionComponent'));
                 }
 
             }
@@ -317,7 +317,7 @@ class GameController extends Controller
             $isAnswered = !empty($sessionData) || $resultItem->is_correct !== null;
 
             if (!$isAnswered) {
-                abort(403, "Access denied. You must submit an answer first.");
+                abort(403, __('errors.answerPeeking'));
             }
 
             $userAnswer   = $sessionData['user_answer'] ?? $resultItem->user_answer_content;
@@ -329,7 +329,7 @@ class GameController extends Controller
             ];
         }
         else{
-           abort(404, "Map not found for this question");
+           abort(404, __('errors.mapNotFound'));
         }
 
         $config['mode'] = $mode;

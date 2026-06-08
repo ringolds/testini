@@ -7,6 +7,8 @@ use App\Http\Controllers\GameController;
 use App\Http\Controllers\MapController;
 use App\Http\Controllers\QuestionController;
 use App\Http\Controllers\TestController;
+use Illuminate\Support\Facades\Session;
+
 
 Route::get('/', function () {
     return view('home');
@@ -15,6 +17,14 @@ Route::get('/', function () {
 Route::middleware('admin')->group(function(){
     Route::resource('map', MapController::class); 
 });
+
+Route::get('lang/{locale}', function (string $locale) {
+    if (in_array($locale, ['en', 'lv'])) {
+        Session::put('locale', $locale);
+    }
+
+    return redirect()->back();
+})->name('lang.switch');
 
 Route::middleware('auth')->group(function() {
     //game

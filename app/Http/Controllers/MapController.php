@@ -53,13 +53,13 @@ class MapController extends Controller implements HasMiddleware
             if (! $response->successful()) {
                 return back()
                     ->withInput()
-                    ->withErrors(['js_path' => 'The map URL is invalid or returned a ' . $response->status() . ' error.']);
+                    ->withErrors(['js_path' => __('errors.mapInvalidUrl') . $response->status() . __('errors.errors')]);
             }
 
         } catch (\Exception $e) {
             return back()
                 ->withInput()
-                ->withErrors(['js_path' => 'Could not connect to the map URL. Please verify the link.']);
+                ->withErrors(['js_path' => __('errors.mapUrlError')]);
         }
 
         $file = $request->file('map_image');
@@ -71,7 +71,7 @@ class MapController extends Controller implements HasMiddleware
             'svg_path' => $path
         ]);
 
-        return redirect()->route('map.index')->with('success', 'Map registered successfully!');
+        return redirect()->route('map.index')->with('success', __('maps.registerSuccess'));
     }
 
     /**
@@ -112,7 +112,7 @@ class MapController extends Controller implements HasMiddleware
         
         $map->update();
 
-        return redirect()->route('map.index')->with('success', 'Map registered successfully!');
+        return redirect()->route('map.index')->with('success', __('maps.registerSuccess'));
     }
 
     /**

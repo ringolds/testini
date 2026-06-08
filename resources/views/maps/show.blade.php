@@ -21,19 +21,19 @@
 
             <div class="col-lg-3">
                 <div class="card shadow-sm border-0 rounded-lg p-3 h-100">
-                    <h3 class="h5 font-weight-bold border-bottom pb-2 mb-3">Region Inspector</h3>
+                    <h3 class="h5 font-weight-bold border-bottom pb-2 mb-3">{{__('maps.inspector')}}</h3>
                     
                     <div id="inspector-placeholder" class="text-muted small">
-                        <p>Hover over or click on a region on the map to view its properties.</p>
+                        <p>{{__('maps.instructions')}}</p>
                     </div>
 
                     <div id="inspector-data" style="display: none;">
                         <div class="mb-3">
-                            <label class="text-muted d-block small uppercase font-weight-bold">Selected Region Name:</label>
+                            <label class="text-muted d-block small uppercase font-weight-bold">{{__('maps.selectedRegion')}}:</label>
                             <span id="selected-name" class="h5 text-primary font-weight-bold d-block"></span>
                         </div>
                         <div class="mb-3">
-                            <label class="text-muted d-block small uppercase font-weight-bold">ISO / Region ID Code:</label>
+                            <label class="text-muted d-block small uppercase font-weight-bold">{{__('maps.iso')}}:</label>
                             <code id="selected-id" class="d-inline-block bg-light px-2 py-1 rounded text-danger font-weight-bold"></code>
                         </div>
                     </div>
@@ -43,13 +43,13 @@
         <div class="row bg-white py-2">
             <div class="d-flex justify-content-end align-items-center gap-2">
                 <a href="{{ route('map.edit', $map) }}" class="btn btn-warning d-flex align-items-center">
-                    <i class="bi bi-pencil me-2"></i> Edit map
+                    <i class="bi bi-pencil me-2"></i> {{__('maps.edit')}}
                 </a>
 
                 <form class="d-inline m-0" action="{{ route('map.destroy', $map) }}" method="POST" onsubmit="return confirm('Are you sure you want to delete this map?');"> 
                     @csrf 
                     @method('DELETE') 
-                    <button type="submit" class="btn btn-danger">Delete</button> 
+                    <button type="submit" class="btn btn-danger">{{__('buttons.delete')}}</button> 
                 </form>
             </div>
         </div>
