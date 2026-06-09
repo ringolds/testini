@@ -66,3 +66,13 @@ Route::middleware('guest')->group(function() {
     Route::get('/register', [AuthController::class, 'showRegister'])->name('register');
     Route::post('/register', [AuthController::class, 'register']);    
 });
+
+Route::get('/debug-request', function () {
+    return [
+        'url' => url('/'),
+        'secure' => request()->secure(),
+        'scheme' => request()->getScheme(),
+        'host' => request()->getHost(),
+        'forwarded_proto' => request()->header('x-forwarded-proto'),
+    ];
+});

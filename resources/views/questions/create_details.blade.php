@@ -44,9 +44,9 @@
         <input type="hidden" name="test_id" value="">
     @endif
     <div class="card mb-4 p-3">
-        <h4>Question</h4>
+        <h4>{{__('questions.question')}}</h4>
         <div class="form-group mb-3">
-            <label for="questionType">{{__('questions.answer')}} {{__('questions.type')}}</label>
+            <label for="questionType">{{__('questions.question')}} {{__('questions.type')}}</label>
             <select class="form-control type-selector" id="questionType" name="question_type" data-target-wrapper="#questionFields">
                 <option value="text" {{ old('question_type') === 'text' ? 'selected' : '' }}>{{__('questions.text')}}</option>
                 <option value="image" {{ old('question_type') === 'image' ? 'selected' : '' }}>{{__('questions.image')}}</option>

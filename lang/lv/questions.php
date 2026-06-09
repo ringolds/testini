@@ -24,7 +24,7 @@ return [
     'removeConfirm' => 'Vai esat pārliecināts, ka vēlaties noņemt šo jautājumu?',
     'deleteConfirm' => 'Vai esat pārliecināts, ka vēlaties dzēst šo jautājumu?',
     'create' => 'Izveidot jaunu jautājumu',
-    'createButoon' => 'Izveidot jautājumu',
+    'createButton' => 'Izveidot jautājumu',
     'none' => 'Neviens',
     'text' => 'Teksts',
     'image' => 'Attēls',

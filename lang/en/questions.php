@@ -24,7 +24,7 @@ return [
     'removeConfirm' => 'Are you sure you want to remove this question?',
     'deleteConfirm' => 'Are you sure you want to delete this question?',
     'create' => 'Create a new question',
-    'createButoon' => 'Create question',
+    'createButton' => 'Create question',
     'none' => 'None',
     'text' => 'Text',
     'image' => 'Image',
