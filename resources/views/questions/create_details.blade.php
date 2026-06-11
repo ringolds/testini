@@ -44,7 +44,7 @@
         <input type="hidden" name="test_id" value="">
     @endif
     <div class="card mb-4 p-3">
-        <h4>{{__('questions.question')}}</h4>
+        <p class="text-dark fs-3 fw-semibold">{{__('questions.question')}}</p>
         <div class="form-group mb-3">
             <label for="questionType">{{__('questions.question')}} {{__('questions.type')}}</label>
             <select class="form-control type-selector" id="questionType" name="question_type" data-target-wrapper="#questionFields">
@@ -78,7 +78,7 @@
                     @endforeach
                 </select>
                 <div id="question-map" class="interactive-map" style="width: 100%; height: 600px; min-height: 600px; background-color: #ffffff;" 
-                            data-config-endpoint=""->
+                            data-config-endpoint="">
                 </div>
                 <input type="hidden" class="selected-target" name="question_map_target" value="{{old('question_map_target')}}">
                 <label>{{__('questions.mapQuestion')}}</label>
@@ -88,7 +88,7 @@
     </div>
 
     <div class="card mb-4 p-3">
-        <h4>{{__('questions.answer')}}</h4>
+        <p class="text-dark fs-3 fw-semibold">{{__('questions.answer')}}</p>
         <div class="form-group mb-3">
             <label for="answerType">{{__('questions.answer')}} {{__('questions.type')}}</label>
             <select class="form-control type-selector" id="answerType" name="answer_type" data-target-wrapper="#answerFields">
@@ -120,7 +120,7 @@
                     @endforeach
                 </select>
                 <div id="answer-map" class="interactive-map" style="width: 100%; height: 600px; min-height: 600px; background-color: #ffffff;" 
-                            data-config-endpoint=""->
+                            data-config-endpoint="">
                 </div>
                 <input type="hidden" class="selected-target" name="answer_map_target" value="{{old('answer_map_target')}}">
             </div>

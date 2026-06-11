@@ -1,5 +1,5 @@
 <div class="card p-3">
-    <h4>{{__('game.summary')}}</h4>
-    <h3>{{__('game.correct')}}: {{$score}}/{{$total}}</h3>
-    <h3>{{__('game.timeSpent')}}: {{$duration}}</h3>
+    <p class="text-dark fw-semibold fs-3">{{__('game.summary')}}</p>
+    <p class="text-dark fw-medium fs-4">{{__('game.correct')}}: {{$score}}/{{$total}}</p>
+    <p class="text-dark fw-medium fs-4">{{__('game.timeSpent')}}: {{$duration}}</p>
 </div>

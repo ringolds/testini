@@ -3,7 +3,7 @@
         {{__('tests.available')}} 
     </x-slot> 
     <div class="container my-5">
-        <h2 class="mb-4">{{__('tests.available')}} </h2>
+        <h1 class="mb-4">{{__('tests.available')}} </h1>
 
         <div class="d-flex justify-content-end mb-3">
             <label class="me-2 align-self-center">{{__('tests.cardsPerPage')}} :</label>
@@ -16,7 +16,7 @@
                 <div class="col">
                     <div class="card h-100 shadow-sm">
                         <div class="card-body d-flex flex-column">
-                            <h5 class="card-title">{{ $test->name }}</h5>
+                            <p class="card-title fw-semibold fs-4">{{ $test->name }}</p>
                             <p class="card-text text-muted small">{{__('tests.author')}} : {{ $test->user->name}}</p>
                             <p class="card-text text-muted small">{{__('tests.description')}} : {{ $test->description}}</p>
                             <a href="{{ route('game.start', $test->id) }}" class="btn btn-success mt-auto w-100">{{__('tests.play')}} </a>

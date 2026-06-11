@@ -24,8 +24,8 @@ function addToCollection(id, target_id) {
         url: '/question/' + id + '/'+type+'/'+ target_id,
         type: 'POST',
         success: function(response) {
-            $('#'+type+'-content').html(response.html).css('opacity', '1');
-            $('#'+type+'-content').attr('data-target-id', target_id);
+            $('.'+type+'-content').html(response.html).css('opacity', '1');
+            $('.'+type+'-content').attr('data-target-id', target_id);
         },
         error: function() {
             alert('Could not add question.');
@@ -156,7 +156,7 @@ $(document).ready(function() {
         editBankCount(id, target);
     });
 
-    $(document).on('submit', '#edit-question-form', function(e) {
+    $(document).on('submit', '.edit-question-form', function(e) {
         e.preventDefault();
         
         let form = $(this);
@@ -166,7 +166,7 @@ $(document).ready(function() {
 
         let formData = new FormData(this);
 
-        let activeId = $('#'+ type + '-content').data('id');
+        let activeId = $('.'+ type + '-content').data('id');
 
         formData.append('content_type', type);
         formData.append('content_id', activeId);
@@ -196,15 +196,17 @@ $(document).ready(function() {
         });
     });
 
-    $(document).on('submit', '#add-existing-question-form', function(e) {
+    $(document).on('submit', '.add-existing-question-form', function(e) {
         e.preventDefault();
         
-        let target = $('#'+type+'-content').data('targetId');
+        console.log("hi")
+        let target = $('.'+type+'-content').data('targetId');
+        console.log(target)
         const id = $(this).data('id');
         addToCollection(id, target)
     });
 
-    $(document).on('submit', '#delete-question-form', function(e) {
+    $(document).on('submit', '.delete-question-form', function(e) {
         if (e.isDefaultPrevented()) return;
         
         e.preventDefault();
@@ -213,7 +215,7 @@ $(document).ready(function() {
         deleteQuestion(id);
     });
 
-    $(document).on('submit', '#remove-question-form', function(e) {
+    $(document).on('submit', '.remove-question-form', function(e) {
         if (e.isDefaultPrevented()) return;
         
         e.preventDefault();
@@ -223,7 +225,7 @@ $(document).ready(function() {
         removeQuestion(id, target);
     });
 
-    $(document).on('submit', '#remove-bank-form', function(e) {
+    $(document).on('submit', '.remove-bank-form', function(e) {
         if (e.isDefaultPrevented()) return;
         
         e.preventDefault();
@@ -233,7 +235,7 @@ $(document).ready(function() {
         removeBank(id, target);
     });
 
-    $(document).on('submit', '#change-bank-count-form', function(e) {
+    $(document).on('submit', '.change-bank-count-form', function(e) {
         if (e.isDefaultPrevented()) return;
         
         e.preventDefault();

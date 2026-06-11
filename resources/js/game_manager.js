@@ -88,7 +88,7 @@ function handleAnsweredQuestion(response, resultItemId, resultId){
     }
     $('#submit-btn').remove();
     if(response.finished){
-        let summaryButton = `<button type="button" id="summary-btn" data-id="${resultId}";
+        let summaryButton = `<button type="button" id="summary-btn" data-id="${resultId}"
             class="btn btn-success mt-4 ms-2">Finish quiz</button>`;
         $('#game-entry-'+resultItemId).append(summaryButton);
     }

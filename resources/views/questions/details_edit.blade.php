@@ -10,7 +10,7 @@
 @endif
 
 <h1 class="mb-4">{{__('questions.edit')}}</h1> 
-<form id="edit-question-form" method="POST" action="{{ route('question.update', $question) }}" enctype="multipart/form-data"> 
+<form class="edit-question-form" id="edit-question-form-{{$question->id}}" method="POST" action="{{ route('question.update', $question) }}" enctype="multipart/form-data"> 
     @csrf 
     @method('PUT') 
     <div class="card mb-4 p-3">

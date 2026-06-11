@@ -19,7 +19,7 @@
                 </button>
                 @endif
                 @if($mode == 'change')
-                    <form class="d-inline m-0" id="change-bank-count-form" data-target-id="{{$test}}" data-id="{{ $bank->id}}" action="{{ route('test.updateBankCount', ['test' => $test, 'bank' => $bank]) }}" method="POST"> 
+                    <form class="d-inline m-0 change-bank-count-form" id="change-bank-count-form-{{$bank->id}}" data-target-id="{{$test}}" data-id="{{ $bank->id}}" action="{{ route('test.updateBankCount', ['test' => $test, 'bank' => $bank]) }}" method="POST"> 
                     @csrf
                     @method('PUT') 
                         <label for="count">{{__('buttons.amount')}}</label>
@@ -27,7 +27,7 @@
                         <button type="submit" class="btn btn-info change-bank-count-btn">{{__('buttons.change')}}</button> 
                     </form>
                 @endif
-                <form class="d-inline m-0" id="remove-bank-form" data-target-id="{{$test}}" data-id="{{ $bank->id}}" action="{{ route('test.removeBank', ['test' => $test, 'bank' => $bank]) }}" method="POST" onsubmit="return confirm(@js(__('banks.removeBankConfirm')));"> 
+                <form class="d-inline m-0 remove-bank-form" id="remove-bank-form-{{$bank->id}}" data-target-id="{{$test}}" data-id="{{ $bank->id}}" action="{{ route('test.removeBank', ['test' => $test, 'bank' => $bank]) }}" method="POST" onsubmit="return confirm(@js(__('banks.removeBankConfirm')));"> 
                     @csrf 
                     @method('DELETE') 
                     <button type="submit" class="btn btn-danger remove-bank-btn">{{__('buttons.remove')}}</button> 

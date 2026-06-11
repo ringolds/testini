@@ -1,8 +1,8 @@
 @props(['question', 'resultItem', 'description'=>null])
 <div class="card p-3" id="question-{{$resultItem->id}}">
-    <h4>{{__('questions.question')}}</h4>
+    <p class="text-dark fw-semibold fs-3">{{__('questions.question')}}</p>
     @if($question instanceof \App\Models\QuestionText)
-        <h3>{{$question->text}}</h3>
+        <p class="text-dark fw-medium fs-5">{{$question->text}}</p>
     @elseif($question instanceof \App\Models\QuestionImage)
         <div class="d-flex justify-content-center w-100">
             <img src="{{ asset('storage/' . $question->path) }}" 
@@ -22,6 +22,6 @@
         </div>
     @endif
     @if($description!=null)
-        <h3>{{$description->text}}</h3>
+        <p class="text-dark fw-medium fs-5">{{$description->text}}</h3>
     @endif
 </div>

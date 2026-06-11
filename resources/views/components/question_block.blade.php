@@ -1,6 +1,6 @@
 @props(['item', 'mode', 'currentItemId' => null, 'collection_type'])
 <div class="list-group list-group-flush mt-3" id="question-content">
-    <h2>{{__('questions.individual')}}</h2>
+    <p class="text-dark fst-normal fs-4">{{__('questions.individual')}}</p>
     @forelse($item->questions as $question)
         <x-question_row :question="$question" :mode="$mode" :currentItemId="$currentItemId" :type="$collection_type">
             <x-slot:questionSlot>
@@ -15,13 +15,13 @@
                         <span>{{ str($comp->text)->limit(50) }}</span>
                     @elseif($type === 'App\Models\QuestionImage')
                         <img src="{{ asset('storage/' . $comp->path) }}" 
-                            alt="{{$comp->alt_text}}", 
+                            alt="{{$comp->alt_text}}"  
                             class="rounded border" 
                             style="width: 45px; height: 45px; object-fit: cover;"
                             title="{{ $comp->alt_text }}">
                     @elseif($type === 'App\Models\QuestionMap')
                         <img src="{{ asset('storage/' . $comp->map->svg_path) }}" 
-                            alt="{{$comp->map->name}}", 
+                            alt="{{$comp->map->name}}" 
                             class="rounded border" 
                             style="width: 45px; height: 45px; object-fit: cover;"
                             title="{{ $comp->alt_text }}">
@@ -57,7 +57,7 @@
                             title="{{ $comp->alt_text }}">
                     @elseif($type === 'App\Models\QuestionMap')
                         <img src="{{ asset('storage/' . $comp->map->svg_path) }}" 
-                            alt="{{$comp->map->name}}", 
+                            alt="{{$comp->map->name}}"  
                             class="rounded border" 
                             style="width: 45px; height: 45px; object-fit: cover;"
                             title="{{ $comp->alt_text }}">
@@ -73,7 +73,7 @@
         <div class="py-3 text-center text-muted">{{__('questions.noQuestions')}}</div>
     @endforelse
     @if($item instanceof \App\Models\Test && $collection_type=='test')
-        <h2>{{__('questions.randomQuestions')}}</h2>
+        <p class="text-dark fst-normal fs-4">{{__('questions.randomQuestions')}}</p>
         @foreach($item->banks as $bank)
             <x-bank_row :count="$bank->pivot->random_count" :bank="$bank" :test="$currentItemId"></x-bank_row>
         @endforeach

@@ -1,7 +1,7 @@
 @props(['answerType', 'answerMode', 'resultItem', 'choices'=>null])
 
 <div class="card p-3" id="answer-{{$resultItem->id}}">
-    <h4>{{__('questions.answer')}}</h4>
+    <p class="text-dark fw-semibold fs-3">{{__('questions.answer')}}</p>
     <form id="answer-form">
         @if($answerMode=='single')
             @if($answerType=='App\Models\QuestionText')
@@ -33,6 +33,7 @@
                                 @if($answerType=='App\Models\QuestionImage')
                                     <img src="{{ asset('storage/' . $item->path) }}" 
                                         class="img-fluid mb-2" 
+                                        alt="{{$item->alt_text}}"
                                         style="max-height: 120px; object-fit: contain;">
                                 @else
                                     <span class="fs-5 fw-medium">{{ $item->text }}</span>

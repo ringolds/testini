@@ -20,7 +20,7 @@
         {{__('tests.tests')}} 
     </x-slot> 
     <div class="d-flex justify-content-between align-items-center mb-4">
-        <h1 class="h3 mb-0">{{__('tests.myTests')}} </h1>
+        <h1 class="mb-0">{{__('tests.myTests')}} </h1>
         <a href="{{ route('test.create') }}" class="btn btn-success d-flex align-items-center">
             <i class="bi bi-plus-lg me-2"></i> {{__('tests.createButton')}} 
         </a>
@@ -33,13 +33,13 @@
                     class="btn btn-outline-primary px-4 rounded-pill test-btn flex-shrink-0"
                     data-id="{{ $test->id }}"
                     data-mode="{{$mode}}"
-                    id="btn-{{ $test->id }}">
+                    id="btn-test-{{ $test->id }}">
                     {{ $test->name }}
                 </button>
             @endforeach
         </div>
     </div>
-    <div id="test-content" data-id=0 data-mode="{{$mode}}" data-target-id="{{$target_id}}">
+    <div class="test-content" data-id=0 data-mode="{{$mode}}" data-target-id="{{$target_id}}">
         <div class="text-center py-5 text-muted">
             {{__('tests.select')}} 
         </div>

@@ -1,5 +1,5 @@
-@vite('resources/js/map_manager.js')
 <x-layout>
+    @vite('resources/js/map_manager.js')
     <x-slot name="title"> 
         {{ $map->name }}
     </x-slot> 
@@ -21,7 +21,7 @@
 
             <div class="col-lg-3">
                 <div class="card shadow-sm border-0 rounded-lg p-3 h-100">
-                    <h3 class="h5 font-weight-bold border-bottom pb-2 mb-3">{{__('maps.inspector')}}</h3>
+                    <h2 class="h5 font-weight-bold border-bottom pb-2 mb-3">{{__('maps.inspector')}}</h2>
                     
                     <div id="inspector-placeholder" class="text-muted small">
                         <p>{{__('maps.instructions')}}</p>

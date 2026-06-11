@@ -78,7 +78,7 @@ class GameController extends Controller
                     if ($available < $count) { $count = $available; }
 
                     $fetchedIds = $bank->questions()
-                        ->whereNotIn('id', $guaranteedImageIds)
+                        ->whereNotIn('id', $randomQuestions)
                         ->inRandomOrder()
                         ->take($count)
                         ->pluck('id')

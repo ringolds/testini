@@ -8,7 +8,7 @@
 </div>
 @endif
 
-<h1 class="mb-4">{{__('tests.edit')}} t</h1> 
+<h1 class="mb-4">{{__('tests.edit')}}</h1> 
 <form id="edit-test-form" method="POST" action="{{ route('test.update', $test->id) }}"> 
     @csrf
     @method('PUT') 

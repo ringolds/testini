@@ -45,14 +45,14 @@
                             </button>
                         @endcan
                         @can('delete', $question)
-                            <form class="d-inline m-0" id="delete-question-form" data-id="{{ $question->id}}" action="{{ route('question.destroy', $question) }}" method="POST" onsubmit="return confirm(@js(__('questions.deleteConfirm')));"> 
+                            <form class="d-inline m-0 delete-question-form" id="delete-question-form-{{$question->id}}" data-id="{{ $question->id}}" action="{{ route('question.destroy', $question) }}" method="POST" onsubmit="return confirm(@js(__('questions.deleteConfirm')));"> 
                                 @csrf 
                                 @method('DELETE') 
                                 <button type="submit" class="btn btn-danger delete-question-btn">{{__('buttons.delete')}}</button> 
                             </form>
                         @endcan
                         @if($target && $target->default==FALSE)
-                            <form class="d-inline m-0" id="remove-question-form" data-target-id="{{$currentItemId}}" data-id="{{ $question->id}}" action="{{ route('question.removeFromBank', ['question' => $question->id, 'bank' => $currentItemId]) }}" method="POST" onsubmit="return confirm(@js(__('questions.removeConfirm')));"> 
+                            <form class="d-inline m-0 remove-question-form" id="remove-question-form-{{$question->id}}" data-target-id="{{$currentItemId}}" data-id="{{ $question->id}}" action="{{ route('question.removeFromBank', ['question' => $question->id, 'bank' => $currentItemId]) }}" method="POST" onsubmit="return confirm(@js(__('questions.removeConfirm')));"> 
                                 @csrf 
                                 @method('DELETE') 
                                 <button type="submit" class="btn btn-danger remove-question-btn">{{__('buttons.remove')}}</button> 
@@ -64,12 +64,12 @@
                 <div>
                     <div class="d-flex justify-content-end align-items-center gap-2">
                         @if($type=='bank' && !$isInCurrentBank)
-                            <form class="d-inline m-0" id="add-existing-question-form" data-id="{{ $question->id}}" action="{{ route('question.addToBank', ['question' => $question->id, 'bank' => $currentItemId]) }}" method="POST"> 
+                            <form class="d-inline m-0 add-existing-question-form" id="add-existing-question-form-{{$question->id}}" data-id="{{ $question->id}}" action="{{ route('question.addToBank', ['question' => $question->id, 'bank' => $currentItemId]) }}" method="POST"> 
                                 @csrf
                                 <button type="submit" class="btn btn-primary delete-question-btn">{{__('questions.add')}}</button> 
                             </form>
                         @elseif($type=='test' && !$isInCurrentTest)
-                            <form class="d-inline m-0" id="add-existing-question-form" data-id="{{ $question->id}}" action="{{ route('question.addToTest', ['question' => $question->id, 'test' => $currentItemId]) }}" method="POST"> 
+                            <form class="d-inline m-0 add-existing-question-form" id="add-existing-question-form-{{$question->id}}" data-id="{{ $question->id}}" action="{{ route('question.addToTest', ['question' => $question->id, 'test' => $currentItemId]) }}" method="POST"> 
                                 @csrf
                                 <button type="submit" class="btn btn-primary delete-question-btn">{{__('questions.add')}}</button> 
                             </form>

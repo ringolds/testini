@@ -11,26 +11,27 @@ let addNewQuestionButton;
 
 function loadCollection(id, mode, target_id, optional_type=null) {
     if(optional_type!=null){
-        console.log(optional_type)
-       $('#' + optional_type + '-content').css('opacity', '0.5');
+       $('.' + optional_type + '-content').css('opacity', '0.5');
         if(mode == "add" || mode=="addBank"){
-            target_id = document.querySelector('#' + optional_type + '-content').getAttribute('data-target-id');
+            console.log(optional_type)
+            target_id = document.querySelector('.' + optional_type + '-content[data-mode="' + mode + '"]').getAttribute('data-target-id');
+            console.log(target_id)
         }
         $.ajax({
             url: '/' + optional_type + '/' + id + '?mode=' + mode+'&target-id='+target_id+'&type='+type,
             type: 'GET',
             success: function(response) {
-                $('#' + optional_type + '-content'+'[data-mode="' + mode + '"]').html(response).css('opacity', '1');
-                $('#' + optional_type + '-content').css('opacity', '1');
+                $('.' + optional_type + '-content'+'[data-mode="' + mode + '"]').html(response).css('opacity', '1');
+                $('.' + optional_type + '-content').css('opacity', '1');
                 
                 $('.' + optional_type + '-btn'+'[data-mode="' + mode + '"').removeClass('btn-primary').addClass('btn-outline-primary');
-                $('#btn-' + id+'[data-mode="' + mode + '"').removeClass('btn-outline-primary').addClass('btn-primary');
-                $('#' + optional_type + '-content'+'[data-mode="' + mode + '"]').attr('data-id', id);
-                $('#' + optional_type + '-content').attr('data-target-id', target_id)
+                $('#btn-' + optional_type + '-'+id+'[data-mode="' + mode + '"').removeClass('btn-outline-primary').addClass('btn-primary');
+                $('.' + optional_type + '-content'+'[data-mode="' + mode + '"]').attr('data-id', id);
+                $('.' + optional_type + '-content').attr('data-target-id', target_id)
             },
             error: function() {
                 alert('Could not load' +optional_type + ' details.');
-                $('#' + optional_type + '-content').css('opacity', '1');
+                $('.' + optional_type + '-content').css('opacity', '1');
             }
         }); 
     }
@@ -47,7 +48,7 @@ function loadCollection(id, mode, target_id, optional_type=null) {
                 $(content).css('opacity', '1');
                 
                 $(button+'[data-mode="' + mode + '"').removeClass('btn-primary').addClass('btn-outline-primary');
-                $('#btn-' + id+'[data-mode="' + mode + '"').removeClass('btn-outline-primary').addClass('btn-primary');
+                $('#btn-' + type+'-'+id+'[data-mode="' + mode + '"').removeClass('btn-outline-primary').addClass('btn-primary');
                 $(content+'[data-mode="' + mode + '"]').attr('data-id', id);
                 $(content).attr('data-target-id', target_id)
             },
@@ -116,7 +117,7 @@ function deleteCollection(id) {
         type: 'DELETE',
         success: function(response) {
             loadCollection(firstId, firstMode, firstId)
-            $('#btn-' + id).remove();
+            $('#btn-' + type +'-'+ id).remove();
             alert("deleted")
         },
         error: function() {
@@ -151,7 +152,7 @@ $(document).ready(function() {
     });
 
     type = window.location.pathname.includes('/test') ? 'test' : 'bank';
-    content = '#' + type + '-content';
+    content = '.' + type + '-content';
     button = '.' + type + '-btn';
     editButton = '.edit-' + type + '-btn';
     deleteForm = '#delete-' + type + '-form';

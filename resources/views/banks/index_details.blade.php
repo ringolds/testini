@@ -23,13 +23,13 @@
                 class="btn btn-outline-primary px-4 rounded-pill bank-btn flex-shrink-0"
                 data-id="{{ $bank->id }}"
                 data-mode="{{$mode}}"
-                id="btn-{{ $bank->id }}">
+                id="btn-bank-{{ $bank->id }}">
                 {{ $bank->name }}
             </button>
         @endforeach
     </div>
 </div>
-<div id="bank-content" data-id=0 data-mode="{{$mode}}" data-target-id="{{$target_id}}">
+<div class="bank-content" data-id=0 data-mode="{{$mode}}" data-target-id="{{$target_id}}">
     <div class="text-center py-5 text-muted">
         {{__('banks.select')}}
     </div>
