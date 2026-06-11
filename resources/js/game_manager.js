@@ -87,14 +87,18 @@ function handleAnsweredQuestion(response, resultItemId, resultId){
         $('#btn-' + resultItemId).removeClass('btn-outline-primary text-primary text-dark').addClass('btn-danger text-white');
     }
     $('#submit-btn').remove();
+
+    let finishText = $('#game-entry-'+resultItemId).attr('data-finish-text');
+    let nextText = $('#game-entry-'+resultItemId).attr('data-next-text');
+
     if(response.finished){
         let summaryButton = `<button type="button" id="summary-btn" data-id="${resultId}"
-            class="btn btn-success mt-4 ms-2">Finish quiz</button>`;
+            class="btn btn-success mt-4 ms-2">${finishText}</button>`;
         $('#game-entry-'+resultItemId).append(summaryButton);
     }
     else{
         let nextActionButton = `<button type="button" id="next-btn" data-id="${response.next_question_index}"
-            class="btn btn-success mt-4 ms-2">Next question</button>`;
+            class="btn btn-success mt-4 ms-2">${nextText}</button>`;
         $('#game-entry-'+resultItemId).append(nextActionButton);
     }
     
@@ -118,6 +122,7 @@ function handleAnsweredQuestion(response, resultItemId, resultId){
         let textInput = $('#answer-form').find('input[name="question_answer"]');
         
         if (response.correct == 1) {
+            console.log("hey")
             textInput.removeClass('is-invalid')
                 .addClass('bg-success text-white border border-warning');
         } else {

@@ -25,6 +25,14 @@
                 <nav class="navbar navbar-expand-lg navbar-light bg-light navbar-top p-3">
                     <div class="container-fluid">
                         <div class="ms-auto d-flex align-items-center gap-3">
+                            <button
+                                class="btn btn-outline-secondary d-lg-none"
+                                type="button"
+                                data-bs-toggle="offcanvas"
+                                data-bs-target="#mobileSidebar"
+                                aria-controls="mobileSidebar">
+                                ☰
+                            </button>
                             @auth
                                 <div class="dropdown">
                                     <span class="me-3">{{ auth()->user()->name }}</span>
@@ -69,6 +77,26 @@
                 <main class="p-4">
                     {{ $slot }}
                 </main>
+            </div>
+        </div>
+        <div
+            class="offcanvas offcanvas-start bg-dark text-white"
+            tabindex="-1"
+            id="mobileSidebar">
+
+            <div class="offcanvas-header">
+                <p class="text-white fs-1">Testiņi</p>
+
+                <button
+                    type="button"
+                    class="btn-close btn-close-white"
+                    data-bs-dismiss="offcanvas"
+                    aria-label="Close">
+                </button>
+            </div>
+
+            <div class="offcanvas-body">
+                <x-sidebar_links></x-sidebar_links>
             </div>
         </div>
     </body> 

@@ -9,7 +9,9 @@ return [
     |
     | The following language lines are used for games.
     */
-    'submit'=> 'Iesniegts',
+    'submit'=> 'Iesniegt',
+    'finish'=> 'Pabeigt testu',
+    'next' => "Nākamais jautājums",
     'select' => 'Izvēlieties jautājumu augšā!',
     'summary' => 'Spēles kopsavilkums',
     'correct' => 'Pareizās atbildes',

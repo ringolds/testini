@@ -1,5 +1,7 @@
 @props(['question', 'answerType', 'resultItem', 'description'=>null])
-<div id="game-entry-{{ $resultItem->id }}" class="d-flex flex-column gap-4 w-100">
+<div id="game-entry-{{ $resultItem->id }}" class="d-flex flex-column gap-4 w-100" 
+    data-finish-text="{{ __('game.finish') }}"
+    data-next-text="{{ __('game.next') }}">
     @include('games.question', ['question'=>$question, 'resultItem'=>$resultItem, 'description'=>$description])
     @include('games.answer', ['answerType'=>$answerType, 'answerMode'=> $answerMode, 'resultItem'=> $resultItem, 'choices'=>$choices])
 </div>

@@ -1,14 +1,14 @@
 @vite('resources/js/question_manager.js')
-<div class="card shadow-sm border-0">
+<div class="card shadow-sm border-0 d-flex flex-colum" style="height: 70vh;">
     <div class="card-header bg-white py-3">
         <h1 class="mb-0">{{ $bank->name }}</h1>
     </div>
-    <div class="card-body">
+    <div class="card-body flex-grow-1 overflow-auto">
         <p class="text-muted small">{{ $bank->description }}</p>
         <x-question_block :item="$bank" :mode="$mode" :currentItemId="$target_id" :collection_type="$type"></x-question_block>
     </div>
-    <div class="card-footer bg-white py-2">
-        <div class="d-flex justify-content-end align-items-center gap-2">
+    <div class="card-footer bg-white border-0 pt-3">
+        <div class="d-flex flex-wrap justify-content-end gap-2 w-100">
             @if($mode=="manage")
                 @can('update', $bank)
                     <button type="button" 

@@ -15,8 +15,6 @@ class GameController extends Controller
         if(request()->user()->can('start', $test)){
             $staticQuestions = $test->questions()->pluck('id')->toArray();
 
-            $staticQuestions = $test->questions()->pluck('id')->toArray();
-
             $staticImageIds = \App\Models\Question::whereIn('id', $staticQuestions)
                 ->whereHas('answer', fn($q) => $q->where('component_type', \App\Models\QuestionImage::class))
                 ->pluck('id')
@@ -54,7 +52,7 @@ class GameController extends Controller
                     ->inRandomOrder()->limit(2)->pluck('id')->toArray();
             }
 
-            $randomQuestions = $guaranteedImageIds;
+            $randomQuestions = array_merge($staticQuestions, $guaranteedImageIds);
 
             $result = Result::create([
                 'user_id' => request()->user()->id,
@@ -88,7 +86,7 @@ class GameController extends Controller
                 }
             }
 
-            $allQuestions = array_merge($staticQuestions, $randomQuestions);
+            $allQuestions = $randomQuestions;
 
             $shuffledQuestionIds = collect($allQuestions)->shuffle()->all();
 
