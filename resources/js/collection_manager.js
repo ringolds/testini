@@ -306,19 +306,51 @@ $(document).ready(function() {
             },
             error: function(xhr) {
                 if (xhr.status === 422) {
-                    let errors = xhr.responseJSON.errors;
+                    let errors = xhr.responseJSON.error;
                     
-                    $.each(errors, function(key, messages) {
-                        let input = form.find(`[name="${key}"]`);
-                        input.addClass('is-invalid');
-                        input.siblings('.invalid-feedback').text(messages[0]);
-                    });
+                    if (errors) {
+                        $('.ajax-errors-' + type).html(`<div class="text-danger">${errors}</div>`);
+                        return;
+                    }
                 } else {
                     alert(window.translations.errors.unexpectedError);
                 }
             }
         });
     });
+
+    $(document).on('submit', '#unpublish-test-form', function(e) {
+        e.preventDefault();
+        
+        let form = $(this);
+
+        form.find('.is-invalid').removeClass('is-invalid');
+        form.find('.invalid-feedback').text('');
+
+        $.ajax({
+            url: form.attr('action'),
+            type: 'POST',
+            data: form.serialize(),
+            success: function(response) {
+                alert(window.translations.unpublishedTest);
+                loadCollection(response.id, "manage", response.id);
+            },
+            error: function(xhr) {
+                if (xhr.status === 422) {
+                    let errors = xhr.responseJSON.error;
+                    
+                    if (errors) {
+                        $('.ajax-errors-' + type).html(`<div class="text-danger">${errors}</div>`);
+                        return;
+                    }
+                } else {
+                    alert(window.translations.errors.unexpectedError);
+                }
+            }
+        });
+    });
+
+
 
     $(document).on('submit', '#add-random-questions-form', function(e) {
         e.preventDefault();
@@ -338,17 +370,26 @@ $(document).ready(function() {
             success: function(response) {
                 $(content).html(response.html).css('opacity', '1');
             },
-            error: function(xhr) {
+           error: function(xhr) {
                 if (xhr.status === 422) {
                     let errors = xhr.responseJSON.errors;
                     
-                    $.each(errors, function(key, messages) {
-                        let input = form.find(`[name="${key}"]`);
-                        input.addClass('is-invalid');
-                        input.siblings('.invalid-feedback').text(messages[0]);
-                    });
+                    if (errors) {
+                        let html = "<ul class='mb-0'>";
+
+                        Object.values(errors).forEach(function (messages) {
+                            messages.forEach(function (msg) {
+                                html += `<li>${msg}</li>`;
+                            });
+                        });
+
+                        html += "</ul>";
+
+                        $('#ajax-errors-bank-' + bankId).html(html);
+                        $('#question-content').css('opacity', '1');
+                    }   
                 } else {
-                    alert(window.translations.errors.unexpectedError);
+                    alert(window.translations.errors.cannotSaveUpdate);
                 }
             }
         });

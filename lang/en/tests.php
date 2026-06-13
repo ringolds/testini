@@ -29,4 +29,6 @@ return [
     'createSuccess' => 'Test created successfully!',
     'updateSuccess' => 'Test updated successfully!',
     'published' => "Test sucessfully published",
+    'unpublish' => "Unpublish",
+    'unpublished' => "Test was unpublished",
 ];

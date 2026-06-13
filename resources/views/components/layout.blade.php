@@ -15,6 +15,7 @@
                 game: @json(__('game')),
                 publishedBank: @json(__('banks.published')),
                 publishedTest: @json(__('tests.published')),
+                unpublishedTest: @json(__('tests.unpublished')),
             };
         </script>
         <style>

@@ -24,16 +24,6 @@
         <textarea name="description" id="edit_description" class="form-control" rows="5">{{ old('description', $test->description) }}</textarea>
         <div class="invalid-feedback" id="error-description"></div> {{-- Placeholder --}}
     </div>
-
-    <div class="mb-3">
-        <div class="form-check">
-            <input class="form-check-input" type="checkbox" name="public" value="1" id="public" 
-                {{ old('public', $test->public) ? 'checked' : '' }}>
-            <label class="form-check-label" for="public">
-                {{__('tests.public')}} 
-            </label>
-        </div>
-    </div>
      
     <button type="submit" class="btn btn-primary">{{__('tests.update')}} </button> 
 </form> 

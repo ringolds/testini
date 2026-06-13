@@ -29,4 +29,6 @@ return [
     'createSuccess' => 'Tests veiksmīgi izveidots!',
     'updateSuccess' => 'Tests veiksmīgi atjaunots!',
     'published' => "Tests veiksmīgi publicēts",
+    'unpublish' => "Atpubliskot",
+    'unpublished' => "Tests vairs nav publisks",
 ];

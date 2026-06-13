@@ -38,6 +38,7 @@ return [
     'cannotAddQuestion' => "Could not add question",
     'cannotEditQuestion' => "Could not edit question",
     'cannotSaveUpdate' => "Could not save the update",
+    'noQuestions' => "Test has no questions",
 
 
 

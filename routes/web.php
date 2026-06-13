@@ -43,6 +43,7 @@ Route::middleware('auth')->group(function() {
     //map
     Route::get('map/{map}/config', [MapController::class, 'getConfig'])->name('map.config'); 
     //resources
+    Route::post('test/{test}/unpublish', [TestController::class, 'unpublish'])->name('test.unpublish');
     Route::post('test/{test}/publish', [TestController::class, 'publish'])->name('test.publish');
     Route::resource('test', TestController::class);
     Route::post('bank/{bank}/publish', [BankController::class, 'publish'])->name('bank.publish');

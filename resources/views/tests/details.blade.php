@@ -1,5 +1,5 @@
 @vite('resources/js/question_manager.js')
-<div class="card shadow-sm border-0 d-flex flex-column" style="height: 60vh;">
+<div class="card shadow-sm border-0 d-flex flex-column" style="height: 70vh;">
     <div class="card-header bg-white py-3">
         <h1 class="mb-0">{{ $test->name }}</h1>
     </div>
@@ -9,11 +9,18 @@
     </div>
     <div class="card-footer bg-white border-0 pt-3">
         <div class="d-flex flex-wrap justify-content-end gap-2 w-100">
+            <div id="ajax-errors-test-{{$test->id}}" class="text-danger small mb-2 ajax-errors-test"></div>
             @if($mode=="manage")
                 @can('publish', $test)
                     <form id="publish-test-form" method="POST" action="{{ route('test.publish', $test)}}"> 
                         @csrf
                         <button type="submit" class="btn btn-primary">{{__('tests.publish')}} </button> 
+                    </form> 
+                @endcan
+                @can('unpublish', $test)
+                    <form id="unpublish-test-form" method="POST" action="{{ route('test.unpublish', $test)}}"> 
+                        @csrf
+                        <button type="submit" class="btn btn-primary">{{__('tests.unpublish')}} </button> 
                     </form> 
                 @endcan
                 @can('update', $test)

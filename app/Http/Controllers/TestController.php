@@ -128,7 +128,6 @@ class TestController extends Controller
 
         $test->name = $validated['name'];
         $test->description = $validated['description'];
-        $test->public = $request->public;
 
         $test->save();
 
@@ -163,8 +162,117 @@ class TestController extends Controller
     public function publish(Test $test){
         $user = request()->user();
         if($user->can('publish', $test)){
+            $staticQuestions = $test->questions()->pluck('id')->toArray();
+
+            $staticImageIds = \App\Models\Question::whereIn('id', $staticQuestions)
+                ->whereHas('answer', fn($q) => $q->where('component_type', \App\Models\QuestionImage::class))
+                ->pluck('id')
+                ->toArray();
+
+            $staticImageCount = count($staticImageIds);
+
+            $bankIds = $test->banks->pluck('id')->toArray();
+            $allAvailableBankImageIds = \App\Models\Question::whereHas('banks', fn($q) => $q->whereIn('banks.id', $bankIds))
+                ->whereHas('answer', fn($q) => $q->where('component_type', \App\Models\QuestionImage::class))
+                ->pluck('id')
+                ->unique() // 
+                ->toArray();
+
+            $eligibleBankImageIds = array_diff($allAvailableBankImageIds, $staticImageIds);
+            $totalBankImagesAvailable = count($eligibleBankImageIds);
+            $totalPotentialImages = $staticImageCount + $totalBankImagesAvailable;
+
+            if ($totalPotentialImages === 1) {
+                if(request()->ajax()){
+                    return response()->json(['error' => __('errors.imageTest')], 422);
+                }
+                else{
+                    return back()->withErrors(['error' => __('errors.imageTest')]);
+                }
+            }
+
+            $guaranteedImageIds = [];
+
+            if ($staticImageCount === 1 && $totalBankImagesAvailable >= 1) {
+                // We need exactly 1 more from any bank to make it 2
+                $guaranteedImageIds = \App\Models\Question::whereHas('banks', fn($q) => $q->whereIn('banks.id', $bankIds))
+                    ->whereHas('answer', fn($q) => $q->where('component_type', \App\Models\QuestionImage::class))
+                    ->inRandomOrder()->limit(1)->pluck('id')->toArray();
+            } 
+            elseif ($staticImageCount === 0 && $totalBankImagesAvailable >= 2) {
+                // We need exactly 2 from the banks to ensure our multiple choice has choices
+                $guaranteedImageIds = \App\Models\Question::whereHas('banks', fn($q) => $q->whereIn('banks.id', $bankIds))
+                    ->whereHas('answer', fn($q) => $q->where('component_type', \App\Models\QuestionImage::class))
+                    ->inRandomOrder()->limit(2)->pluck('id')->toArray();
+            }
+
+            $randomQuestions = array_merge($staticQuestions, $guaranteedImageIds);
+
+            
+
+            foreach ($test->banks as $bank) {
+                $count = $bank->pivot->random_count;
+                $available = $bank->questions()->count();
+
+                if($available<$count){
+                    $count = $available;
+                    $test->banks()->updateExistingPivot($bank->id, [
+                        'random_count' => $count
+                    ]);
+                }
+
+                if ($count > 0) {
+                    $available = $bank->questions()->whereNotIn('id', $randomQuestions)->count();
+                    if ($available < $count) { $count = $available; }
+
+                    $fetchedIds = $bank->questions()
+                        ->whereNotIn('id', $randomQuestions)
+                        ->inRandomOrder()
+                        ->take($count)
+                        ->pluck('id')
+                        ->toArray();
+
+                    $randomQuestions = array_merge($randomQuestions, $fetchedIds);
+                }
+            }
+
+            $allQuestions = $randomQuestions;
+            
+            $shuffledQuestionIds = collect($allQuestions)->shuffle()->all();
+
+            if(count($shuffledQuestionIds)<=0){
+                if(request()->ajax()){
+                    return response()->json(['error' => __('errors.noQuestions')], 422);
+                }
+                else{
+                    return back()->withErrors(['error' => __('errors.noQuestions')]);
+                }
+            }
+
             $test->update([
                 'public' => true,
+            ]);
+
+
+            if(request()->ajax()){
+                return response()->json([
+                    'id' => $test->id,
+                    'name' => $test->name,
+                    'success' => __('tests.updateSuccess')
+                ]);
+            }
+
+            return redirect()->route('test.index')->with('success', __('tests.updateSuccess'));
+        }
+
+        return redirect()->route('home');
+    }
+
+    public function unpublish(Test $test){
+        $user = request()->user();
+        if($user->can('unpublish', $test)){
+            $test->update([
+                'public' => false,
             ]);
 
             if(request()->ajax()){

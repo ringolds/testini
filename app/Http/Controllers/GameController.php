@@ -108,6 +108,12 @@ class GameController extends Controller
             }
             $questions = $result->items;
 
+            if (request()->ajax()) {
+                return response()->json([
+                    'success' => true
+                ]);
+            }
+
             return view('games.start', compact('test', 'questions'));
         }
         

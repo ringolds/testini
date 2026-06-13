@@ -38,5 +38,6 @@ return [
     'cannotAddQuestion' => "Neizdevās pievienot jautājumu",
     'cannotEditQuestion' => "Neizdevās rediģēt jautājumu",
     'cannotSaveUpdate' => "Neizdevās saglabāt atjaunoto informāciju",
+    'noQuestions' => "Testam nav pievienots neviens jautājums",
 
 ];

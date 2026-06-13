@@ -9,6 +9,7 @@
     </div>
     <div class="card-footer bg-white border-0 pt-3">
         <div class="d-flex flex-wrap justify-content-end gap-2 w-100">
+            <div id="ajax-errors-bank-{{$bank->id}}" class="text-danger small mb-2 ajax-errors-bank\"></div>
             @if($mode=="manage")
                 @can('publish', $bank)
                     <form id="publish-bank-form" method="POST" action="{{ route('bank.publish', $bank)}}"> 
@@ -43,6 +44,7 @@
                 </button>
             @endif
             @if($mode=="addBank")
+                <div id="ajax-errors-bank-{{$bank->id}}" class="text-danger small mb-2 ajax-errors-test"></div>
                 <form id="add-random-questions-form" data-id="{{ $bank->id }}" data-target-id="{{$target_id}}" class="d-inline m-0" action="{{ route('test.saveBank', ['test'=>$target_id, 'bank'=>$bank]) }}" method="POST"> 
                     @csrf
                     <label for="count">{{__('buttons.amount')}}</label>

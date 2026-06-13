@@ -53,12 +53,11 @@ class TestPolicy
     public function update(User $user, Test|int $test): bool
     {
         if($test instanceof Test){
-            return $test->user_id === $user->id;
+            return $test->user_id === $user->id && $test->public == FALSE;
         }
         else{
-            return Test::where('id', $test)->where('user_id', $user->id)->exists();
-        }
-        
+            return Test::where('id', $test)->where('user_id', $user->id)->where('public', FALSE)->exists();
+        }   
     }
 
     /**
@@ -82,6 +81,11 @@ class TestPolicy
         return $user->id === $test->user_id && $test->public == FALSE;
     }
 
+    public function unpublish(User $user, Test $test):bool
+    {
+        return $user->id === $test->user_id && $test->public == TRUE;
+    }
+
     /**
      * Determine whether the user can permanently delete the model.
      */
@@ -102,12 +106,12 @@ class TestPolicy
 
     public function removeBankFromTest(User $user, Test $test, Bank $bank): bool
     {
-        return $user->id === $test->user_id && $test->banks()->where('id', $bank->id)->exists();
+        return $user->id === $test->user_id && $test->banks()->where('id', $bank->id)->exists() && $test->public == FALSE;
     }
 
     public function changeBankCount(User $user, Test $test, Bank $bank): bool
     {
-        return $user->id === $test->user_id && $test->banks()->where('id', $bank->id)->exists();
+        return $user->id === $test->user_id && $test->banks()->where('id', $bank->id)->exists() && $test->public == FALSE;
     }
 
     public function start(User $user, Test $test): bool

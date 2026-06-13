@@ -35,7 +35,7 @@
         </div>
         <div class="card-footer bg-white border-0 pt-3">
             <div class="d-flex flex-wrap justify-content-end gap-2 w-100">
-                @if($mode == "manage") 
+                @if($mode == "manage" && ($type=="bank"|| ($target->public==FALSE))) 
                     @can('update', $question)
                         <button type="button" 
                             class="btn btn-warning edit-question-btn d-flex flex-shrink-1 text-nowrap align-items-center flex-shrink-0" 

@@ -105,10 +105,30 @@ function changeBankCount(id, target, formElement){
         success: function(response) {
             $('#bank-'+id+'-row').replaceWith(response.html).css('opacity', '1');;
             $('#question-content').css('opacity', '1');
+            $('#ajax-errors-bank' + id).html("");
         },
-        error: function() {
-            alert(window.translations.errors.cannotSaveUpdate);
-            $('#question-content').css('opacity', '1');
+        error: function(xhr) {
+            
+            if (xhr.status === 422) {
+                let errors = xhr.responseJSON.errors;
+                
+                if (errors) {
+                    let html = "<ul class='mb-0'>";
+
+                    Object.values(errors).forEach(function (messages) {
+                        messages.forEach(function (msg) {
+                            html += `<li>${msg}</li>`;
+                        });
+                    });
+
+                    html += "</ul>";
+
+                    $('#ajax-errors-bank-' + id).html(html);
+                    $('#question-content').css('opacity', '1');
+                }   
+            } else {
+                alert(window.translations.errors.cannotSaveUpdate);
+            }
         }
     });
 }

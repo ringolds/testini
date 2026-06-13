@@ -83,6 +83,6 @@ class QuestionPolicy
 
     public function removeQuestionFromTest(User $user, Question $question, Test $test):bool
     {
-        return $test->questions()->where('id', $question->id)->exists() && $test->user_id === $user->id;
+        return $test->questions()->where('id', $question->id)->exists() && $test->user_id === $user->id && $test->public == FALSE;
     }
 }
