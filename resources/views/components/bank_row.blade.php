@@ -12,7 +12,7 @@
 
         <div class="card-footer bg-white border-0 pt-3">
             <div class="d-flex flex-wrap justify-content-end gap-2 w-100">
-                <div id="ajax-errors-bank-{{$bank->id}}" class="text-danger small mb-2 ajax-errors-test"></div>
+                <div id="ajax-errors-bank-{{$bank->id}}" class="text-danger small mb-2"></div>
                 @can('update', [\App\Models\Test::class, $test])
                     @if($mode == 'view')
                     <button type="button" 
