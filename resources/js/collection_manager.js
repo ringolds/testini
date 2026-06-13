@@ -13,9 +13,7 @@ function loadCollection(id, mode, target_id, optional_type=null) {
     if(optional_type!=null){
        $('.' + optional_type + '-content').css('opacity', '0.5');
         if(mode == "add" || mode=="addBank"){
-            console.log(optional_type)
             target_id = document.querySelector('.' + optional_type + '-content[data-mode="' + mode + '"]').getAttribute('data-target-id');
-            console.log(target_id)
         }
         $.ajax({
             url: '/' + optional_type + '/' + id + '?mode=' + mode+'&target-id='+target_id+'&type='+type,
@@ -30,7 +28,12 @@ function loadCollection(id, mode, target_id, optional_type=null) {
                 $('.' + optional_type + '-content').attr('data-target-id', target_id)
             },
             error: function() {
-                alert('Could not load' +optional_type + ' details.');
+                if(optional_type == "bank"){
+                    alert(window.translations.errors.cannotLoadDetailsBank);
+                }
+                else{
+                    alert(window.translations.errors.cannotLoadDetailsTest);
+                }
                 $('.' + optional_type + '-content').css('opacity', '1');
             }
         }); 
@@ -53,7 +56,12 @@ function loadCollection(id, mode, target_id, optional_type=null) {
                 $(content).attr('data-target-id', target_id)
             },
             error: function() {
-                alert('Could not load' +type + ' details.');
+                if(type == "bank"){
+                    alert(window.translations.errors.cannotLoadDetailsBank);
+                }
+                else{
+                    alert(window.translations.errors.cannotLoadDetailsTest);
+                }
                 $(content).css('opacity', '1');
             }
         });
@@ -71,7 +79,7 @@ function editCollection(id) {
             $(content).html(response).css('opacity', '1');
         },
         error: function() {
-            alert('Could not load edit form.');
+            alert(window.translations.errors.cannotLoadEdit);
             $(content).css('opacity', '1');
         }
     });
@@ -87,7 +95,7 @@ function addNewQuestion(id) {
             $(content).html(response).css('opacity', '1');
         },
         error: function() {
-            alert('Could not load edit form.');
+            alert(window.translations.errors.cannotLoadEdit);
             $(content).css('opacity', '1');
         }
     });
@@ -103,7 +111,7 @@ function addRandomQuestions(id) {
             $(content).html(response).css('opacity', '1');
         },
         error: function() {
-            alert('Could not load edit form.');
+            alert(window.translations.errors.cannotLoadRandomQuestions);
             $(content).css('opacity', '1');
         }
     });
@@ -118,10 +126,14 @@ function deleteCollection(id) {
         success: function(response) {
             loadCollection(firstId, firstMode, firstId)
             $('#btn-' + type +'-'+ id).remove();
-            alert("deleted")
         },
         error: function() {
-            alert('Could not delete ' +type+ '.');
+            if(type == "bank"){
+                alert(window.translations.errors.cannotDeleteBank);
+            }
+            else{
+                alert(window.translations.errors.cannotDeleteTest);
+            }
             $(content).css('opacity', '1');
         }
     });
@@ -138,7 +150,7 @@ function addExistingQuestion(id){
             // $(content).attr('data-target-id', id);
         },
         error: function() {
-            alert('Could not load question adding.');
+            alert(window.translations.errors.questionAddNotLoading);
             $(content).css('opacity', '1');
         }
     });
@@ -218,7 +230,7 @@ $(document).ready(function() {
                         input.siblings('.invalid-feedback').text(messages[0]);
                     });
                 } else {
-                    alert('An unexpected error occurred.');
+                    alert(window.translations.errors.unexpectedError);
                 }
             }
         });
@@ -252,7 +264,7 @@ $(document).ready(function() {
             type: 'POST',
             data: form.serialize(),
             success: function(response) {
-                $(`#btn-${response.id}`).text(response.name);
+                $('#btn-'+ type +'-'+response.id).text(response.name);
                 loadCollection(response.id, "manage", response.id);
             },
             error: function(xhr) {
@@ -265,7 +277,44 @@ $(document).ready(function() {
                         input.siblings('.invalid-feedback').text(messages[0]);
                     });
                 } else {
-                    alert('An unexpected error occurred.');
+                    alert(window.translations.errors.unexpectedError);
+                }
+            }
+        });
+    });
+
+    $(document).on('submit', '#publish-'+type+'-form', function(e) {
+        e.preventDefault();
+        
+        let form = $(this);
+
+        form.find('.is-invalid').removeClass('is-invalid');
+        form.find('.invalid-feedback').text('');
+
+        $.ajax({
+            url: form.attr('action'),
+            type: 'POST',
+            data: form.serialize(),
+            success: function(response) {
+                if(type=="bank"){
+                    alert(window.translations.publishedBank);
+                }
+                else{
+                    alert(window.translations.publishedTest);
+                }
+                loadCollection(response.id, "manage", response.id);
+            },
+            error: function(xhr) {
+                if (xhr.status === 422) {
+                    let errors = xhr.responseJSON.errors;
+                    
+                    $.each(errors, function(key, messages) {
+                        let input = form.find(`[name="${key}"]`);
+                        input.addClass('is-invalid');
+                        input.siblings('.invalid-feedback').text(messages[0]);
+                    });
+                } else {
+                    alert(window.translations.errors.unexpectedError);
                 }
             }
         });
@@ -299,7 +348,7 @@ $(document).ready(function() {
                         input.siblings('.invalid-feedback').text(messages[0]);
                     });
                 } else {
-                    alert('An unexpected error occurred.');
+                    alert(window.translations.errors.unexpectedError);
                 }
             }
         });

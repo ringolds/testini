@@ -77,6 +77,11 @@ class TestPolicy
         return false;
     }
 
+    public function publish(User $user, Test $test):bool
+    {
+        return $user->id === $test->user_id && $test->public == FALSE;
+    }
+
     /**
      * Determine whether the user can permanently delete the model.
      */

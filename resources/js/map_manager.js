@@ -3,7 +3,6 @@ import * as am5map from "@amcharts/amcharts5/map";
 
 const activeMapRoots = new WeakSet();
 
-// 1. Create a global observer that watches the entire document for DOM changes
 const globalMapObserver = new MutationObserver(function (mutations) {
     mutations.forEach(function (mutation) {
         mutation.addedNodes.forEach(function (node) {
@@ -71,7 +70,6 @@ function loadMapConfig(container){
 
 function initializeMap(config, container){
     am5.ready(function() {
-        console.log(container)
         var containerId = container.id;
 
         if (activeMapRoots[containerId]) {
@@ -98,7 +96,8 @@ function initializeMap(config, container){
                 paddingLeft: 0,
                 paddingRight: 0,
                 paddingTop: 0,
-                paddingBottom: 0
+                paddingBottom: 0,
+                maxZoomLevel: 32
             })
         );
 
@@ -202,6 +201,8 @@ function initializeMap(config, container){
                         var targetPolygon = dataItem.get("mapPolygon");
                         if (targetPolygon) {
                             targetPolygon.set("active", true);
+                            polygonSeries.zoomToDataItem(dataItem);
+                            chart.zoomOut();
                         }
                     }
                 }
@@ -217,7 +218,9 @@ function initializeMap(config, container){
                     if (correctDataItem) {
                         var correctPolygon = correctDataItem.get("mapPolygon");
                         if (correctPolygon) {
-                            correctPolygon.set("fill", am5.color("#3be21a")); // Bootstrap success green
+                            correctPolygon.set("fill", am5.color("#3be21a"));
+                            polygonSeries.zoomToDataItem(correctDataItem);
+                            chart.zoomOut();
                         }
                     }
                     if (userAnswerId && userAnswerId !== "" && userAnswerId !== correctTargetId) {
@@ -234,7 +237,9 @@ function initializeMap(config, container){
         }
 
         polygonSeries.events.on("datavalidated", function() {
-            chart.goHome();
+            if (config.mode !== "question" && config.mode !== "result") {
+                chart.goHome();
+            }
         });
         
     });

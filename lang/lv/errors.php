@@ -25,5 +25,18 @@ return [
     'invalidRegion' => 'Izvēlētais reģions ":value" nav kartei atbilstošs.',
     'invalidBank' => 'Nederīga banka',
     'notEnoughQuestions' => 'Bankā nepietiek jautājumu',
+    'unexpectedError' => 'Notika neparadzēta kļūme.',
+    'questionAddNotLoading' => 'Neizdevās ielādēt jautājumu pievienošanu',
+    'cannotDeleteBank' => 'Neizdevās izdzēst banku',
+    'cannotDeleteQuestion' => 'Neizdevās izdzēst jautājumu',
+    'cannotDeleteTest' => 'Neizdevās izdzēst testu',
+    'cannotLoadEdit' => "Neizdevās ielādēt rediģēšanas fontu",
+    'cannotLoadRandomQuestions' => "Neizdevās ielādēt nejaušo jautājumu pievienošanu",
+    'cannotLoadDetailsBank' => "Neizdevās ielādēt bankas informāciju",
+    'cannotLoadDetailsQuestion' => "Neizdevās ielādēt jautājuma informāciju",
+    'cannotLoadDetailsTest' => "Neizdevās ielādēt testa informāciju",
+    'cannotAddQuestion' => "Neizdevās pievienot jautājumu",
+    'cannotEditQuestion' => "Neizdevās rediģēt jautājumu",
+    'cannotSaveUpdate' => "Neizdevās saglabāt atjaunoto informāciju",
 
 ];

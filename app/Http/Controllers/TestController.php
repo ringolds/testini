@@ -160,6 +160,27 @@ class TestController extends Controller
         }
     }
 
+    public function publish(Test $test){
+        $user = request()->user();
+        if($user->can('publish', $test)){
+            $test->update([
+                'public' => true,
+            ]);
+
+            if(request()->ajax()){
+                return response()->json([
+                    'id' => $test->id,
+                    'name' => $test->name,
+                    'success' => __('tests.updateSuccess')
+                ]);
+            }
+
+            return redirect()->route('test.index')->with('success', __('tests.updateSuccess'));
+        }
+
+        return redirect()->route('home');
+    }
+
     public function addQuestion(Test $test){
         $user = request()->user();
         $banks = $user->banks()->get();
@@ -300,6 +321,11 @@ class TestController extends Controller
             if ($userId) {
                 $query->orWhere('user_id', $userId);
             }
+        })->where(function ($query) {
+            $query->whereHas('questions')
+                ->orWhereHas('banks', function ($q) {
+                    $q->where('random_count', '>', 0)->has('questions');
+                });
         })
         ->latest()
         ->paginate($perPage)

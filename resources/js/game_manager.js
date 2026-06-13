@@ -17,7 +17,7 @@ function loadQuestion(resultItemId, resultId) {
             }
         },
         error: function() {
-            alert('Could not load question details.');
+            alert(window.translations.errors.cannotLoadDetailsQuestion);
             $(content).css('opacity', '1');
         }
     }); 
@@ -40,7 +40,7 @@ function loadSummary(resultId){
             $('#game-window').html(response).css('opacity', '1');
         },
         error: function() {
-            alert('Could not load question details.');
+            alert(window.translations.errors.cannotLoadDetailsQuestion);
             $(content).css('opacity', '1');
         }
     });
@@ -73,7 +73,7 @@ function submitQuestion(resultItemId, resultId, formElement){
                         input.siblings('.invalid-feedback').text(messages[0]);
                     });
                 } else {
-                    alert('An unexpected error occurred.');
+                    alert(window.translations.errors.unexpectedEror);
                 }
             }
         });
@@ -129,7 +129,7 @@ function handleAnsweredQuestion(response, resultItemId, resultId){
             textInput.addClass('is-invalid bg-danger text-white');
             
             if (textInput.siblings('.correct-answer-feedback').length === 0) {
-                textInput.after(`<div class="text-success small mt-1 correct-answer-feedback">Correct answer: <strong>${response.answer}</strong></div>`);
+                textInput.after(`<div class="text-success small mt-1 correct-answer-feedback">${window.translations.game.correctAnswer}: <strong>${response.answer}</strong></div>`);
             }
         }
     }
@@ -182,8 +182,6 @@ $(document).ready(function() {
         if (event.keyCode === 13 || event.key === 'Enter') {
             console.log("entered");
             let activeElement = document.activeElement;
-            console.log(activeElement
-            )
             if ($('#submit-btn').length > 0) {
                 event.preventDefault(); 
                 $('#submit-btn').click(); 

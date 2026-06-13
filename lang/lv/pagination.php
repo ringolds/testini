@@ -15,5 +15,6 @@ return [
 
     'previous' => '&laquo; Iepriekšējais',
     'next' => 'Nākamais &raquo;',
+    'message' => 'Redzami rezultāti :from līdz :to no :total kopā'
 
 ];

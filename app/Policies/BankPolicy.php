@@ -56,6 +56,11 @@ class BankPolicy
         return false;
     }
 
+    public function publish(User $user, Bank $bank):bool
+    {
+        return ($user->id === $bank->user_id || $user->is_admin) && $bank->public == FALSE && $bank->deleted_at==NULL;
+    }
+
     /**
      * Determine whether the user can permanently delete the model.
      */

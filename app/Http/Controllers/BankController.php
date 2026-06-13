@@ -175,4 +175,25 @@ class BankController extends Controller
             }
         return view('banks.index', compact('banks', 'mode', 'target_id'));
     }
+
+    public function publish(Bank $bank){
+        $user = request()->user();
+        if($user->can('publish', $bank)){
+            $bank->update([
+                'public' => true,
+            ]);
+
+            if(request()->ajax()){
+                return response()->json([
+                    'id' => $bank->id,
+                    'name' => $bank->name,
+                    'success' => __('banks.successfulUpdate')
+                ]);
+            }
+
+            return redirect()->route('bank.index')->with('success', __('banks.successfulUpdate'));
+        }
+
+        return redirect()->route('home');
+    }
 }

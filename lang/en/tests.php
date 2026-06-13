@@ -14,9 +14,11 @@ return [
     'cardsPerPage' => 'Cards per page',
     'author' => 'Author',
     'description' => 'Description',
-    'play' => 'Play Test',
+    'play' => 'Start Test',
+    'continue' => "Continue test",
     'create' => 'Create a new test',
     'name' => 'Name',
+    'publish' => "Publish",
     'Description' => 'Description',
     'createButton' => 'Create test',
     'edit' => 'Edit test',
@@ -26,4 +28,5 @@ return [
     'select' => 'Select a test above to view questions.',
     'createSuccess' => 'Test created successfully!',
     'updateSuccess' => 'Test updated successfully!',
+    'published' => "Test sucessfully published",
 ];

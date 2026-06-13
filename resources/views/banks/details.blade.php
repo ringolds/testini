@@ -1,5 +1,5 @@
 @vite('resources/js/question_manager.js')
-<div class="card shadow-sm border-0 d-flex flex-colum" style="height: 70vh;">
+<div class="card shadow-sm border-0 d-flex flex-colum" style="height: 60vh;">
     <div class="card-header bg-white py-3">
         <h1 class="mb-0">{{ $bank->name }}</h1>
     </div>
@@ -10,6 +10,12 @@
     <div class="card-footer bg-white border-0 pt-3">
         <div class="d-flex flex-wrap justify-content-end gap-2 w-100">
             @if($mode=="manage")
+                @can('publish', $bank)
+                    <form id="publish-bank-form" method="POST" action="{{ route('bank.publish', $bank)}}"> 
+                        @csrf
+                        <button type="submit" class="btn btn-primary">{{__('banks.publish')}} </button> 
+                    </form> 
+                @endcan
                 @can('update', $bank)
                     <button type="button" 
                         class="btn btn-warning edit-bank-btn d-flex align-items-center" 

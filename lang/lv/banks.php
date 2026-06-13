@@ -17,6 +17,7 @@ return [
     'createButton' => 'Izveidot banku',
     'edit' => "Rediģēt banku",
     'public' => "Publisks (Visiem redzams)",
+    'publish' => "Publicēt",
     'collaborative' => 'Koplietojams (Citi var rediģēt)',
     'update' => 'Atjaunot banku',
     'select' => 'Izvēlieties banku, lai redzētu jautājumus.',
@@ -25,4 +26,5 @@ return [
     'defaultDescription' => 'Noklusējuma banka izveidota reģistrējoties',
     'succesfulCreation' => 'Banka veiksmīgi izveidota!',
     'successfulUpdate' => 'Banka veiksmīgi atjaunota!',
+    'published' => "Banka veiksmīgi publicēta",
 ];

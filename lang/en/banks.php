@@ -17,6 +17,7 @@ return [
     'createButton' => 'Create Bank',
     'edit' => "Edit Bank",
     'public' => "Public (Visible to everyone)",
+    'publish' => "Publish",
     'collaborative' => 'Collaborative (Others can edit)',
     'update' => 'Update Bank',
     'select' => 'Select a bank above to view questions.',
@@ -25,6 +26,7 @@ return [
     'defaultDescription' => 'Default bank created at registration',
     'succesfulCreation' => 'Bank created successfully!',
     'successfulUpdate' => 'Bank updated successfully!',
+    'published' => "Bank sucessfully published",
     
 
 ];

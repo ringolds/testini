@@ -15,5 +15,6 @@ return [
 
     'previous' => '&laquo; Previous',
     'next' => 'Next &raquo;',
+    'message' => 'Showing :from to :to of :total results',
 
 ];

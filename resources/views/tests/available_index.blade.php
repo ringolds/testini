@@ -19,7 +19,12 @@
                             <p class="card-title fw-semibold fs-4">{{ $test->name }}</p>
                             <p class="card-text text-muted small">{{__('tests.author')}} : {{ $test->user->name}}</p>
                             <p class="card-text text-muted small">{{__('tests.description')}} : {{ $test->description}}</p>
-                            <a href="{{ route('game.start', $test->id) }}" class="btn btn-success mt-auto w-100">{{__('tests.play')}} </a>
+                            @can('start', $test)
+                                <a href="{{ route('game.start', $test->id) }}" class="btn btn-success mt-auto w-100">{{__('tests.play')}} </a>
+                            @endcan
+                            @can('continue', $test)
+                                <a href="{{ route('game.start', $test->id) }}" class="btn btn-warning mt-auto w-100">{{__('tests.continue')}} </a>
+                            @endcan
                         </div>
                     </div>
                 </div>

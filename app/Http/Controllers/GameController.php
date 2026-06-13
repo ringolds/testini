@@ -54,11 +54,7 @@ class GameController extends Controller
 
             $randomQuestions = array_merge($staticQuestions, $guaranteedImageIds);
 
-            $result = Result::create([
-                'user_id' => request()->user()->id,
-                'test_id' => $test->id,
-                'start_time'=> now()
-            ]);
+            
 
             foreach ($test->banks as $bank) {
                 $count = $bank->pivot->random_count;
@@ -87,8 +83,18 @@ class GameController extends Controller
             }
 
             $allQuestions = $randomQuestions;
-
+            
             $shuffledQuestionIds = collect($allQuestions)->shuffle()->all();
+
+            if(count($shuffledQuestionIds)<=0){
+                return redirect(route('home'));
+            }
+
+            $result = Result::create([
+                'user_id' => request()->user()->id,
+                'test_id' => $test->id,
+                'start_time'=> now()
+            ]);
 
             foreach ($shuffledQuestionIds as $index => $questionId) {
                 ResultItem::create([

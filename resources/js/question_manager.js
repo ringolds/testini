@@ -11,7 +11,7 @@ function editQuestion(id) {
             $('#question-content').html(response).css('opacity', '1');
         },
         error: function() {
-            alert('Could not load edit form.');
+            alert(window.translations.errors.cannotLoadEdit);
             $('#question-content').css('opacity', '1');
         }
     });
@@ -28,7 +28,7 @@ function addToCollection(id, target_id) {
             $('.'+type+'-content').attr('data-target-id', target_id);
         },
         error: function() {
-            alert('Could not add question.');
+            alert(window.translations.errors.cannotAddQuestion);
             $('#question-content').css('opacity', '1');
         }
     });
@@ -46,7 +46,7 @@ function removeQuestion(id, target) {
             $('#question-content').css('opacity', '1');
         },
         error: function() {
-            alert('Could not delete question.');
+            alert(window.translations.errors.cannotDeleteQuestion);
             $('#question-content').css('opacity', '1');
         }
     });
@@ -63,7 +63,7 @@ function removeBank(id, target) {
             $('#question-content').css('opacity', '1');
         },
         error: function() {
-            alert('Could not delete question.');
+            alert(window.translations.errors.cannotDeleteQuestion);
             $('#question-content').css('opacity', '1');
         }
     });
@@ -80,7 +80,7 @@ function editBankCount(id, target){
             $('#question-content').css('opacity', '1');
         },
         error: function() {
-            alert('Could not edit question.');
+            alert(window.translations.errors.cannotEditQuestion);
             $('#question-content').css('opacity', '1');
         }
     });
@@ -107,7 +107,7 @@ function changeBankCount(id, target, formElement){
             $('#question-content').css('opacity', '1');
         },
         error: function() {
-            alert('Could not save question update.');
+            alert(window.translations.errors.cannotSaveUpdate);
             $('#question-content').css('opacity', '1');
         }
     });
@@ -125,7 +125,7 @@ function deleteQuestion(id) {
             $('#question-content').css('opacity', '1');
         },
         error: function() {
-            alert('Could not delete question.');
+            alert(window.translations.errors.cannotDeleteQuestion);
             $('#question-content').css('opacity', '1');
         }
     });
@@ -190,7 +190,7 @@ $(document).ready(function() {
                         input.siblings('.invalid-feedback').text(messages[0]);
                     });
                 } else {
-                    alert('An unexpected error occurred.');
+                    alert(window.translations.errors.unexpectedError);
                 }
             }
         });

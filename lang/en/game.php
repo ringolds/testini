@@ -16,4 +16,5 @@ return [
     'summary' => 'Quiz summary',
     'correct' => 'Correct answers',
     'timeSpent' => 'Time spent',
+    'correctAnswer' => "Correct answer",
 ];
