@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Question;
+use App\Models\Rating;
 use App\Models\Result;
 use App\Models\ResultItem;
 use App\Models\Test;
@@ -302,7 +303,10 @@ class GameController extends Controller
     public function summary(Result $result){
         if(request()->user()->can('getSummary', $result)){
             $durationString = $result->end_time->diffAsCarbonInterval($result->start_time)->forHumans();
-            return view('games.summary', ['score'=>$result->score, 'total'=> $result->items()->count(), 'duration'=> $durationString]);
+            $rating = Rating::where('test_id', $result->test_id)->where('user_id', request()->user()->id)->first();
+            $stars = $rating?->stars;
+            $test = Test::where('id', $result->test_id)->first();
+            return view('games.summary', ['score'=>$result->score, 'total'=> $result->items()->count(), 'duration'=> $durationString, 'stars' => $stars, 'testId'=>$test->id]);
         }
         else{
             return redirect(route('home'));

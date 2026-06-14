@@ -47,4 +47,14 @@ class Test extends Model
                     ->withPivot('random_count')
                     ->withTimestamps();
     }
+
+    public function individualRating(int $userId){
+        return (int) $this->ratings()
+            ->where('user_id', $userId)
+            ->value('stars');
+    }
+
+    public function averageRating(){
+        return $this->ratings()->avg('stars');
+    }
 }

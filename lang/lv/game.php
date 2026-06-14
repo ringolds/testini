@@ -16,4 +16,6 @@ return [
     'summary' => 'Spēles kopsavilkums',
     'correct' => 'Pareizās atbildes',
     'timeSpent' => 'Kopējais laiks',
+    'correctAnswer' => "Pareizā atbilde",
+    'rateText' => "Novērtējiet šo testu",
 ];

@@ -19,6 +19,20 @@
                             <p class="card-title fw-semibold fs-4">{{ $test->name }}</p>
                             <p class="card-text text-muted small">{{__('tests.author')}} : {{ $test->user->name}}</p>
                             <p class="card-text text-muted small">{{__('tests.description')}} : {{ $test->description}}</p>
+                            @php
+                                $count = $test->individualRating(auth()->id());
+                            @endphp
+                            @if ($count!=0)
+                                <div class="d-flex align-items-center gap-1 mb-3 text-muted small">
+                                    <span>{{ $test->individualRating(auth()->id()) }}</span>
+                                    <i class="bi bi-star-fill text-warning"></i>
+                                </div>
+                            @else
+                                <div class="d-flex align-items-center gap-1 mb-3 text-muted small">
+                                    <span>{{__('game.noRating')}}</span>
+                                </div>
+                            @endif
+                            
                             @can('start', $test)
                                 <a href="{{ route('game.start', $test->id) }}" class="btn btn-success mt-auto w-100 play-btn">{{__('tests.play')}} </a>
                             @endcan

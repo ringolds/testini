@@ -122,7 +122,6 @@ function handleAnsweredQuestion(response, resultItemId, resultId){
         let textInput = $('#answer-form').find('input[name="question_answer"]');
         
         if (response.correct == 1) {
-            console.log("hey")
             textInput.removeClass('is-invalid')
                 .addClass('bg-success text-white border border-warning');
         } else {

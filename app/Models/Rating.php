@@ -6,6 +6,9 @@ use Illuminate\Database\Eloquent\Model;
 
 class Rating extends Model
 {
+    public $incrementing = false;
+    protected $primaryKey = null;
+
     protected $fillable = [
         'user_id',
         'test_id',

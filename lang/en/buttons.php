@@ -19,4 +19,5 @@ return [
     'add' => "Add",
     'amount' => "Choose Amount: ",
     'change' => 'Change',
+    'returnHome'=> "Return home"
 ];

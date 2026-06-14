@@ -6,6 +6,7 @@ use App\Http\Controllers\BankController;
 use App\Http\Controllers\GameController;
 use App\Http\Controllers\MapController;
 use App\Http\Controllers\QuestionController;
+use App\Http\Controllers\RatingController;
 use App\Http\Controllers\TestController;
 use Illuminate\Support\Facades\Session;
 
@@ -27,6 +28,8 @@ Route::get('lang/{locale}', function (string $locale) {
 })->name('lang.switch');
 
 Route::middleware('auth')->group(function() {
+    //rating
+    route::post('rating/{test}', [RatingController::class, 'rate'])->name('rating.rate');
     //game
     route::get('game/{resultItem}/config/{mode}', [GameController::class, 'mapConfig'])->name('game.mapConfig');
     route::get('game/{result}/summary', [GameController::class, 'summary'])->name('game.summary');

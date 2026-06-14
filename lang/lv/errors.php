@@ -39,5 +39,6 @@ return [
     'cannotEditQuestion' => "Neizdevās rediģēt jautājumu",
     'cannotSaveUpdate' => "Neizdevās saglabāt atjaunoto informāciju",
     'noQuestions' => "Testam nav pievienots neviens jautājums",
+    'tooManyRatings' => "Pārāk daudz reitingu pēdējā laikā, lūdzu uzgaidiet",
 
 ];

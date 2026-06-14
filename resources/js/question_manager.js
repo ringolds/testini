@@ -219,9 +219,7 @@ $(document).ready(function() {
     $(document).on('submit', '.add-existing-question-form', function(e) {
         e.preventDefault();
         
-        console.log("hi")
         let target = $('.'+type+'-content').data('targetId');
-        console.log(target)
         const id = $(this).data('id');
         addToCollection(id, target)
     });

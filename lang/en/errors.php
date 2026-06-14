@@ -39,6 +39,7 @@ return [
     'cannotEditQuestion' => "Could not edit question",
     'cannotSaveUpdate' => "Could not save the update",
     'noQuestions' => "Test has no questions",
+    'tooManyRatings' => "Too many ratings in a short while, wait a little bit",
 
 
 

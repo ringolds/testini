@@ -17,4 +17,6 @@ return [
     'correct' => 'Correct answers',
     'timeSpent' => 'Time spent',
     'correctAnswer' => "Correct answer",
+    'rateText' => "Rate this test",
+    'noRating' => "No rating",
 ];
