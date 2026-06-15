@@ -11,6 +11,8 @@ use App\Http\Controllers\TestController;
 use Illuminate\Support\Facades\Session;
 
 
+route::get('/', [TestController::class, 'availableTestIndex'])->name('home');
+
 Route::middleware('admin')->group(function(){
     Route::resource('map', MapController::class); 
 });
@@ -65,6 +67,5 @@ Route::middleware('guest')->group(function() {
     Route::get('/login', [AuthController::class, 'showLogin'])->name('login');
     Route::post('/login', [AuthController::class, 'login']);    
     Route::get('/register', [AuthController::class, 'showRegister'])->name('register');
-    Route::post('/register', [AuthController::class, 'register']);  
-    route::get('/', [TestController::class, 'availableTestIndex'])->name('home');  
+    Route::post('/register', [AuthController::class, 'register']);    
 });
