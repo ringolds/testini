@@ -11,10 +11,6 @@ use App\Http\Controllers\TestController;
 use Illuminate\Support\Facades\Session;
 
 
-Route::get('/', function () {
-    return view('home');
-})->name('home');
-
 Route::middleware('admin')->group(function(){
     Route::resource('map', MapController::class); 
 });
@@ -36,7 +32,6 @@ Route::middleware('auth')->group(function() {
     route::get('game/{result}/question/{resultItem}', [GameController::class, 'getQuestion'])->name('game.getQuestion');
     route::post('game/{result}/question/{resultItem}', [GameController::class, 'submitQuestion'])->name('game.submitQuestion');
     route::get('game/{test}', [GameController::class, 'start'])->name('game.start');
-    route::get('/', [TestController::class, 'availableTestIndex'])->name('home');
     //test-bank
     route::get('test/{test}/banks', [TestController::class, 'addBank'])->name('test.addBank');
     route::get('test/{test}/bank/{bank}/edit', [TestController::class, 'changeBankCount'])->name('test.changeBankCount');
@@ -70,15 +65,6 @@ Route::middleware('guest')->group(function() {
     Route::get('/login', [AuthController::class, 'showLogin'])->name('login');
     Route::post('/login', [AuthController::class, 'login']);    
     Route::get('/register', [AuthController::class, 'showRegister'])->name('register');
-    Route::post('/register', [AuthController::class, 'register']);    
-});
-
-Route::get('/debug-request', function () {
-    return [
-        'url' => url('/'),
-        'secure' => request()->secure(),
-        'scheme' => request()->getScheme(),
-        'host' => request()->getHost(),
-        'forwarded_proto' => request()->header('x-forwarded-proto'),
-    ];
+    Route::post('/register', [AuthController::class, 'register']);  
+    route::get('/', [TestController::class, 'availableTestIndex'])->name('home');  
 });
