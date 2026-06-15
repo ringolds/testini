@@ -34,22 +34,23 @@
                     <form id="delete-test-form" data-id="{{ $test->id }}" class="d-inline m-0" action="{{ route('test.destroy', $test) }}" method="POST" onsubmit="return confirm('Are you sure you want to delete this test?');"> 
                         @csrf 
                         @method('DELETE') 
-                        <button type="submit" class="btn btn-danger delete-test-btn">{{__('buttons.delete')}} </button> 
+                        <button type="submit" class="btn btn-danger delete-test-btn">
+                            <i class="bi bi-trash me-2"></i>{{__('buttons.delete')}} </button> 
                     </form>
                 @endcan
                 <button type="button" class="btn btn-primary add-existing-question-test-btn d-flex align-items-center" 
                     data-id="{{ $test->id }}">
-                    <i class="bi bi-pencil me-2"></i> {{__('buttons.addQuestion')}} 
+                    <i class="bi bi-plus me-2"></i> {{__('buttons.addQuestion')}} 
                 </button>
                 <button type="button" 
                     class="btn btn-success add-new-question-btn d-flex align-items-center" 
                     data-id="{{ $test->id }}">
-                    <i class="bi bi-pencil me-2"></i> {{__('buttons.addNewQuestion')}} 
+                    <i class="bi bi-plus me-2"></i> {{__('buttons.addNewQuestion')}} 
                 </button>
                 <button type="button" 
                     class="btn btn-success add-random-question-btn d-flex align-items-center" 
                     data-id="{{ $test->id }}">
-                    <i class="bi bi-pencil me-2"></i> {{__('buttons.addRandomQuestion')}} 
+                    <i class="bi bi-plus me-2"></i> {{__('buttons.addRandomQuestion')}} 
                 </button>
             @endif
         </div>

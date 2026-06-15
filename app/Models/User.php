@@ -16,7 +16,7 @@ use App\Models\Rating;
 use App\Models\Report;
 use App\Models\Result;
 
-#[Fillable(['name', 'email', 'password', 'google_id', 'is_admin', 'is_banned'])]
+#[Fillable(['name', 'email', 'password', 'google_id', 'is_admin', 'is_banned', 'rating_mode'])]
 #[Hidden(['password', 'remember_token'])]
 class User extends Authenticatable
 {

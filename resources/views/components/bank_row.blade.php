@@ -33,7 +33,8 @@
                     <form class="d-inline m-0 remove-bank-form" id="remove-bank-form-{{$bank->id}}" data-target-id="{{$test}}" data-id="{{ $bank->id}}" action="{{ route('test.removeBank', ['test' => $test, 'bank' => $bank]) }}" method="POST" onsubmit="return confirm(@js(__('banks.removeBankConfirm')));"> 
                         @csrf 
                         @method('DELETE') 
-                        <button type="submit" class="btn btn-danger remove-bank-btn">{{__('buttons.remove')}}</button> 
+                        <button type="submit" class="btn btn-danger remove-bank-btn">
+                            <i class="bi bi-trash me-2"></i> {{__('buttons.remove')}}</button> 
                     </form>
                 @endcan
             </div>

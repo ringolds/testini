@@ -16,7 +16,7 @@ class RatingController extends Controller
         ]);
 
         $existing = Rating::where('user_id', $request->user()->id)
-        ->where('test_id', $request->test_id)
+        ->where('test_id', $test->id)
         ->first();
 
         if ($existing && $existing->stars == $request->rating) {
@@ -37,6 +37,9 @@ class RatingController extends Controller
         );
 
         return response()->json([
+            'test' => $test->id,
+            'existing' => $existing,
+            'user' => $request->user()->id,
             'success' => true,
             'rating' => $request->rating
         ]);

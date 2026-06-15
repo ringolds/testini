@@ -148,14 +148,14 @@ $(document).ready(function() {
     content = '#game-content';
 
     $(document).on('click', '.question-btn', function() {
-        const resultItemId = $(this).data('id');
-        const resultId =$(this).data('targetId');
+        const resultItemId = $(this).attr('data-id');
+        const resultId =$(this).attr('data-target-id');
 
         loadQuestion(resultItemId, resultId);
     });
 
     $(document).on('click', '.multiple-choice-btn', function() {
-        const id = $(this).data('answerId');
+        const id = $(this).attr('data-answer-id');
         makeMultipleChoice(id);
     });
 
@@ -167,7 +167,7 @@ $(document).ready(function() {
     });
 
     $(document).on('click', '#next-btn', function(){
-        const resultItemId = $(this).data('id');
+        const resultItemId = $(this).attr('data-id');
         const resultId =$(content).attr('data-target-id');
         loadQuestion(resultItemId, resultId);
     });
@@ -193,8 +193,8 @@ $(document).ready(function() {
 
 
 
-    firstId = $('.question-btn').first().data('id');
-    firstResultId = $('.question-btn').first().data('targetId');
+    firstId = $('.question-btn').first().attr('data-id');
+    firstResultId = $('.question-btn').first().attr('data-target-id');
 
     if (firstId) {
         loadQuestion(firstId, firstResultId);

@@ -173,31 +173,31 @@ $(document).ready(function() {
     addNewQuestionButton = '.add-new-question-btn';
 
     $(document).on('click', '.bank-btn', function() {
-        const id = $(this).data('id');
-        const mode =$(this).data('mode');
+        const id = $(this).attr('data-id');
+        const mode =$(this).attr('data-mode');
 
         loadCollection(id, mode, id, "bank");
     });
 
     $(document).on('click', '.test-btn', function() {
-        const id = $(this).data('id');
-        const mode =$(this).data('mode');
+        const id = $(this).attr('data-id');
+        const mode =$(this).attr('data-mode');
 
         loadCollection(id, mode, id, "test");
     });
 
     $(document).on('click', '.add-random-question-btn', function(){
-        const id = $(this).data('id');
+        const id = $(this).attr('data-id');
         addRandomQuestions(id);
     });
 
     $(document).on('click', editButton, function() {
-        const id = $(this).data('id');
+        const id = $(this).attr('data-id');
         editCollection(id);
     });
 
     $(document).on('click', addNewQuestionButton, function() {
-        const id = $(this).data('id');
+        const id = $(this).attr('data-id');
         addNewQuestion(id);
     });
 
@@ -238,7 +238,7 @@ $(document).ready(function() {
     });
 
     $(document).on('click', addExistingQuestionButton, function() {
-        const id = $(addExistingQuestionButton).data('id');
+        const id = $(addExistingQuestionButton).attr('data-id');
         addExistingQuestion(id);
     });
 
@@ -247,7 +247,7 @@ $(document).ready(function() {
 
         e.preventDefault();
 
-        const id = $(this).data('id');
+        const id = $(this).attr('data-id');
         deleteCollection(id);
     });
 
@@ -360,8 +360,8 @@ $(document).ready(function() {
         form.find('.is-invalid').removeClass('is-invalid');
         form.find('.invalid-feedback').text('');
 
-        let testId = $(this).data('targetId');
-        let bankId = $(this).data('id');
+        let testId = $(this).attr('data-target-id');
+        let bankId = $(this).attr('data-id');
 
         $.ajax({
             url: '/test/'+testId + '/bank/' + bankId,
@@ -395,8 +395,8 @@ $(document).ready(function() {
         });
     });
 
-    firstId = $(button).first().data('id');
-    firstMode = $(button).first().data('mode');
+    firstId = $(button).first().attr('data-id');
+    firstMode = $(button).first().attr('data-mode');
 
     if (firstId) {
         loadCollection(firstId, firstMode, firstId);

@@ -423,22 +423,86 @@ class TestController extends Controller
         if (!in_array($perPage, [12, 24])) {
             $perPage = 12; 
         }
-        $userId = $request->user()->id;
-        $tests = \App\Models\Test::with('user')->where(function ($query) use ($userId){
-            $query->where('public', true);
+        $userId = $request->user()?->id;
+        $finalQuery = Test::with('user')->where(function ($query) use ($userId){
+            $query->where('tests.public', true);
             if ($userId) {
-                $query->orWhere('user_id', $userId);
+                $query->orWhere('tests.user_id', $userId);
             }
         })->where(function ($query) {
             $query->whereHas('questions')
                 ->orWhereHas('banks', function ($q) {
                     $q->where('random_count', '>', 0)->has('questions');
                 });
-        })
-        ->latest()
-        ->paginate($perPage)
-        ->withQueryString();
+        });
 
-        return view('tests.available_index', compact('tests'));
+        $ratingMode = "general";
+
+        if($userId){
+            $ratingMode = $request->user()->rating_mode;
+
+            if($request->ratingMode){
+                $ratingMode= $request->ratingMode;
+            }
+        }
+
+        
+        if($userId){
+            if ($request->rating === 'personalDesc') {
+            $finalQuery->leftJoin('ratings as personal_rating', function ($join) use ($userId) {
+                $join->on('tests.id', '=', 'personal_rating.test_id')
+                    ->where('personal_rating.user_id', '=', $userId);
+            })
+            ->select('tests.*')
+            ->selectRaw('COALESCE(personal_rating.stars, 0) as personal_rating')
+            ->orderByDesc('personal_rating');
+            $ratingMode = "personal";
+            }
+
+            if ($request->rating === 'personalAsc') {
+                $finalQuery->leftJoin('ratings as personal_rating', function ($join) use ($userId) {
+                    $join->on('tests.id', '=', 'personal_rating.test_id')
+                        ->where('personal_rating.user_id', '=', $userId);
+                })
+                ->select('tests.*')
+                ->selectRaw('COALESCE(personal_rating.stars, 0) as personal_rating')
+                ->orderBy('personal_rating');
+                $ratingMode = "personal";
+            }
+        }
+
+        if ($request->rating === 'generalDesc') {
+            $finalQuery->withAvg('ratings', 'stars')->orderByDesc('ratings_avg_stars');
+            $ratingMode = "general";
+        }
+
+        if ($request->rating === 'generalAsc') {
+            $finalQuery->withAvg('ratings', 'stars')->orderBy('ratings_avg_stars');
+            $ratingMode = "general";
+        }
+
+        if ($request->date === 'new') {
+            $finalQuery->orderBy('created_at', 'desc');
+        }
+
+        if ($request->date === 'old') {
+            $finalQuery->orderBy('created_at', 'asc');
+        }
+
+        if (!$request->date && !$request->rating) {
+            $finalQuery->latest();
+        }
+
+        $tests = $finalQuery->paginate($perPage)->withQueryString();
+
+        if ($userId) {
+            $request->user()->update([
+                'rating_mode' => $ratingMode
+            ]);
+        }
+        if($request->ajax()){
+            return view('tests.available_index_details', compact('tests', 'ratingMode'));
+        }
+        return view('tests.available_index', compact('tests', 'ratingMode'));
     }
 }

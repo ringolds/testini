@@ -171,8 +171,8 @@ $(document).ready(function() {
         
         e.preventDefault();
 
-        const target = $(this).data('targetId');
-        const id = $(this).data('id');
+        const target = $(this).attr('data-target-id');
+        const id = $(this).attr('data-id');
         editBankCount(id, target);
     });
 
@@ -186,7 +186,7 @@ $(document).ready(function() {
 
         let formData = new FormData(this);
 
-        let activeId = $('.'+ type + '-content').data('id');
+        let activeId = $('.'+ type + '-content').attr('data-id');
 
         formData.append('content_type', type);
         formData.append('content_id', activeId);
@@ -219,8 +219,8 @@ $(document).ready(function() {
     $(document).on('submit', '.add-existing-question-form', function(e) {
         e.preventDefault();
         
-        let target = $('.'+type+'-content').data('targetId');
-        const id = $(this).data('id');
+        const target = $('.'+type+'-content').attr('data-target-id');
+        const id = $(this).attr('data-id');
         addToCollection(id, target)
     });
 
@@ -229,7 +229,7 @@ $(document).ready(function() {
         
         e.preventDefault();
 
-        const id = $(this).data('id');
+        const id = $(this).attr('data-id');
         deleteQuestion(id);
     });
 
@@ -238,8 +238,8 @@ $(document).ready(function() {
         
         e.preventDefault();
 
-        const target = $(this).data('targetId');
-        const id = $(this).data('id');
+        const target = $(this).attr('data-target-id');
+        const id = $(this).attr('data-id');
         removeQuestion(id, target);
     });
 
@@ -248,8 +248,8 @@ $(document).ready(function() {
         
         e.preventDefault();
 
-        const target = $(this).data('targetId');
-        const id = $(this).data('id');
+        const target = $(this).attr('data-target-id');
+        const id = $(this).attr('data-id');
         removeBank(id, target);
     });
 
@@ -258,8 +258,8 @@ $(document).ready(function() {
         
         e.preventDefault();
 
-        const target = $(this).data('targetId');
-        const id = $(this).data('id');
+        const target = $(this).attr('data-target-id');
+        const id = $(this).attr('data-id');
         changeBankCount(id, target, this);
     });
 
