@@ -19,5 +19,6 @@ return [
     'add' => "Pievienot",
     'amount' => "Izvēlieties skaitu: ",
     'change' => 'Mainīt',
-    'returnHome'=> "Atgriezties mājās"
+    'returnHome'=> "Atgriezties mājās",
+    'search' => "Meklēt",
 ];

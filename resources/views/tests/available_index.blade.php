@@ -4,9 +4,12 @@
     </x-slot> 
     <div class="container my-5">
         <h1 class="mb-4">{{__('tests.available')}} </h1>
-
+        <div class="search-container mt-3 mb-3">
+            <input type="text" class="form-control search-input" placeholder="{{__('buttons.search')}}...">
+            <i class="fas fa-search search-icon"></i>
+        </div>
         <div class="d-flex justify-content-end mb-3 gap-2">
-            <label class="me-2 align-self-center">{{__('tests.cardsPerPage')}} :</label>
+            <p class="me-2 align-self-center">{{__('tests.cardsPerPage')}} :</p>
             <a href="{{ request()->fullUrlWithQuery(['per_page' => 12, 'page' => 1]) }}" data-amount="12" class="btn btn-sm per-page-btn {{ request('per_page', 12) == 12 ? 'btn-primary' : 'btn-outline-primary' }} me-1">12</a>
             <a href="{{ request()->fullUrlWithQuery(['per_page' => 24, 'page' => 1]) }}" data-amount="24" class="btn btn-sm per-page-btn {{ request('per_page') == 24 ? 'btn-primary' : 'btn-outline-primary' }}">24</a>
             <div class="dropdown">
@@ -157,6 +160,22 @@
 
             loadTests(url);
         });
+
+        $(document).on('input', '.search-input', function(e){
+            e.preventDefault();
+
+            const search = $(this).val();
+            
+            const params = new URLSearchParams(window.location.search);
+
+            if(search!="") params.set('search', search); else params.delete('search');
+
+            params.set('page', 1);
+
+            const url = '?' + params.toString();
+
+            loadTests(url);
+        })
 
 
         $(document).ready(function () {

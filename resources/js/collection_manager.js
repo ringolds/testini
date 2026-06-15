@@ -350,8 +350,6 @@ $(document).ready(function() {
         });
     });
 
-
-
     $(document).on('submit', '#add-random-questions-form', function(e) {
         e.preventDefault();
         

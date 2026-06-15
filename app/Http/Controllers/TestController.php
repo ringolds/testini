@@ -436,6 +436,13 @@ class TestController extends Controller
                 });
         });
 
+        if($request->search && $request->search!=""){
+            $finalQuery->where(function ($q) use ($request) {
+                $q->where('tests.name', 'like', '%' . $request->search . '%')
+                ->orWhere('tests.description', 'like', '%' . $request->search . '%');
+            });
+        }
+
         $ratingMode = "general";
 
         if($userId){
