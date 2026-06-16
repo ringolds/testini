@@ -48,7 +48,7 @@ Route::middleware('auth')->group(function() {
     Route::resource('test', TestController::class);
     Route::post('bank/{bank}/publish', [BankController::class, 'publish'])->name('bank.publish');
     Route::resource('bank', BankController::class); 
-    Route::resource('question', QuestionController::class);
+    Route::resource('question', QuestionController::class, ['except'=> ['index', 'show']]);
     //auth
     Route::post('/logout', [AuthController::class, 'logout']) ->name('logout');  
     //bank-question
